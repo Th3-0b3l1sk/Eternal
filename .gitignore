@@ -16,6 +16,15 @@
 # Mono auto generated files
 mono_crash.*
 
+# User Directories
+Depends
+AccountServer/Debug
+AccountServer/Release
+GameServer/Debug
+GameServer/Release
+
+
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
