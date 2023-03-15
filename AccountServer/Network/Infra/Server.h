@@ -1,7 +1,9 @@
 #pragma once
 #include <string_view>
 #include <memory>
+#include "Connection.h"
 #include <asio.hpp>
+#include <vector>
 
 namespace Eternal
 {
@@ -11,9 +13,11 @@ namespace Eternal
 
 		class Server
 		{
+			
 		private:
 			void init(std::string_view ip, uint16_t port);
 			void on_accept(const asio::error_code& error, tcp::socket perr);
+			static void on_receive(std::shared_ptr<Connection> connection, size_t bytes_received);
 			
 		public:
 			Server(std::string_view config_file);
@@ -35,6 +39,7 @@ namespace Eternal
 			tcp::acceptor _acceptor;
 			tcp::endpoint _endpoint;
 			
+			std::vector<std::shared_ptr<Connection>> _connections;
 		};
 	}
 

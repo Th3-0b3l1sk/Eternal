@@ -77,9 +77,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AccountMain.cpp" />
+    <ClCompile Include="Network\Infra\Connection.cpp" />
     <ClCompile Include="Network\Infra\Server.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Network\Infra\Connection.h" />
     <ClInclude Include="Network\Infra\Server.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,5 +1,6 @@
 #include "Server.h"
 #include <iostream>
+#include "./Connection.h"
 
 namespace Eternal::Infra
 {
@@ -7,12 +8,10 @@ namespace Eternal::Infra
 
 	void Server::init(std::string_view ip, uint16_t port)
 	{
-		tcp::acceptor::keep_alive keep_alive{ false };
-
 		_endpoint.address(asio::ip::make_address(ip));
 		_endpoint.port(port);
 		_acceptor.open(_endpoint.protocol());
-		_acceptor.set_option(keep_alive);
+		_acceptor.set_option(tcp::acceptor::keep_alive{ false });
 		_acceptor.bind(_endpoint);
 		_acceptor.listen();
 
@@ -22,10 +21,23 @@ namespace Eternal::Infra
 	{
 		// todo: logger
 		std::cout << " Accepeted connection from: " << peer.remote_endpoint().address().to_string() << " port: " << peer.remote_endpoint().port() << '\n';
-		peer.shutdown(tcp::socket::shutdown_both);
-		peer.close();
-		
+
+		std::shared_ptr<Connection> client = std::make_shared<Connection>( std::move(peer), &Server::on_receive );
+		_connections.push_back(std::move(client));
+		_connections.back()->begin_read();
+
 		_acceptor.async_accept(std::bind(&Server::on_accept, this, std::placeholders::_1, std::placeholders::_2));
+	}
+
+	void Server::on_receive(std::shared_ptr<Connection> connection, size_t bytes_received)
+	{
+		if (bytes_received > 0) {
+			std::cout << "Incoming [" << bytes_received << "] bytes from Client: " << connection->get_ip_address() << ":" << connection->get_port() << '\n';
+			/*PacketDumper << connection->data();
+			std::cout << PacketDummper << '\n';*/
+			std::cout << "Resetting the connection...\n";
+			connection->reset();
+		}
 	}
 
 	void Server::run()

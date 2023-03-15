@@ -21,9 +21,15 @@
     <ClCompile Include="Network\Infra\Server.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Network\Infra\Connection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Network\Infra\Server.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\Infra\Connection.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
