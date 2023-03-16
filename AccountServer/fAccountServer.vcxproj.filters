@@ -2,15 +2,12 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
     <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
     <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
   </ItemGroup>
@@ -18,36 +15,36 @@
     <ClCompile Include="AccountMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Network\Infra\Server.cpp">
+    <ClCompile Include="Infra\Network\Connection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Network\Infra\Connection.cpp">
+    <ClCompile Include="Infra\Network\Server.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Network\Msg\NetMsg.cpp">
+    <ClCompile Include="Infra\Network\Encryption\TqCipher.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Network\Msg\MsgAccount.cpp">
+    <ClCompile Include="Msg\MsgAccount.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Network\Encryption\TqCipher.cpp">
+    <ClCompile Include="Msg\NetMsg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Network\Infra\Server.h">
+    <ClInclude Include="Infra\Network\Connection.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Network\Infra\Connection.h">
+    <ClInclude Include="Infra\Network\Server.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Network\Msg\NetMsg.h">
+    <ClInclude Include="Infra\Network\Encryption\TqCipher.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Network\Msg\MsgAccount.h">
+    <ClInclude Include="Msg\MsgAccount.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Network\Encryption\TqCipher.h">
+    <ClInclude Include="Msg\NetMsg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

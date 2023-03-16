@@ -17,7 +17,6 @@ namespace Eternal::Infra
 		_acceptor.set_option(tcp::acceptor::keep_alive{ false });
 		_acceptor.bind(_endpoint);
 		_acceptor.listen();
-
 	}
 
 	void Server::on_accept(const asio::error_code& error, tcp::socket peer)
@@ -38,7 +37,7 @@ namespace Eternal::Infra
 			std::cout << "Incoming [" << bytes_received << "] bytes from Client: " << connection->get_ip_address() << ":" << connection->get_port() << '\n';
 			
 			Encryption::TqCipher cipher;
-			cipher.generate_iv(0x13FA0F9D, 0x6D5C7962);
+			cipher.generate_iv();
 			cipher.decrypt((uint8_t*)connection->get_buffer().get(), bytes_received);
 			Msg::MsgAccount msg_account{ connection->get_buffer().get(), bytes_received};
 			std::cout << msg_account.stringfy() << '\n';

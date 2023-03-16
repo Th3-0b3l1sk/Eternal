@@ -77,18 +77,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AccountMain.cpp" />
-    <ClCompile Include="Network\Msg\MsgAccount.cpp" />
-    <ClCompile Include="Network\Msg\NetMsg.cpp" />
-    <ClCompile Include="Network\Infra\Connection.cpp" />
-    <ClCompile Include="Network\Infra\Server.cpp" />
-    <ClCompile Include="Network\Encryption\TqCipher.cpp" />
+    <ClCompile Include="Infra\Network\Connection.cpp" />
+    <ClCompile Include="Infra\Network\Encryption\TqCipher.cpp" />
+    <ClCompile Include="Infra\Network\Server.cpp" />
+    <ClCompile Include="Msg\MsgAccount.cpp" />
+    <ClCompile Include="Msg\NetMsg.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Network\Msg\MsgAccount.h" />
-    <ClInclude Include="Network\Msg\NetMsg.h" />
-    <ClInclude Include="Network\Infra\Connection.h" />
-    <ClInclude Include="Network\Infra\Server.h" />
-    <ClInclude Include="Network\Encryption\TqCipher.h" />
+    <ClInclude Include="Infra\Network\Connection.h" />
+    <ClInclude Include="Infra\Network\Encryption\TqCipher.h" />
+    <ClInclude Include="Infra\Network\Server.h" />
+    <ClInclude Include="Msg\MsgAccount.h" />
+    <ClInclude Include="Msg\NetMsg.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
