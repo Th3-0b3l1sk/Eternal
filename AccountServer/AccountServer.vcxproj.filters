@@ -24,12 +24,30 @@
     <ClCompile Include="Network\Infra\Connection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Network\Msg\NetMsg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Network\Msg\MsgAccount.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Network\Encryption\TqCipher.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Network\Infra\Server.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Network\Infra\Connection.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\Msg\NetMsg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\Msg\MsgAccount.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Network\Encryption\TqCipher.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,6 +1,9 @@
 #include "Server.h"
 #include <iostream>
 #include "./Connection.h"
+#include "./Encryption/TqCipher.h"
+#include "../../Msg/MsgAccount.h"
+
 
 namespace Eternal::Infra
 {
@@ -33,8 +36,13 @@ namespace Eternal::Infra
 	{
 		if (bytes_received > 0) {
 			std::cout << "Incoming [" << bytes_received << "] bytes from Client: " << connection->get_ip_address() << ":" << connection->get_port() << '\n';
-			/*PacketDumper << connection->data();
-			std::cout << PacketDummper << '\n';*/
+			
+			Encryption::TqCipher cipher;
+			cipher.generate_iv(0x13FA0F9D, 0x6D5C7962);
+			cipher.decrypt((uint8_t*)connection->get_buffer().get(), bytes_received);
+			Msg::MsgAccount msg_account{ connection->get_buffer().get(), bytes_received};
+			std::cout << msg_account.stringfy() << '\n';
+
 			std::cout << "Resetting the connection...\n";
 			connection->reset();
 		}

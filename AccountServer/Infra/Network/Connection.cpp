@@ -6,7 +6,7 @@ namespace Eternal::Infra
     Connection::Connection(tcp::socket&& client_socket, fn_on_receive_callback on_receive_callback)
         : _client_socket(std::move(client_socket)),
         _on_receive_callback(on_receive_callback),
-        _buffer(std::make_unique<uint8_t[]>(BUF_SIZE))
+        _buffer(new uint8_t[BUF_SIZE] {})
     {
         if (_on_receive_callback == nullptr)
             throw std::exception{}; // todo: proper exception
