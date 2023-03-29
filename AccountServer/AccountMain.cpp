@@ -4,19 +4,21 @@
 #include <thread>
 #include <Windows.h>
 
+
+
 int main()
 {
 	try {
 
 		Eternal::Infra::Server AccountServer("127.0.0.1", 55099);
-		std::thread worker_thread{ std::bind(&Eternal::Infra::Server::run, &AccountServer) };
+		std::thread worker_thread{ std::bind(&Eternal::Infra::Server::run, &AccountServer) };	// TODO: Move the thread creation and management to the server
 
 		while (!(GetAsyncKeyState(VK_NUMPAD0) & 1))
 		{
 			Sleep(100);
 		}
 
-		AccountServer.get_iocontext()->stop();
+		AccountServer.get_iocontext()->stop();	// TODO: get_iocontext needs to be removed. no need for it in the client code AccountServer.stop();
 
 		std::cout << "Server stopped\n";
 		worker_thread.join();

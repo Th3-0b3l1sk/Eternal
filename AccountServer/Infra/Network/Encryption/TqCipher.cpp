@@ -12,7 +12,7 @@ namespace Eternal
             memset(_iv, 0, TqCipher::IV_SIZE);
         }
 
-        // 004bbbf8 [0x9dfa0f13] []
+        // 004bbbf8 [0x9dfa0f13] [0x62a4796d]
         void TqCipher::generate_iv()
         {
             uint8_t* a = (uint8_t*)&_key1;
@@ -46,9 +46,7 @@ namespace Eternal
                     if (_de_counter > 0xff)
                         _de_counter = 0;
                 }
-
             }
-
         }
 
         void TqCipher::decrypt(uint8_t* _pBuf, size_t _len)
@@ -70,10 +68,7 @@ namespace Eternal
                     if (_en_counter > 0xff)
                         _en_counter = 0;
                 }
-
             }
-
         }
-
     }
 }

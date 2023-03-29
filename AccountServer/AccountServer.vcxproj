@@ -82,6 +82,7 @@
     <ClCompile Include="Infra\Network\Server.cpp" />
     <ClCompile Include="Msg\MsgAccount.cpp" />
     <ClCompile Include="Msg\NetMsg.cpp" />
+    <ClCompile Include="Infra\Network\Encryption\Rc5.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Infra\Network\Connection.h" />
@@ -89,6 +90,7 @@
     <ClInclude Include="Infra\Network\Server.h" />
     <ClInclude Include="Msg\MsgAccount.h" />
     <ClInclude Include="Msg\NetMsg.h" />
+    <ClInclude Include="Infra\Network\Encryption\Rc5.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

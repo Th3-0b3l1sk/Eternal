@@ -18,9 +18,9 @@ namespace Eternal
 		public:		
 			void generate_iv();
 
-			void encrypt(std::uint8_t* _pBuf, size_t _len) ;
+			void encrypt(uint8_t* data, size_t len) ;
 
-			void decrypt(uint8_t* _pBuf, size_t _len) ;
+			void decrypt(uint8_t* data, size_t len) ;
 
 		public:
 			uint32_t get_key1() const { return _key1; }

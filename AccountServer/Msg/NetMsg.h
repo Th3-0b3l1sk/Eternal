@@ -43,7 +43,7 @@ namespace Eternal
             
         protected:
             size_t _size;
-            uint8_t* _buffer; // NetMsg doesn't own the buffer
+            uint8_t* _buffer; // TODO: NetMsg doesn't own the buffer. Make it own it.
         };
     }
 }
