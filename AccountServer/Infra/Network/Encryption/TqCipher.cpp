@@ -58,7 +58,7 @@ namespace Eternal
             {
                 _pBuf[i] ^= UINT8_C(0xAB);
                 _pBuf[i] = (_pBuf[i] << 0x4) + (_pBuf[i] >> 0x4);    // the right shift operation is AFFECTED by the sign of its operand (char/uint8_t) 
-                // wasted  ~4 hours on this little bug :))
+                                                                     // wasted  ~4 hours on this little bug :))
                 _pBuf[i] ^= _iv[_de_counter++];
                 _pBuf[i] ^= _iv[_en_counter + 0x100];
 

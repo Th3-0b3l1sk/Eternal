@@ -13,7 +13,7 @@ namespace Eternal
         {
             class Server;
         public:
-            using fn_on_receive_callback = void(*)(std::shared_ptr<Connection>, size_t bytes_received);
+            using fn_on_receive_callback = std::function<void(std::shared_ptr<Connection>, size_t bytes_received)>;
 
         public:
             // the callback signature: void(this)
