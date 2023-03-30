@@ -33,26 +33,16 @@ namespace Eternal
         //004BBC59 encrypt
         void TqCipher::encrypt(std::uint8_t* _pBuf, size_t _len)
         {
-            for (size_t i{}; i < _len; i++)
-            {
-                _pBuf[i] ^= _iv[_en_counter++];
-                _pBuf[i] ^= _iv[_de_counter + 0x100];
-                _pBuf[i] = (_pBuf[i] << 0x4) + (_pBuf[i] >> 0x4);
-                _pBuf[i] ^= 0xab;
-
-                if (_en_counter > 0xff) {
-                    _en_counter = 0;
-                    _de_counter++;
-                    if (_de_counter > 0xff)
-                        _de_counter = 0;
-                }
-            }
+            // the same routine ... 
+            decrypt(_pBuf, _len);
         }
 
         void TqCipher::decrypt(uint8_t* _pBuf, size_t _len)
         {
-            uint8_t* key1 = _iv;
-            uint8_t* key2 = key1 + (TqCipher::IV_SIZE / 2);
+
+            uint32_t a{}, b{};
+            a = _de_counter;
+            b = _en_counter;
 
             for (size_t i = 0; i < _len; ++i)
             {
@@ -66,9 +56,12 @@ namespace Eternal
                     _de_counter = 0;
                     _en_counter++;
                     if (_en_counter > 0xff)
-                        _en_counter = 0;
+                         _en_counter = 0;
                 }
             }
+
+            _de_counter = a;
+            _en_counter = b;
         }
     }
 }
