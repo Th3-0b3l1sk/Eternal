@@ -17,9 +17,7 @@ namespace Eternal
 
 		public:		
 			void generate_iv();
-
 			void encrypt(uint8_t* data, size_t len) ;
-
 			void decrypt(uint8_t* data, size_t len) ;
 
 		public:

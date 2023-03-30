@@ -1,26 +1,35 @@
-#include "NetMsg.h"
 #include <sstream>
 #include <iomanip>
 #include <assert.h>
+#include "./NetMsg.h"
+#include "./MsgAccount.h"
+#include "./MsgConnect.h"
 
 namespace Eternal
 {
+    class Server;
     namespace Msg
     {
-        NetMsg::NetMsg(uint8_t* buffer, size_t size)
-            : _buffer(buffer), _size(size)
+        NetMsg::NetMsg(std::shared_ptr<uint8_t[]>&& buffer, size_t size)
+            : _buffer(std::move(buffer)), _size(size)
         {}
+
+        NetMsg::NetMsg()
+        {
+            _buffer.reset(new uint8_t[UINT16_C(1024)]{});
+            _size = UINT16_C(1024);
+        }
 
         std::string NetMsg::stringfy()
         {
-            assert(_buffer != nullptr, "Attemptin to stringfy a non-existent packet!");
+            assert(_buffer != nullptr, "Attempting to stringfy a non-existent packet!");
             // format 
             // [type][len]
             // hex dump .... ascii dump 16 per line 
             std::ostringstream buf;
             std::ostringstream ascii;
 
-            buf << '[' << msg_type_to_string(((Header*)_buffer)->type) << "][" << _size << "]\n";
+            buf << '[' << msg_type_to_string(((Header*)_buffer.get())->type) << "][" << _size << "]\n";
             for (size_t i{}; i < _size; i++) {
                 if (i != 0 && i % 15 == 0) {
                     buf << "    " << ascii.str() << '\n';
@@ -45,11 +54,24 @@ namespace Eternal
 
         }
 
-        void NetMsg::process()
+        void NetMsg::process(Server& server)
         {
-
+            // TODO: implementation
         }
+        // static function
+        std::shared_ptr<NetMsg> NetMsg::create(std::shared_ptr<uint8_t[]>&& packet, size_t len)
+        {
+            auto type = ((Header*)packet.get())->type;
+            switch (type)
+            {
+            case MsgType::MSG_ACCOUNT:
+                return std::make_shared<MsgAccount>(std::move(packet), len);
+            case MsgType::MSG_CONNECT:
+                return std::make_shared<MsgConnect>(std::move(packet), len);
 
+            default:
+                return std::make_shared<NetMsg>(std::move(packet), len);
+            }
+        }
     }
 }
-
