@@ -47,7 +47,6 @@ namespace Eternal
                 } if (a > 0xff) {
                     a = 0;
                 }
-
             }
         }
 
