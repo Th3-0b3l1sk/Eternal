@@ -76,10 +76,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AccountMain.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="Infra\Network\Connection.cpp" />
     <ClCompile Include="Infra\Network\Encryption\TqCipher.cpp" />
     <ClCompile Include="Infra\Network\Server.cpp" />
+    <ClCompile Include="Msg\MsgConnect.cpp" />
+    <ClCompile Include="Msg\MsgConnectEx.cpp" />
     <ClCompile Include="Msg\MsgAccount.cpp" />
     <ClCompile Include="Msg\NetMsg.cpp" />
     <ClCompile Include="Infra\Network\Encryption\Rc5.cpp" />
@@ -88,6 +90,8 @@
     <ClInclude Include="Infra\Network\Connection.h" />
     <ClInclude Include="Infra\Network\Encryption\TqCipher.h" />
     <ClInclude Include="Infra\Network\Server.h" />
+    <ClInclude Include="Msg\MsgConnect.h" />
+    <ClInclude Include="Msg\MsgConnectEx.h" />
     <ClInclude Include="Msg\MsgAccount.h" />
     <ClInclude Include="Msg\NetMsg.h" />
     <ClInclude Include="Infra\Network\Encryption\Rc5.h" />
