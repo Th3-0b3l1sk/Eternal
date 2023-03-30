@@ -2,14 +2,14 @@
 #include <asio.hpp>
 #include <memory>
 #include <string>
+#include "./Encryption/TqCipher.h"
 
+// TODO: add cipher interface here
 namespace Eternal
 {
-    namespace Infra
-    {
-        using asio::ip::tcp;
-       
-        class Connection: public std::enable_shared_from_this<Connection>
+    using asio::ip::tcp;
+    
+    class Connection: public std::enable_shared_from_this<Connection>
         {
             class Server;
         public:
@@ -22,12 +22,15 @@ namespace Eternal
         public:
             void begin_read();
             void reset();
+            void send(std::shared_ptr<uint8_t[]> data, size_t len);
+            void set_cipher(std::unique_ptr<Encryption::TqCipher>&& cipher) { _cipher = std::move(cipher); }
 
         public:
 
             std::string get_ip_address() const { return _client_socket.remote_endpoint().address().to_string(); }
             uint16_t  get_port() const { return _client_socket.remote_endpoint().port(); }
             std::shared_ptr<uint8_t[]> get_buffer() const { return _buffer; }
+            std::unique_ptr<Encryption::TqCipher>& get_cipher() { return _cipher; }
 
         private:
             void on_receive(const asio::error_code& error, size_t bytes_read);
@@ -37,8 +40,8 @@ namespace Eternal
             fn_on_receive_callback _on_receive_callback;
             size_t BUF_SIZE = 1024;
             std::shared_ptr<uint8_t[]> _buffer;
+            // TODO: In dire need of an interface OR decrypt encrypt functions?
+            std::unique_ptr<Encryption::TqCipher> _cipher;
 
         };
-
-    }
 }

@@ -2,7 +2,7 @@
 #include <iostream>
 #include "./Connection.h"
 
-namespace Eternal::Infra
+namespace Eternal
 {
 	using asio::ip::tcp;
 
@@ -22,6 +22,7 @@ namespace Eternal::Infra
 		std::cout << " Accepeted connection from: " << peer.remote_endpoint().address().to_string() << " port: " << peer.remote_endpoint().port() << '\n';
 
 		std::shared_ptr<Connection> client = std::make_shared<Connection>( std::move(peer), std::bind(&Server::on_receive, this ,std::placeholders::_1, std::placeholders::_2));
+		_on_accept(client);
 		_connections.push_back(std::move(client));
 		_connections.back()->begin_read();    // TODO: replace the vector with map<id, connection>
 
@@ -33,9 +34,15 @@ namespace Eternal::Infra
 		if (bytes_received > 0) {
 			// TODO: proper logger
 			std::cout << "Incoming [" << bytes_received << "] bytes from Client: " << connection->get_ip_address() << ":" << connection->get_port() << '\n';
-			_on_receive(connection->get_buffer().get(), bytes_received);
-			std::cout << "Resetting the connection ... \n";
-			connection->reset();
+			_on_receive(connection, bytes_received);
+			
+			for (auto& msg : _outgoing)
+				this->send(connection, msg);
+
+			_outgoing.clear();
+
+			//std::cout << "Resetting the connection ... \n";
+			//connection->reset();
 		}
 	}
 
@@ -57,6 +64,24 @@ namespace Eternal::Infra
 		_io_context->stop();
 		for (auto& connection : _connections)
 			connection->reset();
+	}
+
+	void Server::send(std::shared_ptr<Connection> connection, std::shared_ptr<Eternal::Msg::NetMsg> msg)
+	{
+		static constexpr char SEAL[] = "TQServer";
+		static constexpr uint8_t SEAL_LEN = UINT8_C(9);
+
+		std::shared_ptr<uint8_t[]> data(new uint8_t[msg->get_size() + SEAL_LEN]{});
+		memcpy_s(data.get(), msg->get_size(), msg->get_data().get(), msg->get_size());
+		memcpy_s(data.get()  + msg->get_size(), SEAL_LEN, SEAL, SEAL_LEN);
+		connection->send(data, msg->get_size() + SEAL_LEN );
+		// TODO: work this out
+		std::cout << msg->stringfy() << '\n';
+	}
+
+	void Server::queue_msg(std::shared_ptr<Eternal::Msg::NetMsg> msg)
+	{
+		_outgoing.push_back(msg);
 	}
 
 	void Server::run()
