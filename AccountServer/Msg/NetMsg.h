@@ -1,13 +1,18 @@
 #pragma once
 #include <string>
+#include <memory>
 
 namespace Eternal
 {
+    class Server;
     namespace Msg
     {
         enum class MsgType: uint16_t
         {
             MSG_ACCOUNT = 1051,
+            MSG_CONNECT_EX = 1055,
+            MSG_CONNECT = 1052,
+
         };
 
 #pragma pack(push, 1)
@@ -21,14 +26,17 @@ namespace Eternal
         class NetMsg
         {
         public:
-            virtual ~NetMsg() = default;
-            NetMsg(uint8_t* buffer, size_t size);
-            
-        public:
-            std::string stringfy();
+            virtual ~NetMsg() {};
+            NetMsg(std::shared_ptr<uint8_t[]>&& buffer, size_t size);
+            NetMsg();
 
         public:
-            virtual void process();
+            std::string stringfy();
+            std::shared_ptr<uint8_t[]> get_data() const { return _buffer; }
+            std::size_t get_size() const { return _size; }
+        public:
+            virtual void process(Server& server);
+            static std::shared_ptr<NetMsg> create(std::shared_ptr<uint8_t[]>&& data, size_t len);
 
         private:
             std::string msg_type_to_string(MsgType type) {
@@ -36,6 +44,10 @@ namespace Eternal
                 {
                 case MsgType::MSG_ACCOUNT:
                     return "MSG_ACCOUNT";
+                case MsgType::MSG_CONNECT_EX:
+                    return "MSG_CONNECT_EX";
+                case MsgType::MSG_CONNECT:
+                    return "MSG_CONNECT";
                 default:
                     return "UNKNOWN_TYPE";
                 }
@@ -43,7 +55,7 @@ namespace Eternal
             
         protected:
             size_t _size;
-            uint8_t* _buffer; // TODO: NetMsg doesn't own the buffer. Make it own it.
+            std::shared_ptr<uint8_t[]> _buffer;
         };
     }
 }

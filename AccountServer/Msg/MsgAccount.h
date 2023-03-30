@@ -19,9 +19,12 @@ namespace Eternal
 
 #pragma pack(pop)
         public:
-            MsgAccount(uint8_t* buffer, size_t len);
+            MsgAccount(std::shared_ptr<uint8_t[]>&& data, size_t len);
             char* get_password() const { return _info->account_pass; }
             uint32_t get_password_len() const { return 0x10; }
+
+        public:
+            virtual void process(Server& server) override;
 
         private:
             Info* _info;
