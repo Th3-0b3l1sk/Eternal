@@ -1,6 +1,6 @@
-#include "Server.h"
+#include "./Network/Server.h"
+#include "./Network/Connection.h"
 #include <iostream>
-#include "./Connection.h"
 
 namespace Eternal
 {

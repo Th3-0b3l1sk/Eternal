@@ -1,4 +1,4 @@
-#include "Rc5.h"
+#include "./Network/Encryption/Rc5.h"
 
 //TODO: can this implementation be prettier?
 
@@ -20,7 +20,7 @@ namespace Eternal
         // ghidra -> 004e1937
         void Rc5::init_key_expansion()
         {
-            for (int i{ 0 }; i < _magics.size(); ++i)
+            for (size_t i{ 0 }; i < _magics.size(); ++i)
                 _key[i] = _magics[i];
 
             _key[4] = _p;

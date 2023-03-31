@@ -1,5 +1,5 @@
-#include "MsgConnect.h"
-#include "../Network/Server.h"
+#include "./Msg/MsgConnect.h"
+#include "./Network/Server.h"
 #include <iostream> // TODO: remove
 
 namespace Eternal

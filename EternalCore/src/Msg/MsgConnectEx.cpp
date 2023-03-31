@@ -1,4 +1,4 @@
-#include "MsgConnectEx.h"
+#include "./Msg/MsgConnectEx.h"
 #include <assert.h>
 
 namespace Eternal
@@ -43,7 +43,7 @@ namespace Eternal
 
         MsgConnectEx& MsgConnectEx::set_game_server_port(int32_t port)
         {
-            assert(port < UINT16_MAX, "Invalid port number");
+            assert(port < UINT16_MAX);
             _info->game_server_port = port;
             return *this;
         }
