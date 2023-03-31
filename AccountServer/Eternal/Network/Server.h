@@ -2,7 +2,7 @@
 #include <string_view>
 #include <memory>
 #include "./Connection.h"
-#include "../../Msg/NetMsg.h"
+#include "../Msg/NetMsg.h"
 #include <asio.hpp>
 #include <vector>
 #include <deque>

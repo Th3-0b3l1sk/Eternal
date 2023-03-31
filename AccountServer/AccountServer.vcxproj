@@ -77,24 +77,24 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Infra\Network\Connection.cpp" />
-    <ClCompile Include="Infra\Network\Encryption\TqCipher.cpp" />
-    <ClCompile Include="Infra\Network\Server.cpp" />
-    <ClCompile Include="Msg\MsgConnect.cpp" />
-    <ClCompile Include="Msg\MsgConnectEx.cpp" />
-    <ClCompile Include="Msg\MsgAccount.cpp" />
-    <ClCompile Include="Msg\NetMsg.cpp" />
-    <ClCompile Include="Infra\Network\Encryption\Rc5.cpp" />
+    <ClCompile Include="Eternal\Network\Connection.cpp" />
+    <ClCompile Include="Eternal\Network\Encryption\TqCipher.cpp" />
+    <ClCompile Include="Eternal\Network\Server.cpp" />
+    <ClCompile Include="Eternal\Msg\MsgConnect.cpp" />
+    <ClCompile Include="Eternal\Msg\MsgConnectEx.cpp" />
+    <ClCompile Include="Eternal\Msg\MsgAccount.cpp" />
+    <ClCompile Include="Eternal\Msg\NetMsg.cpp" />
+    <ClCompile Include="Eternal\Network\Encryption\Rc5.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Infra\Network\Connection.h" />
-    <ClInclude Include="Infra\Network\Encryption\TqCipher.h" />
-    <ClInclude Include="Infra\Network\Server.h" />
-    <ClInclude Include="Msg\MsgConnect.h" />
-    <ClInclude Include="Msg\MsgConnectEx.h" />
-    <ClInclude Include="Msg\MsgAccount.h" />
-    <ClInclude Include="Msg\NetMsg.h" />
-    <ClInclude Include="Infra\Network\Encryption\Rc5.h" />
+    <ClInclude Include="Eternal\Network\Connection.h" />
+    <ClInclude Include="Eternal\Network\Encryption\TqCipher.h" />
+    <ClInclude Include="Eternal\Network\Server.h" />
+    <ClInclude Include="Eternal\Msg\MsgConnect.h" />
+    <ClInclude Include="Eternal\Msg\MsgConnectEx.h" />
+    <ClInclude Include="Eternal\Msg\MsgAccount.h" />
+    <ClInclude Include="Eternal\Msg\NetMsg.h" />
+    <ClInclude Include="Eternal\Network\Encryption\Rc5.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,7 +1,7 @@
 #include <iostream>
-#include "./Infra/Network/Server.h"
-#include "./Infra/Network/Connection.h"
-#include "./Infra/Network/Encryption/TqCipher.h"
+#include "./Eternal/Network/Server.h"
+#include "./Eternal/Network/Connection.h"
+#include "./Eternal/Network/Encryption/TqCipher.h"
 #include <string>
 #include <thread>
 #include <Windows.h>

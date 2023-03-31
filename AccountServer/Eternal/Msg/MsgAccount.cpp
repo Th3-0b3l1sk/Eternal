@@ -1,6 +1,6 @@
 #include "./MsgAccount.h"
-#include "../Infra/Network/Encryption/Rc5.h"
-#include "../Infra/Network/Server.h"
+#include "../Network/Encryption/Rc5.h"
+#include "../Network/Server.h"
 #include "./MsgConnectEx.h"
 #include <iostream>
 
