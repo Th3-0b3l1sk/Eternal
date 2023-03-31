@@ -1,7 +1,7 @@
-#include "./MsgAccount.h"
-#include "../Network/Encryption/Rc5.h"
-#include "../Network/Server.h"
-#include "./MsgConnectEx.h"
+#include "./Msg/MsgAccount.h"
+#include "./Msg/MsgConnectEx.h"
+#include "./Network/Encryption/Rc5.h"
+#include "./Network/Server.h"
 #include <iostream>
 
 namespace Eternal

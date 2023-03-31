@@ -1,9 +1,9 @@
 #include <sstream>
 #include <iomanip>
 #include <assert.h>
-#include "./NetMsg.h"
-#include "./MsgAccount.h"
-#include "./MsgConnect.h"
+#include "./Msg/NetMsg.h"
+#include "./Msg/MsgAccount.h"
+#include "./Msg/MsgConnect.h"
 
 namespace Eternal
 {
@@ -22,7 +22,7 @@ namespace Eternal
 
         std::string NetMsg::stringfy()
         {
-            assert(_buffer != nullptr, "Attempting to stringfy a non-existent packet!");
+            assert(_buffer != nullptr);
             // format 
             // [type][len]
             // hex dump .... ascii dump 16 per line 

@@ -1,4 +1,4 @@
-#include "TqCipher.h"
+#include "./Network/Encryption/TqCipher.h"
 #include <string>
 
 namespace Eternal

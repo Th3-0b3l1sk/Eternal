@@ -4,13 +4,18 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <OutDir>$(SolutionDir)\$(ProjectName)\Bake\$(Configuration)\</OutDir>
-    <IncludePath>$(SolutionDir)\Depends\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\EternalCore\include;$(SolutionDir)\Depends\;$(IncludePath)</IncludePath>
     <IntDir>$(SolutionDir)\$(ProjectName)\Bake\Intermediate\$(Configuration)\</IntDir>
+    <LibraryPath>$(SolutionDir)\EternalCore\Bake\$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)EternalCore\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
+    <Link>
+      <AdditionalDependencies>EternalCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemGroup />
 </Project>
