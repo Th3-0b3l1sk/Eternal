@@ -23,6 +23,13 @@ namespace Eternal
 
 		std::shared_ptr<Connection> client = std::make_shared<Connection>( std::move(peer), std::bind(&Server::on_receive, this ,std::placeholders::_1, std::placeholders::_2));
 		_on_accept(client);
+
+		// TODO: think of a better impl for both the game and account servers
+		for (auto& msg : _outgoing)
+			this->send(client, msg);
+
+		_outgoing.clear();
+
 		_connections.push_back(std::move(client));
 		_connections.back()->begin_read();    // TODO: replace the vector with map<id, connection>
 
@@ -87,7 +94,7 @@ namespace Eternal
 	void Server::run()
 	{
 		// TODO: proper logger
-		std::cout << "AccountServer is up and running ..." << '\n';
+		std::cout << "The server is up and running ..." << '\n';
 		_acceptor.async_accept(std::bind(&Server::on_accept, this,  std::placeholders::_1, std::placeholders::_2));
 		auto work_guard = asio::make_work_guard<asio::io_context>(*_io_context);
 		
