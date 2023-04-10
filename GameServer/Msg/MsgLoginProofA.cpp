@@ -5,6 +5,7 @@ MsgLoginProofA::MsgLoginProofA(const std::string& P, const std::string& G, const
 {
     Info* info = (Info*)_buffer.get();
 	srand(0);
+
 	for (auto i{ 0 }; i < MsgLoginProofA::PADDING_LEN; i++)
 		info->padding[i] = rand();
 	info->junk_size= MsgLoginProofA::JUNK_LEN;

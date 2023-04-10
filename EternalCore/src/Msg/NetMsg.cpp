@@ -28,8 +28,8 @@ namespace Eternal
             // hex dump .... ascii dump 16 per line 
             std::ostringstream buf;
             std::ostringstream ascii;
-
             std::string head(16 * 2 + 15, '=');
+
             buf << head << '\n';
             buf << '[' << msg_type_to_string(((Header*)_buffer.get())->type) << "][" << _size << "]\n";
             for (size_t i{}; i < _size; i++) {
@@ -37,13 +37,11 @@ namespace Eternal
                     buf << "    " << ascii.str() << '\n';
                     ascii.str("");
                 }
-
                 buf << std::setw(2) << std::setfill('0') << std::hex << ((int)_buffer[i] & 0xff )<< ' ';
                 if (std::isprint(_buffer[i])) 
                     ascii << _buffer[i];
                 else 
                     ascii << ".";
-
             }
 
             // for residue bytes < 0x16 limit
@@ -54,7 +52,6 @@ namespace Eternal
 
             buf << head << '\n';
             return buf.str();
-
         }
 
         void NetMsg::process(Server& server)
