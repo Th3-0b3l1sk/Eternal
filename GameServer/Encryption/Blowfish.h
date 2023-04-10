@@ -2,8 +2,9 @@
 #include <string_view>
 #include <openssl/blowfish.h>
 #include <memory>
+#include "Network/Encryption/ICipher.h"
 
-class Blowfish
+class Blowfish: public Eternal::Encryption::ICipher
 {
 private:
     enum class Do
@@ -13,13 +14,14 @@ private:
     };
 public:
     Blowfish(std::string_view key);
+    virtual ~Blowfish() = default;
 
 public:
-    void encrypt(std::shared_ptr<uint8_t[]> ct, size_t len);
-    void decrypt(std::shared_ptr<uint8_t[]> pt, size_t len);
+    virtual void encrypt(uint8_t* ct, size_t len) override;
+    virtual void decrypt(uint8_t* pt, size_t len) override;
 
 private:
-    void bf_do(std::shared_ptr<uint8_t[]> in_out, size_t len, Do what);
+    void bf_do(uint8_t* in_out, size_t len, Do what);
 
 private:    
     std::unique_ptr<BF_KEY> _bf_key;

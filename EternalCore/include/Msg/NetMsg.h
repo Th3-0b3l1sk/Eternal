@@ -28,7 +28,7 @@ namespace Eternal
         public:
             virtual ~NetMsg() {};
             NetMsg(std::shared_ptr<uint8_t[]>&& buffer, size_t size);
-            NetMsg();
+            NetMsg(size_t len);
 
         public:
             std::string stringfy();

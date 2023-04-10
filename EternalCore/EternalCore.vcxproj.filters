@@ -11,8 +11,40 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="EternalCore.cpp">
+    <ClCompile Include="src\Msg\MsgAccount.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Msg\MsgConnect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Msg\MsgConnectEx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Msg\NetMsg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Network\Connection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Network\Encryption\Rc5.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Network\Encryption\TqCipher.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Network\Server.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\Msg\MsgAccount.h" />
+    <ClInclude Include="include\Msg\MsgConnect.h" />
+    <ClInclude Include="include\Msg\MsgConnectEx.h" />
+    <ClInclude Include="include\Msg\NetMsg.h" />
+    <ClInclude Include="include\Network\Connection.h" />
+    <ClInclude Include="include\Network\Encryption\Rc5.h" />
+    <ClInclude Include="include\Network\Encryption\TqCipher.h" />
+    <ClInclude Include="include\Network\Server.h" />
+    <ClInclude Include="include\Network\Encryption\ICipher.h" />
   </ItemGroup>
 </Project>

@@ -3,7 +3,8 @@
 #include "Network/Connection.h"
 #include "Network/Encryption/TqCipher.h"
 #include "./Encryption/DiffieHellman.h"
-#include "Msg/MsgConnectEx.h"
+#include "./Encryption/Blowfish.h"
+#include "./Msg/MsgConnectEx.h"
 #include "./Msg/MsgLoginProofA.h"
 #include <string>
 #include <thread>
@@ -13,9 +14,12 @@ int main()
 {
 	try {
 		Eternal::Server GameServer("127.0.0.1", 5816);
+
 		GameServer._on_accept = [&](std::shared_ptr<Eternal::Connection> connection) {
 			// TODO: implement the Blowfish and DH exhange
 			// MsgLoginProofA -> (BF & DH)
+			auto bf = std::make_unique<Blowfish>("DR654dt34trg4UI6");
+			connection->set_cipher(std::move(bf));
 
 			const std::string P{ "E7A69EBDF105F2A6BBDEAD7E798F76A209AD73FB466431E2E7352ED262F8C558F10BEFEA977DE9E21DCEE9B04D245F300ECCBBA03E72630556D011023F9E857F" };
 			const std::string G{ "05" };
