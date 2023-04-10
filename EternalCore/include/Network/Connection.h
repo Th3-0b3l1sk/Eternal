@@ -3,15 +3,22 @@
 #include <memory>
 #include <string>
 #include "./Encryption/ICipher.h"
+#include "./Encryption/IExchange.h"
 
-// TODO: add cipher interface here
 namespace Eternal
 {
     using asio::ip::tcp;
     
     class Connection: public std::enable_shared_from_this<Connection>
         {
+        public:
+            enum class State
+            {
+                KEY_EXCHANGE,
+                NORMAL
+            };
             class Server;
+
         public:
             using fn_on_receive_callback = std::function<void(std::shared_ptr<Connection>, size_t bytes_received)>;
 
@@ -24,6 +31,8 @@ namespace Eternal
             void reset();
             void send(std::shared_ptr<uint8_t[]> data, size_t len);
             void set_cipher(std::unique_ptr<Encryption::ICipher>&& cipher) { _cipher = std::move(cipher); }
+            void set_state(State state) { _state = state; }
+            void set_exchange(std::unique_ptr<Encryption::IExchange>&& dh) { _exchange = std::move(dh); }
 
         public:
 
@@ -31,6 +40,9 @@ namespace Eternal
             uint16_t  get_port() const { return _client_socket.remote_endpoint().port(); }
             std::shared_ptr<uint8_t[]> get_buffer() const { return _buffer; }
             std::unique_ptr<Encryption::ICipher>& get_cipher() { return _cipher; }
+            State get_state() const { return _state; }
+            std::unique_ptr<Encryption::IExchange>& get_exchange()  { return _exchange; }
+
 
         private:
             void on_receive(const asio::error_code& error, size_t bytes_read);
@@ -42,6 +54,8 @@ namespace Eternal
             std::shared_ptr<uint8_t[]> _buffer;
             // TODO: In dire need of an interface OR decrypt encrypt functions?
             std::unique_ptr<Encryption::ICipher> _cipher;
+            std::unique_ptr<Encryption::IExchange> _exchange;
+            State _state;
 
         };
 }
