@@ -76,11 +76,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Encryption\Blowfish.cpp" />
     <ClCompile Include="Encryption\DiffieHellman.cpp" />
     <ClCompile Include="GameMain.cpp" />
     <ClCompile Include="Msg\MsgLoginProofA.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Encryption\Blowfish.h" />
     <ClInclude Include="Encryption\DiffieHellman.h" />
     <ClInclude Include="Msg\MsgLoginProofA.h" />
   </ItemGroup>

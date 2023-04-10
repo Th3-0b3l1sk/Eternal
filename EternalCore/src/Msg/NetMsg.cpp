@@ -14,10 +14,10 @@ namespace Eternal
             : _buffer(std::move(buffer)), _size(size)
         {}
 
-        NetMsg::NetMsg()
+        NetMsg::NetMsg(size_t len)
         {
-            _buffer.reset(new uint8_t[UINT16_C(1024)]{});
-            _size = UINT16_C(1024);
+            _buffer.reset(new uint8_t[len]{});
+            _size = len;
         }
 
         std::string NetMsg::stringfy()
@@ -29,6 +29,8 @@ namespace Eternal
             std::ostringstream buf;
             std::ostringstream ascii;
 
+            std::string head(16 * 2 + 15, '=');
+            buf << head << '\n';
             buf << '[' << msg_type_to_string(((Header*)_buffer.get())->type) << "][" << _size << "]\n";
             for (size_t i{}; i < _size; i++) {
                 if (i != 0 && i % 15 == 0) {
@@ -50,6 +52,7 @@ namespace Eternal
                 buf << std::string(len_spaces, ' ') << "    " << ascii.str() << '\n';
             }
 
+            buf << head << '\n';
             return buf.str();
 
         }

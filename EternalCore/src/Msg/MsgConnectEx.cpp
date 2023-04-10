@@ -14,7 +14,7 @@ namespace Eternal
         }
 
         MsgConnectEx::MsgConnectEx()
-            : NetMsg()
+            : NetMsg(sizeof(Info))
         {
             _info = (Info*)this->_buffer.get();
             this->_size = sizeof(Info);

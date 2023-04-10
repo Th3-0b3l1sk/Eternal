@@ -24,12 +24,18 @@
     <ClCompile Include="Msg\MsgLoginProofA.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Encryption\Blowfish.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Encryption\DiffieHellman.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Msg\MsgLoginProofA.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Encryption\Blowfish.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
