@@ -9,6 +9,7 @@ namespace Eternal
             :_en_counter(0), _de_counter(0),
             _key1(UINT32_C(0x9dfa0f13)), _key2(UINT32_C(0x62a4796d))
         {
+            _cipher = Cipher::TQ;
             memset(_iv, 0, TqCipher::IV_SIZE);
         }
 

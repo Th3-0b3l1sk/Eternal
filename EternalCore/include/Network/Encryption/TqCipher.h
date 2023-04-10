@@ -1,11 +1,12 @@
 #pragma once
 #include <cstdint>
+#include "./ICipher.h"
 
 namespace Eternal
 {
     namespace Encryption
     {
-        class TqCipher
+        class TqCipher: public ICipher
         {
 
 		public:
@@ -13,12 +14,12 @@ namespace Eternal
 
 		public:
 			TqCipher();
-			~TqCipher() = default;;
+			virtual ~TqCipher() = default;;
 
 		public:		
 			void generate_iv();
-			void encrypt(uint8_t* data, size_t len) ;
-			void decrypt(uint8_t* data, size_t len) ;
+			virtual void encrypt(uint8_t* data, size_t len) ;
+			virtual void decrypt(uint8_t* data, size_t len) ;
 
 		public:
 			uint32_t get_key1() const { return _key1; }

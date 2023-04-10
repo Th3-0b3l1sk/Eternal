@@ -2,17 +2,18 @@
 #include <cstdint>
 #include <vector>
 #include <memory>
+#include "./ICipher.h"
 
 
 namespace Eternal
 {
     namespace Encryption
     {
-        class Rc5
+        class Rc5: public ICipher
         {
         public:
             Rc5();
-            ~Rc5() = default;
+            virtual ~Rc5() = default;
 
         private:
             void init_key_expansion();
@@ -20,8 +21,8 @@ namespace Eternal
             uint32_t rotr_32(uint32_t word, uint8_t n);
 
         public:
-            void decrypt(uint8_t* data, uint32_t len);
-            void encrypt(uint8_t* data, uint32_t len);
+            virtual void decrypt(uint8_t* data, size_t len) override;
+            virtual void encrypt(uint8_t* data, size_t len) override;
 
         private:
             uint32_t _p;

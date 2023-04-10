@@ -9,10 +9,11 @@ namespace Eternal
     namespace Encryption
     {
         Rc5::Rc5()
-            :   _p(UINT32_C(0xb7e15163)), 
-                _q(UINT32_C(0x9e3779b9)),
-            _magics{ UINT32_C(0xE8FEDC3C), UINT32_C(0x7ED654C4),UINT32_C(0x1AF8A616),UINT32_C(0xBE38D0E8) }
+            : _p(UINT32_C(0xb7e15163)),
+              _q(UINT32_C(0x9e3779b9)),
+              _magics{ UINT32_C(0xE8FEDC3C), UINT32_C(0x7ED654C4),UINT32_C(0x1AF8A616),UINT32_C(0xBE38D0E8) }
         {
+            _cipher = Cipher::RC5;
             _key = std::make_unique<uint32_t[]>(UINT8_C(KEY_SIZE / 4));
             init_key_expansion();
         }
