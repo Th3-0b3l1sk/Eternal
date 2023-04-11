@@ -46,5 +46,6 @@
     <ClInclude Include="include\Network\Encryption\TqCipher.h" />
     <ClInclude Include="include\Network\Server.h" />
     <ClInclude Include="include\Network\Encryption\ICipher.h" />
+    <ClInclude Include="include\Network\Encryption\IExchange.h" />
   </ItemGroup>
 </Project>

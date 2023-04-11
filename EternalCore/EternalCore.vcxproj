@@ -98,6 +98,7 @@
     <ClCompile Include="src\Network\Server.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Network\Encryption\IExchange.h" />
     <ClInclude Include="include\Network\Encryption\ICipher.h" />
     <ClInclude Include="include\Msg\MsgAccount.h" />
     <ClInclude Include="include\Msg\MsgConnect.h" />
