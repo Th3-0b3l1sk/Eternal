@@ -50,7 +50,7 @@ std::string DiffieHellman::derive_shared_secret(std::string_view hex_peer_public
         return {};
     }
 
-    std::string shared_secret((const char*)key);
+    std::string shared_secret((char*)key, DH_size(_dh.get()));
     delete[] key;
 
     return shared_secret;
