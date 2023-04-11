@@ -24,8 +24,10 @@ namespace Eternal
         {
             assert(_buffer != nullptr);
             // format 
+            // ==============
             // [type][len]
             // hex dump .... ascii dump 16 per line 
+            // ==============
             std::ostringstream buf;
             std::ostringstream ascii;
             std::string head(16 * 2 + 15, '=');

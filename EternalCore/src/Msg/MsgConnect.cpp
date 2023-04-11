@@ -14,6 +14,17 @@ namespace Eternal
         void MsgConnect::process(Server& server)
         {
             std::cout << stringfy() << '\n';
+            switch (server._which)
+            {
+            case Eternal::Server::Which::ACCOUNT:
+                server._disconnect_last = true;
+                break;
+            case Eternal::Server::Which::GAME:
+                // process game logic here ... 
+                std::cout << "Connecting to the game ... \n";
+                break;
+            }
+            
             // TODO: disconnect this user from the account server          
         }
     }

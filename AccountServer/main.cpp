@@ -24,16 +24,19 @@ int main()
 			connection->get_cipher()->decrypt(data, bytes_received);
 			auto msg = Eternal::Msg::NetMsg::create(connection->get_buffer(), bytes_received);	
 			msg->process(AccountServer);
+			if (AccountServer._disconnect_last) {
+				AccountServer._disconnect_last = false;	
+				connection->reset();
+				AccountServer.disconnect(connection->unique_id);
+				std::cout << "Disconnecting client [" << connection->unique_id << "].\n";
+			}
 		};
 
 		AccountServer.take_over();
-		//AccountServer.set_threads(3).run();
-
 		while (!(GetAsyncKeyState(VK_NUMPAD0) & 1))
 		{
 			Sleep(100);
 		}
-
 		AccountServer.shutdown();
 		std::cout << "Server stopped\n";
 	}
