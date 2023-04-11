@@ -11,9 +11,12 @@ namespace Eternal
     
     class Connection: public std::enable_shared_from_this<Connection>
         {
+        static uint32_t id;
+
         public:
             enum class State
             {
+                CLOSED,
                 KEY_EXCHANGE,
                 NORMAL
             };
@@ -47,6 +50,9 @@ namespace Eternal
         private:
             void on_receive(const asio::error_code& error, size_t bytes_read);
 
+        public:
+            uint32_t unique_id;
+
         private:
             tcp::socket _client_socket;
             fn_on_receive_callback _on_receive_callback;
@@ -56,6 +62,5 @@ namespace Eternal
             std::unique_ptr<Encryption::ICipher> _cipher;
             std::unique_ptr<Encryption::IExchange> _exchange;
             State _state;
-
         };
 }

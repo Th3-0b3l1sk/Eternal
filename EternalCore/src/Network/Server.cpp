@@ -30,9 +30,9 @@ namespace Eternal
 
 		_outgoing.clear();
 
-		_connections.push_back(std::move(client));
-		_connections.back()->begin_read();    // TODO: replace the vector with map<id, connection>
-
+		auto unique_id = client->unique_id;
+		_connections.insert({unique_id, std::move(client)});
+		_connections[unique_id]->begin_read();
 		_acceptor.async_accept(std::bind(&Server::on_accept, this, std::placeholders::_1, std::placeholders::_2));
 	}
 
@@ -45,11 +45,10 @@ namespace Eternal
 			
 			for (auto& msg : _outgoing)
 				this->send(connection, msg);
-
 			_outgoing.clear();
 
-			//std::cout << "Resetting the connection ... \n";
-			//connection->reset();
+			if(connection->get_state() != Connection::State::CLOSED)
+				connection->begin_read();
 		}
 	}
 
@@ -70,7 +69,12 @@ namespace Eternal
 	{
 		_io_context->stop();
 		for (auto& connection : _connections)
-			connection->reset();
+			connection.second->reset();
+	}
+
+	void Server::disconnect(uint32_t id)
+	{
+		_connections.erase(id);
 	}
 
 	void Server::send(std::shared_ptr<Connection> connection, std::shared_ptr<Eternal::Msg::NetMsg> msg)
