@@ -22,8 +22,6 @@ namespace Eternal
         public:
             MsgConnect(std::shared_ptr<uint8_t[]>&& data, size_t len);
             virtual void process(Server&) override;
-
-
         };
     }
 }
