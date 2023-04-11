@@ -80,7 +80,7 @@ namespace Eternal
 	void Server::send(std::shared_ptr<Connection> connection, std::shared_ptr<Eternal::Msg::NetMsg> msg)
 	{
 		static constexpr char SEAL[] = "TQServer";
-		static constexpr uint8_t SEAL_LEN = UINT8_C(9);
+		static constexpr uint8_t SEAL_LEN = UINT8_C(8);
 
 		std::shared_ptr<uint8_t[]> data(new uint8_t[msg->get_size() + SEAL_LEN]{});
 		memcpy_s(data.get(), msg->get_size(), msg->get_data().get(), msg->get_size());
