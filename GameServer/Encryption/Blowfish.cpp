@@ -10,12 +10,10 @@ Blowfish::Blowfish(std::string_view key)
     _en_iv(nullptr), _de_iv(nullptr)
 {
     _cipher = Cipher::BF;
-    //static const uint8_t SEED[] = "DR654dt34trg4UI6";
-    const std::string SEED(key);
     _en_iv = std::make_unique<uint8_t[]>(BF_BLOCK);
     _de_iv = std::make_unique<uint8_t[]>(BF_BLOCK);
     _bf_key = std::make_unique<BF_KEY>();
-    BF_set_key(_bf_key.get(), key.size(), (const uint8_t*)SEED.c_str());
+    BF_set_key(_bf_key.get(), key.size(), (const uint8_t*)key.data());
 }
 
 void Blowfish::encrypt(uint8_t* ct, size_t len)
@@ -24,8 +22,7 @@ void Blowfish::encrypt(uint8_t* ct, size_t len)
 }
 
 void Blowfish::decrypt(uint8_t* pt, size_t len)
-{
-    
+{  
     bf_do(pt, len, Do::Decrypt);
 }
 
@@ -43,9 +40,6 @@ void Blowfish::bf_do(uint8_t* in_out, size_t len, Do what)
     default:
         assert(0 && "Invalid code path.");
     }
-
-
-//    _num = 0;
 }
 
 
