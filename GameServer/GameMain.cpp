@@ -15,6 +15,7 @@ int main()
 {
 	try {
 		Eternal::Server GameServer("127.0.0.1", 5816);
+		GameServer._which = Eternal::Server::Which::GAME;
 
 		GameServer._on_accept = [&](std::shared_ptr<Eternal::Connection> connection) {
 

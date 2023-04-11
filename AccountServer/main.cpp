@@ -10,6 +10,8 @@ int main()
 {
 	try {
 		Eternal::Server AccountServer("127.0.0.1", 55099);
+		AccountServer._which = Eternal::Server::Which::ACCOUNT;
+
 		AccountServer._on_accept = [&](std::shared_ptr<Eternal::Connection> connection) {
 			auto tq_cipher = std::make_unique<Eternal::Encryption::TqCipher>();
 			tq_cipher->generate_iv();

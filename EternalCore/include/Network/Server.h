@@ -13,6 +13,12 @@ namespace Eternal
 
 	class Server
 		{
+		public:
+		enum class Which
+		{
+			ACCOUNT,
+			GAME
+		};
 
 		private:
 			void init(std::string_view ip, uint16_t port);
@@ -45,6 +51,7 @@ namespace Eternal
 		public:
 			std::function<void(std::shared_ptr<Connection>, size_t)> _on_receive;
 			std::function<void(std::shared_ptr<Connection>)> _on_accept;
+			Which _which;
 
 		private:
 			std::shared_ptr<asio::io_context> _io_context;
