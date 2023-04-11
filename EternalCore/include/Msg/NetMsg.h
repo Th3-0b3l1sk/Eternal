@@ -12,6 +12,7 @@ namespace Eternal
             MSG_ACCOUNT = 1051,
             MSG_CONNECT_EX = 1055,
             MSG_CONNECT = 1052,
+            MSG_TALK = 1004,
 
         };
 
@@ -48,6 +49,8 @@ namespace Eternal
                     return "MSG_CONNECT_EX";
                 case MsgType::MSG_CONNECT:
                     return "MSG_CONNECT";
+                case MsgType::MSG_TALK:
+                    return "MSG_TALK";
                 default:
                     return "UNKNOWN_TYPE";
                 }
