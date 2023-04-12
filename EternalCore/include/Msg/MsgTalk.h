@@ -19,7 +19,15 @@ namespace Eternal
                 int32_t identity;
                 uint32_t sender_mesh;
                 uint32_t recipient_mesh;
-                uint8_t buf[1];
+                uint8_t str_count;
+                uint8_t sender_len;
+                char sender_name[1];
+                uint8_t recipient_len;
+                char recipient_name[1];
+                uint8_t suffix_len;
+                char suffix[1];
+                uint8_t message_len;
+                char message[1];
             };
 #pragma pack(pop)
         public:

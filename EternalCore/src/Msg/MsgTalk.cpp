@@ -14,13 +14,13 @@ namespace Eternal
 
         MsgTalk::MsgTalk(std::string sender_name, std::string recipient_name, std::string suffix, std::string message, uint32_t tone, uint32_t color)
             : NetMsg(sizeof(Info) +
-                sender_name.length() + 1 + recipient_name.length() + 1 +
-                suffix.length() + 1 + message.length() + 1)   // 1s for the size byte
+                sender_name.length() + recipient_name.length() +
+                suffix.length()  + message.length() - UINT8_C(4 * 1))   //  4 * char[] placeholders
         {
             helper(tone, color);
 
             auto ptr = (Info*)_buffer.get();
-            StringPacker packer(ptr->buf);
+            StringPacker packer(&ptr->str_count);
             packer.AddString(sender_name);
             packer.AddString(recipient_name);
             packer.AddString(suffix);
