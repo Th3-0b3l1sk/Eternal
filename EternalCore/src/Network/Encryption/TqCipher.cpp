@@ -37,10 +37,10 @@ namespace Eternal
             uint8_t a = 0;
             for (size_t i = 0; i < _len; ++i)
             {
-                _pBuf[i] ^= UINT8_C(0xAB);
-                _pBuf[i] = (_pBuf[i] << 0x4) + (_pBuf[i] >> 0x4);   
                 _pBuf[i] ^= _iv[_en_counter++];
                 _pBuf[i] ^= _iv[a + 0x100];
+                _pBuf[i] = (_pBuf[i] << 0x4) + (_pBuf[i] >> 0x4);   
+                _pBuf[i] ^= UINT8_C(0xAB);
 
                 if (_en_counter > 0xff) {
                     _en_counter = 0;
@@ -67,7 +67,7 @@ namespace Eternal
                     b++;
                     if (b > 0xff)
                          b = 0;
-                }
+                } 
             }
         }
     }
