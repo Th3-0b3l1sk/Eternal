@@ -35,6 +35,15 @@
     <ClCompile Include="src\Network\Server.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Util\StringPacker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Msg\MsgTalk.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Database.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Msg\MsgAccount.h" />
@@ -47,5 +56,8 @@
     <ClInclude Include="include\Network\Server.h" />
     <ClInclude Include="include\Network\Encryption\ICipher.h" />
     <ClInclude Include="include\Network\Encryption\IExchange.h" />
+    <ClInclude Include="include\Util\StringPacker.h" />
+    <ClInclude Include="include\Msg\MsgTalk.h" />
+    <ClInclude Include="include\Database.h" />
   </ItemGroup>
 </Project>

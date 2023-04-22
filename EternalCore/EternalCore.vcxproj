@@ -88,16 +88,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Database.cpp" />
     <ClCompile Include="src\Msg\MsgAccount.cpp" />
     <ClCompile Include="src\Msg\MsgConnect.cpp" />
     <ClCompile Include="src\Msg\MsgConnectEx.cpp" />
+    <ClCompile Include="src\Msg\MsgTalk.cpp" />
     <ClCompile Include="src\Msg\NetMsg.cpp" />
     <ClCompile Include="src\Network\Connection.cpp" />
     <ClCompile Include="src\Network\Encryption\Rc5.cpp" />
     <ClCompile Include="src\Network\Encryption\TqCipher.cpp" />
     <ClCompile Include="src\Network\Server.cpp" />
+    <ClCompile Include="src\Util\StringPacker.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Database.h" />
+    <ClInclude Include="include\Msg\MsgTalk.h" />
     <ClInclude Include="include\Network\Encryption\IExchange.h" />
     <ClInclude Include="include\Network\Encryption\ICipher.h" />
     <ClInclude Include="include\Msg\MsgAccount.h" />
@@ -108,6 +113,7 @@
     <ClInclude Include="include\Network\Encryption\Rc5.h" />
     <ClInclude Include="include\Network\Encryption\TqCipher.h" />
     <ClInclude Include="include\Network\Server.h" />
+    <ClInclude Include="include\Util\StringPacker.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
