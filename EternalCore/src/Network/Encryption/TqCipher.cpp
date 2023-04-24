@@ -32,16 +32,50 @@ namespace Eternal
         }
 
         //004BBC59 encrypt
-        void TqCipher::encrypt(std::uint8_t* _pBuf, size_t _len)
+        /* Note:
+        *   The method in the client that handles the encryption of the the packets using this cipher
+        * seems to be the same method that's also used in the decryption. The order of the operations
+        * is something like this:
+        *   packet[i] ^= Y;
+        *   rotl8(packet[i]);
+        *   packet[i] ^= 0xAB;
+        * Which can be decrypted successfuly using the below TqCipher::decrypt method. However, when 
+        * attempting to encrypt using the below TqCipher::encrypt, the game client fails to successfuly
+        * decrypt the packet since the order of operations is different. 
+        * In short, the function directly below this comment is the identical function used in the client
+        * for the encryption, however, it won't be used in the server for the previously mentioned reason.
+        * The server function WILL BREAK the TqCipher EncryptDecrypt test.
+        */
+        /*void TqCipher::encrypt(std::uint8_t* _pBuf, size_t _len)
         {
             uint8_t a = 0;
             for (size_t i = 0; i < _len; ++i)
             {
                 _pBuf[i] ^= _iv[_en_counter++];
                 _pBuf[i] ^= _iv[a + 0x100];
-                _pBuf[i] = (_pBuf[i] << 0x4) + (_pBuf[i] >> 0x4);   
+                _pBuf[i] = (_pBuf[i] << 0x4) + (_pBuf[i] >> 0x4);
                 _pBuf[i] ^= UINT8_C(0xAB);
+                
+                if (_en_counter > 0xff) {
+                    _en_counter = 0;
+                    a++;
+                } if (a > 0xff) {
+                    a = 0;
+                    
+                }
+            }
+        }*/
 
+        void TqCipher::encrypt(std::uint8_t* _pBuf, size_t _len)
+        {
+            uint8_t a = 0;
+            for (size_t i = 0; i < _len; ++i)
+            {   
+                _pBuf[i] ^= UINT8_C(0xAB);
+                _pBuf[i] = (_pBuf[i] << 0x4) + (_pBuf[i] >> 0x4);
+                _pBuf[i] ^= _iv[_en_counter++];
+                _pBuf[i] ^= _iv[a + 0x100];
+                
                 if (_en_counter > 0xff) {
                     _en_counter = 0;
                     a++;
