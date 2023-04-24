@@ -2,6 +2,7 @@
 #include "Network/Server.h"
 #include "Network/Connection.h"
 #include "Network/Encryption/TqCipher.h"
+#include "Database/Database.h"
 #include <string>
 #include <thread>
 #include <Windows.h>
@@ -9,7 +10,8 @@
 int main()
 {
 	try {
-		Eternal::Server AccountServer("127.0.0.1", 55099);
+		auto account_db = std::make_unique<Eternal::Database>("eternal_account", "e_account_db", "e_account_pd");
+		Eternal::Server AccountServer("127.0.0.1", 55099, std::move(account_db));
 		AccountServer._which = Eternal::Server::Which::ACCOUNT;
 
 		AccountServer._on_accept = [&](std::shared_ptr<Eternal::Connection> connection) {

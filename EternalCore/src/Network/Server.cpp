@@ -119,8 +119,9 @@ namespace Eternal
 	/************************************************************
 	* Constructors
 	************************************************************/
-	Server::Server(std::string_view ip, uint16_t port)
-		: _io_context{ std::make_shared<asio::io_context>() }, _acceptor{*_io_context}
+	Server::Server(std::string_view ip, uint16_t port, std::unique_ptr<Database>&& database)
+		: _database(std::move(database)),
+		_io_context{ std::make_shared<asio::io_context>() }, _acceptor{*_io_context}
 	{
 		init(ip, port);
 	}
