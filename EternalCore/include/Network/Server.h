@@ -3,6 +3,7 @@
 #include <memory>
 #include "./Connection.h"
 #include "../Msg/NetMsg.h"
+#include "../Database/Database.h"
 #include <asio.hpp>
 #include <unordered_map>
 #include <deque>
@@ -27,7 +28,7 @@ namespace Eternal
 			
 		public:
 			Server(std::string_view config_file);
-			Server(std::string_view ip, uint16_t port);
+			Server(std::string_view ip, uint16_t port, std::unique_ptr<Database::Database>&& database);
 			Server(const Server&) = delete;
 			Server& operator=(const Server&) = delete;
 			Server(Server&&) = default;
@@ -63,6 +64,7 @@ namespace Eternal
 			std::unordered_map<uint32_t, std::shared_ptr<Connection>> _connections;
 			std::deque<std::shared_ptr<Eternal::Msg::NetMsg>> _outgoing;
 			std::vector<std::thread> _thread_pool;
+			std::unique_ptr<Database::Database> _database;
 		};
 
 }

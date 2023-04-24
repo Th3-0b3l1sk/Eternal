@@ -13,6 +13,7 @@ private:
     using deleter = std::integral_constant<decltype(Deleter), Deleter>;
 
 public:
+    // TODO: might want to create the parameters in the runtime
     DiffieHellman(std::string_view p, std::string_view q);
     virtual ~DiffieHellman() = default;
     

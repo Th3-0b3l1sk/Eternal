@@ -3,14 +3,21 @@
 #include <cstdint>
 #include <string>
 
-class StringPacker
+namespace Eternal
 {
-public:
-    StringPacker(uint8_t* buffer);
-public:
-    void AddString(std::string str);
+    namespace Util
+    {
+        class StringPacker
+        {
+        public:
+            StringPacker(uint8_t* buffer);
+        public:
+            void AddString(std::string str);
 
-private:
-    uint8_t* _buffer;   //   thats where the count will be 
-};
+        private:
+            uint8_t* _buffer;   //   thats where the count will be 
+        };
 
+
+    }
+}

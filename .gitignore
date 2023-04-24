@@ -22,7 +22,8 @@ AccountServer/Debug
 AccountServer/Release
 GameServer/Debug
 GameServer/Release
-
+AccountServer/db
+GameServer/db
 
 
 # Build results
