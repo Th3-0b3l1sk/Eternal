@@ -10,7 +10,9 @@
 int main()
 {
 	try {
-		auto account_db = std::make_unique<Eternal::Database>("eternal_account", "e_account_db", "e_account_pd");
+		auto account_db = std::make_unique<Eternal::Database::Database>("eternal_account", "e_account_db", "e_account_pd");
+		account_db->load_statements("./account_stmts.txt");
+
 		Eternal::Server AccountServer("127.0.0.1", 55099, std::move(account_db));
 		AccountServer._which = Eternal::Server::Which::ACCOUNT;
 
