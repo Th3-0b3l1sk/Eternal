@@ -4,6 +4,7 @@
 #include "Network/Encryption/TqCipher.h"
 #include "GameServer/Encryption/DiffieHellman.h"
 #include "GameServer/Encryption/Blowfish.h"
+#include "Util/LineReader.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -25,6 +26,40 @@ namespace Utilities
 			int total_number = *(uint8_t*)data;
 			Assert::AreEqual(3, total_number, L"The total number of strings didn't match the expected number");
 			delete[] data;
+		}
+	};
+
+	TEST_CLASS(LineReader)
+	{
+	public:
+		TEST_METHOD(OpeningFiles)
+		{
+			// non-existent file
+			Assert::ExpectException<std::exception>([]() {
+				auto reader = Eternal::Util::LineReader("../EternalTest/_non_existent_test_file.txt");
+				reader.get_lines();
+				});
+
+			auto reader = Eternal::Util::LineReader("../EternalTest/compliant_format.txt");
+		}
+		TEST_METHOD(CompliantFile)
+		{
+			auto reader = Eternal::Util::LineReader("../EternalTest/compliant_format.txt");
+			auto data = reader.get_lines();
+			auto test_data = std::vector<std::pair<std::string, std::string>>{ { "key1", "value1" }, { "key2 ",  " value2" }, { "key3", "" } };
+
+			Assert::AreEqual(data.size(), test_data.size());
+			int i{};
+			for (const auto& pair : data) {
+				Assert::AreEqual(pair.first, test_data[i].first);
+				Assert::AreEqual(pair.second, test_data[i].second);
+				i++;
+			}
+		}
+		TEST_METHOD(NonCompliantFile)
+		{
+			auto reader = Eternal::Util::LineReader("../EternalTest/non_compliant_format.txt");
+			Assert::ExpectException<std::exception>([&]() {reader.get_lines(); });
 		}
 	};
 
@@ -103,8 +138,6 @@ namespace Encryption
 			for (size_t i = 0; i < len; ++i) {
 				Assert::AreEqual(data[i], original[i]);
 			}
-
-
 		}
 	};
 }

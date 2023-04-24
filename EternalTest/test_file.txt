@@ -1,0 +1,4 @@
+string_key=string_value
+string_key=string_value2
+key =    value
+no_value=

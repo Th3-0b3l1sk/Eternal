@@ -102,6 +102,10 @@
       <Project>{9eebf78d-3ab4-4783-87a1-bece297ea280}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="compliant_format.txt" />
+    <Text Include="test_file.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
