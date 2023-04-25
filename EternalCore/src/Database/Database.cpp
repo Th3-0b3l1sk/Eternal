@@ -1,27 +1,7 @@
-#define _CRT_SECURE_NO_WARNINGS
 #include "Database/Database.h"
 #include "Util/LineReader.h"
 #include <string>
 #include <iostream>
-
-/*******************************************/
-/* Macro to call ODBC functions and        */
-/* report an error on failure.             */
-/* Takes handle, handle type, and stmt     */
-/*******************************************/
-#define TRYODBC(handle, handle_type, fun)                           \
-    {                                                               \
-        RETCODE rc = fun;                                           \
-        if(rc != SQL_SUCCESS) {                                     \
-            auto error_msg = get_error(handle, handle_type, rc);    \
-            std::cout << "[database_error] " << error_msg << '\n';  \
-        }                                                           \
-        if(rc == SQL_ERROR) {                                       \
-            std::cout << "Error in " # fun << '\n'; goto bailout; } \
-    }                                                               \
-        
-
-#define DO_IF(cond, what, ...) if(cond) what(__VA_ARGS__);
 
 namespace Eternal
 {
@@ -55,9 +35,9 @@ namespace Eternal
 
             TRYODBC(_hCon, SQL_HANDLE_DBC,
                 SQLConnectA(_hCon,
-                    (SQLCHAR*)dsn_name.data(), dsn_name.size(),
-                    (SQLCHAR*)username.data(), username.size(),
-                    (SQLCHAR*)password.data(), password.size()));
+                    (SQLCHAR*)dsn_name.data(), (SQLSMALLINT)dsn_name.size(),
+                    (SQLCHAR*)username.data(), (SQLSMALLINT)username.size(),
+                    (SQLCHAR*)password.data(), (SQLSMALLINT)password.size()));
 
             std::cout << "[successfully connected to the database!]\n";
             return;
@@ -74,40 +54,35 @@ namespace Eternal
             _statements = reader.get_lines();          
         }
 
-        /* Yanked straight out from: https://learn.microsoft.com/en-us/sql/connect/odbc/cpp-code-example-app-connect-access-sql-db?view=sql-server-ver16 */
-        std::string Database::get_error(SQLHANDLE hHandle, SQLSMALLINT hType, RETCODE return_code)
+        std::vector<std::unique_ptr<uint8_t[]>> Database::execute(std::unique_ptr<IStatement>&& statement)
         {
-            SQLSMALLINT iRec = 0;
-            SQLINTEGER  iError;
-            std::string error_message;
-            std::string error_state;
-            std::string error;
+            auto stmt_id  = statement->get_id();
+            auto& stmt_h = statement->get_handle();
+            auto& stmt_txt = _statements.at(id_to_stmt(stmt_id).data());
+                        
+            TRYODBC(stmt_h, SQL_HANDLE_STMT,
+                SQLAllocHandle(SQL_HANDLE_STMT, _hCon, &stmt_h));
+            TRYODBC(stmt_h, SQL_HANDLE_STMT,
+                SQLPrepare(stmt_h, (SQLCHAR*)stmt_txt.c_str(), stmt_txt.size()));
+            TRYODBC(stmt_h, SQL_HANDLE_STMT,
+                statement->bind());
+            TRYODBC(stmt_h, SQL_HANDLE_STMT,
+                SQLExecDirectA(stmt_h, (SQLCHAR*)stmt_txt.c_str(), stmt_txt.size()));
+             
+            return std::move(statement->fetch());
 
-            error_message.resize(1000);
-            error_state.resize(SQL_SQLSTATE_SIZE + 1);
-            error.resize(error_message.capacity() + error_state.capacity());
-            auto szMessage = &error_message[0];
-            auto szState = &error_state[0];
-            auto e = &error[0];
+        bailout:
+            return {};
+        }
 
-            if (return_code == SQL_INVALID_HANDLE)
-                return { "Invalid Handle!" };
-
-            while (SQLGetDiagRec(hType,
-                hHandle,
-                ++iRec,
-                (SQLCHAR*)szState,
-                &iError,
-                (SQLCHAR*)szMessage,
-                error_message.size(),
-                (SQLSMALLINT*)NULL) == SQL_SUCCESS)
+        std::string_view Database::id_to_stmt(StatementID id) const
+        {
+            switch (id)
             {
-                // Hide data truncated..
-                if (strncmp(szState, "01004", 5))
-                {
-                    sprintf(e, "[%5.5s] %s (%d)\n", szState, szMessage, iError);
-                    return std::move(error);
-                }
+            case Eternal::Database::StatementID::AUTHENTICATE:
+                return "authenticate";
+            default:
+                throw std::exception{ "Invalid statement id" };
             }
         }
     }
