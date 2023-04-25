@@ -1,9 +1,9 @@
 #pragma once
-#include <Windows.h>
-#include <sqlext.h>
-#include <sql.h>
+#include "db_helper.h"
+#include "./Statements/IStatement.h"
 #include <string_view>
 #include <unordered_map>
+
 namespace Eternal
 {
     namespace Database
@@ -17,12 +17,11 @@ namespace Eternal
 
         public:
             void connect(std::string_view n, std::string_view w);
-            void register_statement(std::string_view key, std::string_view statement);
             void load_statements(std::string_view file);
-
+            std::vector<std::unique_ptr<uint8_t[]>> execute(std::unique_ptr<IStatement>&& statement);
 
         private:
-            std::string get_error(SQLHANDLE hHandle, SQLSMALLINT hType, RETCODE return_code);
+            std::string_view id_to_stmt(StatementID id) const;
 
 
         private:
