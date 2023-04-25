@@ -34,8 +34,6 @@ namespace Eternal
             }
                 
             }
-            
-            // TODO: disconnect this user from the account server          
         }
     }
 }

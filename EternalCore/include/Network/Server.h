@@ -1,12 +1,13 @@
 #pragma once
 #include <string_view>
 #include <memory>
-#include "./Connection.h"
-#include "../Msg/NetMsg.h"
-#include "../Database/Database.h"
 #include <asio.hpp>
 #include <unordered_map>
 #include <deque>
+#include <vector>
+#include "Msg/NetMsg.h"
+#include "Database/Database.h"
+#include "./Connection.h"
 
 namespace Eternal
 {
@@ -40,6 +41,7 @@ namespace Eternal
 			Server& set_threads(uint32_t thread_count);
 			void shutdown();
 			void disconnect(uint32_t id);
+			std::vector<std::unique_ptr<uint8_t[]>> execute_statement(std::unique_ptr<Database::IStatement>&& statement);
 
 		private:
 			void send(std::shared_ptr<Connection> connection, std::shared_ptr<Eternal::Msg::NetMsg> msg);

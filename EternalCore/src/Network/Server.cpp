@@ -77,6 +77,12 @@ namespace Eternal
 		_connections.erase(id);
 	}
 
+	std::vector<std::unique_ptr<uint8_t[]>>
+		Server::execute_statement(std::unique_ptr<Database::IStatement>&& statement)
+	{
+		return std::move(_database->execute(std::move(statement)));	
+	}
+
 	void Server::send(std::shared_ptr<Connection> connection, std::shared_ptr<Eternal::Msg::NetMsg> msg)
 	{
 		static constexpr char SEAL[] = "TQServer";

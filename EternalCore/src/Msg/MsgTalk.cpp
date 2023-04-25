@@ -30,7 +30,7 @@ namespace Eternal
         void MsgTalk::helper(uint32_t tone, uint32_t color)
         {
             auto info = (Info*)_buffer.get();
-            info->header.length = _size;
+            info->header.length = (uint16_t)_size;
             info->header.type = MsgType::MSG_TALK;
             info->argb = color;
             info->tone = tone;

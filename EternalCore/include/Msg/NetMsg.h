@@ -9,10 +9,10 @@ namespace Eternal
     {
         enum class MsgType: uint16_t
         {
-            MSG_ACCOUNT = 1051,
-            MSG_CONNECT_EX = 1055,
-            MSG_CONNECT = 1052,
-            MSG_TALK = 1004,
+            MSG_ACCOUNT     = 1051,
+            MSG_CONNECT_EX  = 1055,
+            MSG_CONNECT     = 1052,
+            MSG_TALK        = 1004,
 
         };
 
