@@ -24,7 +24,7 @@ namespace Eternal
             uint32_t get_password_len() const { return 0x10; }
 
         public:
-            virtual void process(Server& server) override;
+            virtual void process(Server& server, uint32_t con_id) override;
 
         private:
             Info* _info;

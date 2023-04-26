@@ -11,6 +11,7 @@ namespace Eternal
             enum class RejectionCode: uint32_t
             {
                 INVALID_ID_PWD = 1,
+                TRY_AGN_LATER  = 11
             };
         private:
 #pragma pack(push, 1)
@@ -22,6 +23,14 @@ namespace Eternal
                 char game_server_ip[16];
                 int32_t game_server_port;
 
+            };
+
+            struct RInfo
+            {
+                Msg::Header header;
+                uint32_t rejection;
+                RejectionCode rejection_code;
+                uint32_t random_bullshit;       //  for some reason, it's required for the client not to crash <= 0 >= 0x400
             };
 #pragma pack(pop)
         public:

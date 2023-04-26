@@ -1,6 +1,5 @@
 #pragma once
 #include "Msg/NetMsg.h"
-#include "Network/Server.h"
 
 namespace Eternal
 {
@@ -39,7 +38,7 @@ namespace Eternal
             void helper(uint32_t tone, uint32_t color);
 
         public:
-            virtual void process(Eternal::Server& server) override;
+            virtual void process(Server& server, uint32_t con_id ) override;
 
         private:
 

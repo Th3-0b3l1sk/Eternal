@@ -12,13 +12,13 @@ namespace Eternal
         {
         }
 
-        void MsgConnect::process(Server& server)
+        void MsgConnect::process(Server& server, uint32_t con_id)
         {
             std::cout << stringfy() << '\n';
             switch (server._which)
             {
             case Eternal::Server::Which::ACCOUNT:
-                server._disconnect_last = true;
+                server.disconnect(con_id);
                 break;
             case Eternal::Server::Which::GAME:
                 // process game logic here ... 
@@ -29,7 +29,7 @@ namespace Eternal
                 std::string message{ "NEW_ROLE" };
                 std::string suffix{ "" };
                 auto msg_talk = std::make_shared<MsgTalk>(sender_name, recipient_name, suffix, message, 2101, 0x00FFFFFF);
-                server.queue_msg(msg_talk);
+                server.send(con_id, msg_talk);
                 break;
             }
                 

@@ -1,7 +1,5 @@
-#include "./Msg/MsgConnectEx.h"
 #include <assert.h>
-
-
+#include "./Msg/MsgConnectEx.h"
 
 
 namespace Eternal
@@ -19,16 +17,15 @@ namespace Eternal
 
         // TODO: fix and make more generic
         MsgConnectEx::MsgConnectEx(RejectionCode code)
-            : NetMsg(sizeof(Info))
+            : NetMsg(sizeof(RInfo))
         {
-            _info = (Info*)this->_buffer.get();
-            this->_size = sizeof(Info);
-            _info->header.type = MsgType::MSG_CONNECT_EX;
-            _info->header.length = sizeof(Info);
-            _info->client_identity = 0;
-            _info->authentication_code = (int32_t)code;
-            strcpy(_info->game_server_ip, "");      // error code
-            _info->game_server_port = 0;
+            auto info = (RInfo*)this->_buffer.get();
+            this->_size = sizeof(RInfo);
+            info->header.type = MsgType::MSG_CONNECT_EX;
+            info->header.length = sizeof(RInfo);
+            info->rejection_code = code;
+            info->rejection = UINT32_C(0);
+            info->random_bullshit = UINT32_C(0x050);    // Totally random bullshit
         }
 
         MsgConnectEx::MsgConnectEx()

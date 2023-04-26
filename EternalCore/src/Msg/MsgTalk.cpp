@@ -1,6 +1,6 @@
+#include <Windows.h>
 #include "./Msg/MsgTalk.h"
 #include "Util/StringPacker.h"
-#include <timeapi.h>
 
 namespace Eternal
 {
@@ -40,7 +40,7 @@ namespace Eternal
             info->identity = timeGetTime();
         }
 
-        void MsgTalk::process(Eternal::Server& server)
+        void MsgTalk::process(Server& server, uint32_t con_id)
         {
 
         }

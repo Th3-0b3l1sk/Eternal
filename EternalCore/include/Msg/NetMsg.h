@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <memory>
+#include <cstdint>
 
 namespace Eternal
 {
@@ -15,28 +16,27 @@ namespace Eternal
             MSG_TALK        = 1004,
 
         };
-
 #pragma pack(push, 1)
         struct Header
         {
             uint16_t length;
             MsgType type;
         };
-
 #pragma pack(pop)
+
         class NetMsg
         {
         public:
             virtual ~NetMsg() {};
             NetMsg(std::shared_ptr<uint8_t[]>&& buffer, size_t size);
             NetMsg(size_t len);
-
         public:
             std::string stringfy();
             std::shared_ptr<uint8_t[]> get_data() const { return _buffer; }
             std::size_t get_size() const { return _size; }
         public:
-            virtual void process(Server& server);
+            virtual void process(Server& server, uint32_t con_id);
+
             static std::shared_ptr<NetMsg> create(std::shared_ptr<uint8_t[]>&& data, size_t len);
 
         private:

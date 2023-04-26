@@ -56,10 +56,11 @@ namespace Eternal
             return buf.str();
         }
 
-        void NetMsg::process(Server& server)
+        void NetMsg::process(Server& server, uint32_t con_id)
         {
-            // TODO: implementation
+            // TODO: impl
         }
+
         // static function
         std::shared_ptr<NetMsg> NetMsg::create(std::shared_ptr<uint8_t[]>&& packet, size_t len)
         {
