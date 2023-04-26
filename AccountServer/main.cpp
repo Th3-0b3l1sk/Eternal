@@ -5,7 +5,6 @@
 #include "Database/Database.h"
 #include <string>
 #include <thread>
-#include <Windows.h>
 
 int main()
 {
@@ -27,13 +26,7 @@ int main()
 			auto data = connection->get_buffer().get();
 			connection->get_cipher()->decrypt(data, bytes_received);
 			auto msg = Eternal::Msg::NetMsg::create(connection->get_buffer(), bytes_received);	
-			msg->process(AccountServer);
-			if (AccountServer._disconnect_last) {
-				AccountServer._disconnect_last = false;	
-				connection->reset();
-				AccountServer.disconnect(connection->unique_id);
-				std::cout << "Disconnecting client [" << connection->unique_id << "].\n";
-			}
+			msg->process(AccountServer, connection->unique_id);
 		};
 
 		AccountServer.take_over();

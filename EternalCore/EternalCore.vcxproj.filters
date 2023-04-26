@@ -44,6 +44,15 @@
     <ClCompile Include="src\Database\Database.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Util\LineReader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Database\Statements\Authenticate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Database\Statements\Register.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Msg\MsgAccount.h" />
@@ -59,5 +68,10 @@
     <ClInclude Include="include\Util\StringPacker.h" />
     <ClInclude Include="include\Msg\MsgTalk.h" />
     <ClInclude Include="include\Database\Database.h" />
+    <ClInclude Include="include\Database\Statements\IStatement.h" />
+    <ClInclude Include="include\Util\LineReader.h" />
+    <ClInclude Include="include\Database\db_helper.h" />
+    <ClInclude Include="include\Database\Statements\Authenticate.h" />
+    <ClInclude Include="include\Database\Statements\Register.h" />
   </ItemGroup>
 </Project>

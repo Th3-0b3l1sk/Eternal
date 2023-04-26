@@ -1,20 +1,20 @@
 #include <iostream>
+#include <string>
+#include <thread>
 #include "Network/Server.h"
 #include "Network/Connection.h"
 #include "Network/Encryption/TqCipher.h"
-#include "./Encryption/DiffieHellman.h"
-#include "./Encryption/Blowfish.h"
-#include "./Msg/MsgConnectEx.h"
-#include "./Msg/MsgLoginProofA.h"
-#include <string>
-#include <thread>
-#include <Windows.h>
+#include "Encryption/DiffieHellman.h"
+#include "Encryption/Blowfish.h"
+#include "Msg/MsgConnectEx.h"
+#include "Msg/MsgLoginProofA.h"
 #include "Network/Encryption/IExchange.h"
 
 int main()
 {
 	try {
-		Eternal::Server GameServer("127.0.0.1", 5816);
+		// todo: the nullptr for the db
+		Eternal::Server GameServer("127.0.0.1", 5816, nullptr);
 		GameServer._which = Eternal::Server::Which::GAME;
 
 		GameServer._on_accept = [&](std::shared_ptr<Eternal::Connection> connection) {
@@ -26,7 +26,7 @@ int main()
 			std::unique_ptr<Eternal::Encryption::IExchange> dh(new DiffieHellman(P, G));
 			dh->generate_key();
 			auto msg = std::make_shared<MsgLoginProofA>( P, G, dh->get_public_key() );
-			GameServer.queue_msg(msg);
+			GameServer.send(connection->unique_id, msg);
 			connection->set_exchange(std::move(dh));
 			connection->set_state(Eternal::Connection::State::KEY_EXCHANGE);
 		};
@@ -63,7 +63,7 @@ int main()
 				auto data = connection->get_buffer().get();
 				connection->get_cipher()->decrypt(data, bytes_received);
 				auto msg = Eternal::Msg::NetMsg::create(connection->get_buffer(), bytes_received);
-				msg->process(GameServer);
+				msg->process(GameServer, connection->unique_id);
 				break;
 			}
 			}

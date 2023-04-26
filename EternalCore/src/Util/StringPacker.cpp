@@ -20,7 +20,7 @@ namespace Eternal
                 tmp += 1;       // for the actual string length byte and the null terminator
             }
 
-            *tmp = str.length();
+            *tmp = (uint8_t)str.length();
             tmp++;
             memcpy((char*)tmp, str.c_str(), str.length());
             tmp += str.length();
