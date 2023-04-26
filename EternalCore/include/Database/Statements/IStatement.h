@@ -12,6 +12,8 @@ namespace Eternal
         enum class StatementID
         {
             AUTHENTICATE = 0,
+            REGISTER     = 1,
+
         };
 
         /* statements are always executed within the context of a database */

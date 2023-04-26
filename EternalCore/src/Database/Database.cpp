@@ -81,6 +81,8 @@ namespace Eternal
             {
             case Eternal::Database::StatementID::AUTHENTICATE:
                 return "authenticate";
+            case Eternal::Database::StatementID::REGISTER:
+                return "register";
             default:
                 throw std::exception{ "Invalid statement id" };
             }

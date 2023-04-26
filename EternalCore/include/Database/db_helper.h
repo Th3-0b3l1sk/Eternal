@@ -1,9 +1,13 @@
 #pragma once
 #include <Windows.h>
-#include <sql.h>
 #include <sqlext.h>
+#include <sql.h>
 #include <string>
 #include <iostream> // TODO: proper logging
+
+#pragma warning(disable: 4267)
+#pragma warning(disable: 4715)
+
 
 /*******************************************/
 /* Macro to call ODBC functions and        */
