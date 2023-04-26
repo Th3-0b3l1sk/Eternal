@@ -1,6 +1,6 @@
-#include "./Network/Server.h"
-#include "./Network/Connection.h"
 #include <iostream>
+#include "Network/Server.h"
+#include "Network/Connection.h"
 
 namespace Eternal
 {
@@ -22,16 +22,11 @@ namespace Eternal
 		std::cout << " Accepeted connection from: " << peer.remote_endpoint().address().to_string() << " port: " << peer.remote_endpoint().port() << '\n';
 
 		std::shared_ptr<Connection> client = std::make_shared<Connection>( std::move(peer), std::bind(&Server::on_receive, this ,std::placeholders::_1, std::placeholders::_2));
-		_on_accept(client);
-
-		// TODO: think of a better impl for both the game and account servers
-		for (auto& msg : _outgoing)
-			this->send(client, msg);
-
-		_outgoing.clear();
-
 		auto unique_id = client->unique_id;
-		_connections.insert({unique_id, std::move(client)});
+		_connections.insert({ unique_id, std::move(client) });
+
+		_on_accept(_connections.at(unique_id));
+
 		_connections[unique_id]->begin_read();
 		_acceptor.async_accept(std::bind(&Server::on_accept, this, std::placeholders::_1, std::placeholders::_2));
 	}
@@ -42,11 +37,6 @@ namespace Eternal
 			// TODO: proper logger
 			std::cout << "Incoming [" << bytes_received << "] bytes from Client: " << connection->get_ip_address() << ":" << connection->get_port() << '\n';
 			_on_receive(connection, bytes_received);
-			
-			for (auto& msg : _outgoing)
-				this->send(connection, msg);
-			_outgoing.clear();
-
 			if(connection->get_state() != Connection::State::CLOSED)
 				connection->begin_read();
 		}
@@ -74,6 +64,9 @@ namespace Eternal
 
 	void Server::disconnect(uint32_t id)
 	{
+		// TODO: remove this logging
+		std::cout << "Disconnecting client: " << id << '\n';
+		_connections.at(id)->reset();
 		_connections.erase(id);
 	}
 
@@ -83,22 +76,34 @@ namespace Eternal
 		return std::move(_database->execute(std::move(statement)));	
 	}
 
-	void Server::send(std::shared_ptr<Connection> connection, std::shared_ptr<Eternal::Msg::NetMsg> msg)
+	static std::shared_ptr<uint8_t[]> prep_msg(std::shared_ptr<Eternal::Msg::NetMsg> msg, bool set_tq_server = true)
 	{
-		static constexpr char SEAL[] = "TQServer";
-		static constexpr uint8_t SEAL_LEN = UINT8_C(8);
-
-		std::shared_ptr<uint8_t[]> data(new uint8_t[msg->get_size() + SEAL_LEN]{});
+		using Eternal::Server;
+		std::shared_ptr<uint8_t[]> data(new uint8_t[msg->get_size() + (set_tq_server ? Server::SEAL_LEN : 0)]{});
 		memcpy_s(data.get(), msg->get_size(), msg->get_data().get(), msg->get_size());
-		memcpy_s(data.get()  + msg->get_size(), SEAL_LEN, SEAL, SEAL_LEN);
-		connection->send(data, msg->get_size() + SEAL_LEN );
-		// TODO: work this out
+		if (!set_tq_server)
+			return std::move(data);
+
+		memcpy_s(data.get() + msg->get_size(), Server::SEAL_LEN, Server::SEAL, Server::SEAL_LEN);
+
+		return std::move(data);
+	}
+
+
+	void Server::send(uint32_t con_id, std::shared_ptr<Eternal::Msg::NetMsg> msg)
+	{
+		auto packet = prep_msg(msg);
+		_connections.at(con_id)->send(packet, msg->get_size() + SEAL_LEN);
 		std::cout << msg->stringfy() << '\n';
 	}
 
-	void Server::queue_msg(std::shared_ptr<Eternal::Msg::NetMsg> msg)
+	void Server::send_n_kill(uint32_t con_id, std::shared_ptr<Eternal::Msg::NetMsg> msg, bool set_tq_server )
 	{
-		_outgoing.push_back(msg);
+		auto packet = prep_msg(msg, set_tq_server);
+		std::cout << msg->stringfy() << '\n';
+		_connections.at(con_id)->block();
+		_connections.at(con_id)->write(packet, msg->get_size() + (set_tq_server ? SEAL_LEN : 0));
+		disconnect(con_id);
 	}
 
 	void Server::run()

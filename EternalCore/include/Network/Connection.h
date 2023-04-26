@@ -32,20 +32,20 @@ namespace Eternal
         public:
             void begin_read();
             void reset();
+            void block();
             void send(std::shared_ptr<uint8_t[]> data, size_t len);
+            void write(std::shared_ptr<uint8_t[]> data, size_t len);
             void set_cipher(std::unique_ptr<Encryption::ICipher>&& cipher) { _cipher = std::move(cipher); }
             void set_state(State state) { _state = state; }
             void set_exchange(std::unique_ptr<Encryption::IExchange>&& dh) { _exchange = std::move(dh); }
 
         public:
-
             std::string get_ip_address() const { return _client_socket.remote_endpoint().address().to_string(); }
             uint16_t  get_port() const { return _client_socket.remote_endpoint().port(); }
             std::shared_ptr<uint8_t[]> get_buffer() const { return _buffer; }
             std::unique_ptr<Encryption::ICipher>& get_cipher() { return _cipher; }
             State get_state() const { return _state; }
             std::unique_ptr<Encryption::IExchange>& get_exchange()  { return _exchange; }
-
 
         private:
             void on_receive(const asio::error_code& error, size_t bytes_read);

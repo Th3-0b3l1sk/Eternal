@@ -1,5 +1,5 @@
-#include "./Network/Connection.h"
 #include <iostream> // TODO: remove
+#include "Network/Connection.h"
 
 namespace Eternal
 {
@@ -37,7 +37,15 @@ namespace Eternal
     {
         _state = State::CLOSED;
         _client_socket.shutdown(tcp::socket::shutdown_both);
+        _client_socket.cancel();
         _client_socket.close();
+    }
+
+    void Connection::block()
+    {
+        _state = State::CLOSED;
+        _client_socket.shutdown(tcp::socket::shutdown_receive);
+        _client_socket.cancel();
     }
 
     void Connection::send(std::shared_ptr<uint8_t[]> data, size_t len)
@@ -50,6 +58,12 @@ namespace Eternal
             }
             }
         );
+    }
+    // synchronous operation
+    void Connection::write(std::shared_ptr<uint8_t[]> data, size_t len)
+    {
+        _cipher->encrypt(data.get(), len);
+        asio::write(_client_socket, asio::const_buffer{ data.get(), len });
     }
 
 }

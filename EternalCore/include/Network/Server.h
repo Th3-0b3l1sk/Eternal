@@ -1,13 +1,12 @@
 #pragma once
+#include <asio.hpp>
 #include <string_view>
 #include <memory>
-#include <asio.hpp>
 #include <unordered_map>
-#include <deque>
 #include <vector>
 #include "Msg/NetMsg.h"
 #include "Database/Database.h"
-#include "./Connection.h"
+#include "Connection.h"
 
 namespace Eternal
 {
@@ -21,6 +20,10 @@ namespace Eternal
 			ACCOUNT,
 			GAME
 		};
+
+		public:
+			static constexpr char SEAL[] = "TQServer";
+			static constexpr uint8_t SEAL_LEN = UINT8_C(8);
 
 		private:
 			void init(std::string_view ip, uint16_t port);
@@ -41,13 +44,11 @@ namespace Eternal
 			Server& set_threads(uint32_t thread_count);
 			void shutdown();
 			void disconnect(uint32_t id);
+			std::shared_ptr<Connection> get_connetion(uint32_t con_id) const { return _connections.at(con_id); }
 			std::vector<std::unique_ptr<uint8_t[]>> execute_statement(std::unique_ptr<Database::IStatement>&& statement);
-
-		private:
-			void send(std::shared_ptr<Connection> connection, std::shared_ptr<Eternal::Msg::NetMsg> msg);
-
-		public:
-			void queue_msg(std::shared_ptr<Eternal::Msg::NetMsg> msg);
+			void send(uint32_t con_id, std::shared_ptr<Eternal::Msg::NetMsg> msg);
+			void send_n_kill(uint32_t con_id, std::shared_ptr<Eternal::Msg::NetMsg> msg, bool set_tq_server = true);
+					
 
 		public:
 			void run();
@@ -56,17 +57,13 @@ namespace Eternal
 			std::function<void(std::shared_ptr<Connection>, size_t)> _on_receive;
 			std::function<void(std::shared_ptr<Connection>)> _on_accept;
 			Which _which;
-			// TODO: a multi-threaded nightmare, fixt it
-			bool _disconnect_last = false;
 
 		private:
 			std::shared_ptr<asio::io_context> _io_context;
 			tcp::acceptor _acceptor;
 			tcp::endpoint _endpoint;
 			std::unordered_map<uint32_t, std::shared_ptr<Connection>> _connections;
-			std::deque<std::shared_ptr<Eternal::Msg::NetMsg>> _outgoing;
 			std::vector<std::thread> _thread_pool;
 			std::unique_ptr<Database::Database> _database;
 		};
-
 }
