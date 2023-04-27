@@ -39,4 +39,10 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="game_db.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="game_stmts.txt" />
+  </ItemGroup>
 </Project>

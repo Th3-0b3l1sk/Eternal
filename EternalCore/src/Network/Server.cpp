@@ -85,7 +85,6 @@ namespace Eternal
 			return std::move(data);
 
 		memcpy_s(data.get() + msg->get_size(), Server::SEAL_LEN, Server::SEAL, Server::SEAL_LEN);
-
 		return std::move(data);
 	}
 

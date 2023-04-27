@@ -9,12 +9,15 @@
 #include "Msg/MsgConnectEx.h"
 #include "Msg/MsgLoginProofA.h"
 #include "Network/Encryption/IExchange.h"
+#include "Database/Database.h"
 
 int main()
 {
 	try {
-		// todo: the nullptr for the db
-		Eternal::Server GameServer("127.0.0.1", 5816, nullptr);
+		
+		auto db = std::make_unique<Eternal::Database::Database>("eternal_game", "e_game_db", "e_game_pd");
+		db->load_statements("./game_stmts.txt");
+		Eternal::Server GameServer("127.0.0.1", 5816, std::move(db));
 		GameServer._which = Eternal::Server::Which::GAME;
 
 		GameServer._on_accept = [&](std::shared_ptr<Eternal::Connection> connection) {

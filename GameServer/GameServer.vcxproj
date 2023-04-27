@@ -86,6 +86,12 @@
     <ClInclude Include="Encryption\DiffieHellman.h" />
     <ClInclude Include="Msg\MsgLoginProofA.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="game_db.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="game_stmts.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
