@@ -14,6 +14,10 @@ namespace Eternal
             MSG_CONNECT_EX  = 1055,
             MSG_CONNECT     = 1052,
             MSG_TALK        = 1004,
+            MSG_DATA        = 1033,
+            MSG_USER_INFO   = 1006,
+            MSG_ACTION      = 1010,
+
 
         };
 #pragma pack(push, 1)
@@ -51,6 +55,12 @@ namespace Eternal
                     return "MSG_CONNECT";
                 case MsgType::MSG_TALK:
                     return "MSG_TALK";
+                case MsgType::MSG_DATA:
+                    return "MSG_DATA";
+                case MsgType::MSG_USER_INFO:
+                    return "MSG_USER_INFO";
+                case MsgType::MSG_ACTION:
+                    return "MSG_ACTION";
                 default:
                     return "UNKNOWN_TYPE";
                 }
