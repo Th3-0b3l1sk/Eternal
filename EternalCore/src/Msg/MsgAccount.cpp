@@ -12,6 +12,14 @@ namespace Eternal
 {
     namespace Msg
     {
+        static void reject_user(Eternal::Server& server, uint32_t con_id, Eternal::Msg::MsgConnectEx::RejectionCode code)
+        {
+            std::cout << "responding to the client ...\n";
+            auto msg_account_ex = std::make_shared<MsgConnectEx>(MsgConnectEx::RejectionCode::INVALID_ID_PWD);
+            server.send_n_kill(con_id, std::move(msg_account_ex), false);
+        }
+
+
         MsgAccount::MsgAccount(std::shared_ptr<uint8_t[]>&& data, size_t len)
             : NetMsg(std::move(data), len),
             _info((Info*)this->_buffer.get())
@@ -42,21 +50,29 @@ namespace Eternal
             auto statement = std::make_unique<Eternal::Database::Authenticate>();
             statement->set_name(_info->account_name);
             auto result = server.execute_statement(std::move(statement));
+            
+            // TODO: add sanitization checks
+            // The account doesn't exist
             if (result.empty()) {
-                // The account doesn't exist
-                std::cout << "responding to the client ...\n";
-                auto msg_account_ex = std::make_shared<MsgConnectEx>(MsgConnectEx::RejectionCode::INVALID_ID_PWD);
-                server.send_n_kill(con_id, std::move(msg_account_ex), false);
+                reject_user(server, con_id, MsgConnectEx::RejectionCode::INVALID_ID_PWD);
+                return;
+                
             }
             else {
-                // MSG_CONNECT_EX
+                auto user_info = reinterpret_cast<Eternal::Database::Authenticate::Info*>(result[0].get());
+                if (strncmp((char*)user_info->password, _info->account_pass, MAX_PASSWORD_LEN) != 0) {
+                    reject_user(server, con_id, MsgConnectEx::RejectionCode::INVALID_ID_PWD);
+                    return;
+                }
+
                 std::cout << "responding to the client ...\n";
                 auto msg_account_ex = std::make_shared<MsgConnectEx>();
-                msg_account_ex->set_client_identity(3).set_authentication_code(281557324).set_game_server_ip("192.168.7.127").set_game_server_port(5816);
+                msg_account_ex->set_client_identity(user_info->id + IDENTITY_START)
+                               .set_authentication_code(UINT8_C(2))
+                               .set_game_server_ip("192.168.7.127")    
+                               .set_game_server_port(5816);            // TODO: de-couple
                 server.send(con_id, std::move(msg_account_ex));
             }
-
         }
     }
 }
-

@@ -1,0 +1,1 @@
+get_user=SELECT * FROM [e_game_db].[dbo].[users] WHERE [_identity]=?

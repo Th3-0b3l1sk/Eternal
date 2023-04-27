@@ -94,8 +94,12 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Msg\MsgAction.cpp" />
+    <ClCompile Include="src\Msg\MsgUserInfo.cpp" />
+    <ClCompile Include="src\Database\Statements\GetUser.cpp" />
     <ClCompile Include="src\Database\Statements\Register.cpp" />
     <ClCompile Include="src\Database\Statements\Authenticate.cpp" />
+    <ClCompile Include="src\Msg\MsgData.cpp" />
     <ClCompile Include="src\Util\LineReader.cpp" />
     <ClCompile Include="src\Database\Database.cpp" />
     <ClCompile Include="src\Msg\MsgAccount.cpp" />
@@ -110,9 +114,11 @@
     <ClCompile Include="src\Util\StringPacker.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Database\Statements\GetUser.h" />
     <ClInclude Include="include\Database\Statements\Authenticate.h" />
     <ClInclude Include="include\Database\Database.h" />
     <ClInclude Include="include\Database\db_helper.h" />
+    <ClInclude Include="include\Msg\MsgData.h" />
     <ClInclude Include="include\Msg\MsgTalk.h" />
     <ClInclude Include="include\Network\Encryption\IExchange.h" />
     <ClInclude Include="include\Network\Encryption\ICipher.h" />
@@ -128,6 +134,8 @@
     <ClInclude Include="include\Database\Statements\IStatement.h" />
     <ClInclude Include="include\Util\LineReader.h" />
     <ClInclude Include="include\Database\Statements\Register.h" />
+    <ClInclude Include="include\Msg\MsgUserInfo.h" />
+    <ClInclude Include="include\Msg\MsgAction.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

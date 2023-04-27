@@ -8,3 +8,7 @@ Eternal is a C++ multi-threaded private server emulator targeting the client ver
  1. [Asio](https://think-async.com/Asio/)
  2. [openssl v1.1](https://www.openssl.org/)
  3. [Spirited's Dragon Launcher](https://spirited.io/project/dragon/)
+
+
+### Screenshots
+![first login](./screenshots/eternal_first_login.PNG?raw=true "first login")

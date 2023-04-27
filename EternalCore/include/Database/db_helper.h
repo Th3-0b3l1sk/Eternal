@@ -109,3 +109,5 @@ static std::string get_error(SQLHANDLE hHandle, SQLSMALLINT hType, RETCODE retur
 #define MAX_ACCOUNT_LEN     16
 #define MAX_PASSWORD_LEN    16
 #define MAX_IP_LEN          15
+#define MAX_NAME_LEN        15
+#define IDENTITY_START      1'000'000

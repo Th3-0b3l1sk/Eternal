@@ -13,6 +13,7 @@ namespace Eternal
         {
             AUTHENTICATE = 0,
             REGISTER     = 1,
+            GET_USER     = 2,
 
         };
 
