@@ -8,7 +8,7 @@ namespace Eternal
         class Authenticate :
             public IStatement
         {
-        private:
+        public:
 #pragma pack(push, 1)
             struct Info
             {
