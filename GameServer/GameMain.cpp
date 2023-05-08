@@ -63,10 +63,22 @@ int main()
 			}
 			case Eternal::Connection::State::NORMAL:
 			{
+				static constexpr uint8_t SEAL_LEN = UINT8_C(8);
 				auto data = connection->get_buffer().get();
 				connection->get_cipher()->decrypt(data, bytes_received);
-				auto msg = Eternal::Msg::NetMsg::create(connection->get_buffer(), bytes_received);
-				msg->process(GameServer, connection->unique_id);
+				auto size = *(uint16_t*)data + SEAL_LEN;
+				// multiple packets in the same blob
+				while (size <= bytes_received) {
+					const auto packet_size = *(uint16_t*)data;
+					auto packet = new uint8_t[packet_size];
+					memcpy_s(packet, packet_size, data, packet_size);
+					auto msg = Eternal::Msg::NetMsg::create(std::shared_ptr<uint8_t[]>(packet), packet_size);
+					msg->process(GameServer, connection->unique_id);
+					if (size >= bytes_received)
+						break;
+					data += size;
+					size += *(uint16_t*)data + SEAL_LEN;
+				}
 				break;
 			}
 			}
@@ -84,5 +96,4 @@ int main()
 	{
 		std::cout << "Exception: " << e.what() << '\n';
 	}
-
 }
