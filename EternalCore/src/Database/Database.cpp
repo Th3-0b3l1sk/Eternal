@@ -85,6 +85,8 @@ namespace Eternal
                 return "register";
             case Eternal::Database::StatementID::GET_USER:
                 return "get_user";
+            case Eternal::Database::StatementID::GET_USER_ITEMS:
+                return "get_user_items";
             default:
                 throw std::exception{ "Invalid statement id" };
             }
