@@ -17,6 +17,7 @@ namespace Eternal
             MSG_DATA        = 1033,
             MSG_USER_INFO   = 1006,
             MSG_ACTION      = 1010,
+            MSG_ITEM_INFO   = 1008,
 
 
         };
@@ -61,6 +62,8 @@ namespace Eternal
                     return "MSG_USER_INFO";
                 case MsgType::MSG_ACTION:
                     return "MSG_ACTION";
+                case MsgType::MSG_ITEM_INFO:
+                    return "MSG_ITEM_INFO";
                 default:
                     return "UNKNOWN_TYPE";
                 }

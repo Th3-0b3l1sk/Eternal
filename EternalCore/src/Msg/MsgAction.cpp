@@ -1,5 +1,7 @@
 #include "Msg/MsgAction.h"
+#include "Msg/MsgItemInfo.h"
 #include "Network/Server.h"
+#include "Database/Statements/GetUserItems.h"
 
 namespace  Eternal
 {
@@ -42,6 +44,17 @@ namespace  Eternal
                     186,
                     1  );
                 server.send(con_id, msg_action);
+                break;
+            }
+            case ActionType::ACTION_SEND_ITEMS:
+            {
+                auto con = server.get_connetion(con_id);
+                auto stmt = std::make_unique<Database::GetUserItems>(con->player_id);
+                auto result = server.execute_statement(std::move(stmt));
+                for (auto& i : result) {
+                    auto msg_item = std::make_shared<Msg::MsgItemInfo>(i.get());
+                    server.send(con_id, msg_item);
+                }
                 break;
             }
             }
