@@ -23,6 +23,8 @@ namespace Eternal
                 if (!error)
                 {
                     try {
+                        if (_state == State::CLOSED) 
+                            return;
                         _on_receive_callback(shared_from_this(), bytes_read);
                     }
                     catch (std::exception& e) {
