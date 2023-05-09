@@ -11,4 +11,4 @@ Eternal is a C++ multi-threaded private server emulator targeting the client ver
 
 
 ### Screenshots
-![first login](./screenshots/eternal_first_login.PNG?raw=true "first login")
+![Trojan set](./screenshots/eternal_equipment.PNG?raw=true "Trojan set")
