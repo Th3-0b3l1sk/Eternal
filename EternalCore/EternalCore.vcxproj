@@ -94,6 +94,11 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Database\Statements\GetItemtype.cpp" />
+    <ClCompile Include="src\Structs\Player.cpp" />
+    <ClCompile Include="src\Database\Statements\GetUserItems.cpp" />
+    <ClCompile Include="src\Structs\Item.cpp" />
+    <ClCompile Include="src\Msg\MsgItemInfo.cpp" />
     <ClCompile Include="src\Msg\MsgAction.cpp" />
     <ClCompile Include="src\Msg\MsgUserInfo.cpp" />
     <ClCompile Include="src\Database\Statements\GetUser.cpp" />
@@ -112,8 +117,11 @@
     <ClCompile Include="src\Network\Encryption\TqCipher.cpp" />
     <ClCompile Include="src\Network\Server.cpp" />
     <ClCompile Include="src\Util\StringPacker.cpp" />
+    <ClCompile Include="src\World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Database\Statements\GetItemtype.h" />
+    <ClInclude Include="include\Database\Statements\GetUserItems.h" />
     <ClInclude Include="include\Database\Statements\GetUser.h" />
     <ClInclude Include="include\Database\Statements\Authenticate.h" />
     <ClInclude Include="include\Database\Database.h" />
@@ -130,12 +138,19 @@
     <ClInclude Include="include\Network\Encryption\Rc5.h" />
     <ClInclude Include="include\Network\Encryption\TqCipher.h" />
     <ClInclude Include="include\Network\Server.h" />
+    <ClInclude Include="include\Structs\AdvancedEntity.h" />
+    <ClInclude Include="include\Structs\Entity.h" />
+    <ClInclude Include="include\Structs\Item.h" />
+    <ClInclude Include="include\Util\co_defs.h" />
     <ClInclude Include="include\Util\StringPacker.h" />
     <ClInclude Include="include\Database\Statements\IStatement.h" />
     <ClInclude Include="include\Util\LineReader.h" />
     <ClInclude Include="include\Database\Statements\Register.h" />
     <ClInclude Include="include\Msg\MsgUserInfo.h" />
     <ClInclude Include="include\Msg\MsgAction.h" />
+    <ClInclude Include="include\Msg\MsgItemInfo.h" />
+    <ClInclude Include="include\Structs\Player.h" />
+    <ClInclude Include="include\World.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

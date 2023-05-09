@@ -1,5 +1,11 @@
 #include "Msg/MsgAction.h"
+#include "Msg/MsgItemInfo.h"
 #include "Network/Server.h"
+#include "Network/Connection.h"
+#include "Database/Statements/GetUserItems.h"
+#include "Database/Statements/GetItemtype.h"
+#include "Structs/Player.h"
+#include "Structs/Item.h"
 
 namespace  Eternal
 {
@@ -42,6 +48,29 @@ namespace  Eternal
                     186,
                     1  );
                 server.send(con_id, msg_action);
+                break;
+            }
+            case ActionType::ACTION_SEND_ITEMS:
+            {
+                auto con = server.get_connection(con_id);
+                auto stmt = std::make_unique<Database::GetUserItems>(con->player_id);
+                auto result = server.execute_statement(std::move(stmt));
+                std::vector<uint32_t> item_ids;
+                for (auto& i : result) {
+                    auto msg_item = std::make_shared<Msg::MsgItemInfo>(i.get());
+                    item_ids.push_back(msg_item->get_type());
+                    server.send(con_id, msg_item);
+                }
+
+                // TODO: move to a proper location
+                if (item_ids.empty())
+                    return;
+                auto item_type_stmt = std::make_unique<Database::GetItemtype>(item_ids);
+                auto item_result = server.execute_statement(std::move(item_type_stmt));
+                auto& player = server.get_connection(con_id)->get_player();
+                for (auto& i : item_result) {
+                    player->add_item(std::make_unique<Structs::Item>((Database::GetItemtype::Info*)i.get()));
+                }
                 break;
             }
             }

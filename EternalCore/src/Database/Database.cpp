@@ -60,6 +60,7 @@ namespace Eternal
             auto& stmt_h = statement->get_handle();
             auto& stmt_txt = _statements.at(id_to_stmt(stmt_id).data());
                         
+            statement->hook_stmt(stmt_txt);
             TRYODBC(stmt_h, SQL_HANDLE_STMT,
                 SQLAllocHandle(SQL_HANDLE_STMT, _hCon, &stmt_h));
             TRYODBC(stmt_h, SQL_HANDLE_STMT,
@@ -85,6 +86,10 @@ namespace Eternal
                 return "register";
             case Eternal::Database::StatementID::GET_USER:
                 return "get_user";
+            case Eternal::Database::StatementID::GET_USER_ITEMS:
+                return "get_user_items";
+            case Eternal::Database::StatementID::GET_ITEMTYPE:
+                return "get_itemtype";
             default:
                 throw std::exception{ "Invalid statement id" };
             }

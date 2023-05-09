@@ -1,9 +1,10 @@
 #pragma once
-#include <asio.hpp>
 #include <memory>
 #include <string>
 #include "./Encryption/ICipher.h"
 #include "./Encryption/IExchange.h"
+#include "Structs/Player.h"
+#include <asio.hpp>
 
 namespace Eternal
 {
@@ -45,6 +46,8 @@ namespace Eternal
             std::shared_ptr<uint8_t[]> get_buffer() const { return _buffer; }
             std::unique_ptr<Encryption::ICipher>& get_cipher() { return _cipher; }
             State get_state() const { return _state; }
+            std::shared_ptr<Structs::Player>& get_player() { return _player; }
+            void set_player(std::shared_ptr<Structs::Player> player) { _player = std::move(player); }
             std::unique_ptr<Encryption::IExchange>& get_exchange()  { return _exchange; }
 
         private:
@@ -52,6 +55,7 @@ namespace Eternal
 
         public:
             uint32_t unique_id;
+            uint32_t player_id; // TODO: remove and replace with a player class;
 
         private:
             tcp::socket _client_socket;
@@ -61,6 +65,7 @@ namespace Eternal
             // TODO: In dire need of an interface OR decrypt encrypt functions?
             std::unique_ptr<Encryption::ICipher> _cipher;
             std::unique_ptr<Encryption::IExchange> _exchange;
+            std::shared_ptr<Structs::Player> _player;
             State _state;
         };
 }

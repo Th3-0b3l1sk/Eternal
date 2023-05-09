@@ -1,9 +1,11 @@
 #pragma once
+#define WIN32_LEAN_AND_MEAN 
+#include <string>
+#include <iostream> // TODO: proper logging
 #include <Windows.h>
 #include <sqlext.h>
 #include <sql.h>
-#include <string>
-#include <iostream> // TODO: proper logging
+#include "Util/co_defs.h"
 
 #pragma warning(disable: 4267)
 #pragma warning(disable: 4715)
@@ -102,12 +104,3 @@ static std::string get_error(SQLHANDLE hHandle, SQLSMALLINT hType, RETCODE retur
 #define COL_EIGHT           8
 #define COL_NINE            9
 #define COL_TEN             10
-
-
-
-// Coquer Specific Values
-#define MAX_ACCOUNT_LEN     16
-#define MAX_PASSWORD_LEN    16
-#define MAX_IP_LEN          15
-#define MAX_NAME_LEN        15
-#define IDENTITY_START      1'000'000

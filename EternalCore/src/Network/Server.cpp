@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Network/Server.h"
 #include "Network/Connection.h"
+#include "World.h"
 
 namespace Eternal
 {
@@ -79,12 +80,12 @@ namespace Eternal
 	static std::shared_ptr<uint8_t[]> prep_msg(std::shared_ptr<Eternal::Msg::NetMsg> msg, bool set_tq_server = true)
 	{
 		using Eternal::Server;
-		std::shared_ptr<uint8_t[]> data(new uint8_t[msg->get_size() + (set_tq_server ? Server::SEAL_LEN : 0)]{});
+		std::shared_ptr<uint8_t[]> data(new uint8_t[msg->get_size() + (set_tq_server ? SEAL_LEN : 0)]{});
 		memcpy_s(data.get(), msg->get_size(), msg->get_data().get(), msg->get_size());
 		if (!set_tq_server)
 			return std::move(data);
 
-		memcpy_s(data.get() + msg->get_size(), Server::SEAL_LEN, Server::SEAL, Server::SEAL_LEN);
+		memcpy_s(data.get() + msg->get_size(), SEAL_LEN, SEAL, SEAL_LEN);
 		return std::move(data);
 	}
 
@@ -103,6 +104,21 @@ namespace Eternal
 		_connections.at(con_id)->block();
 		_connections.at(con_id)->write(packet, msg->get_size() + (set_tq_server ? SEAL_LEN : 0));
 		disconnect(con_id);
+	}
+
+	std::unique_ptr<Eternal::World>& Server::get_world() 
+	{ 
+		return _game_world; 
+	}
+
+	void Server::set_world(std::unique_ptr<Eternal::World>&& world)
+	{
+		_game_world = std::move(world);
+	}
+
+	std::shared_ptr<Connection>& Server::get_connection(uint32_t con_id)
+	{ 
+		return _connections.at(con_id); 
 	}
 
 	void Server::run()

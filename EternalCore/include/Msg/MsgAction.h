@@ -12,6 +12,7 @@ namespace Eternal
             enum class ActionType: uint16_t
             {
                 ACTION_SET_LOCATION = 74,
+                ACTION_SEND_ITEMS   = 75,
 
             };
 
