@@ -15,6 +15,7 @@ namespace Eternal
             REGISTER       = 1,
             GET_USER       = 2,
             GET_USER_ITEMS = 3,
+            GET_ITEMTYPE   = 4,
 
         };
 
@@ -33,6 +34,10 @@ namespace Eternal
         public:
             virtual SQLRETURN  bind() = 0;
             virtual std::vector<std::unique_ptr<uint8_t[]>> fetch() = 0;
+            virtual void hook_stmt(std::string& stmt)
+            {
+                // to override default SQL statements
+            }
 
         public:
             inline StatementID get_id() const { return _id; }
