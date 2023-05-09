@@ -74,6 +74,15 @@
     <ClCompile Include="src\Database\Statements\GetUserItems.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Structs\Player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\World.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Database\Statements\GetItemtype.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Msg\MsgAccount.h" />
@@ -101,5 +110,11 @@
     <ClInclude Include="include\Msg\MsgItemInfo.h" />
     <ClInclude Include="include\Structs\Item.h" />
     <ClInclude Include="include\Database\Statements\GetUserItems.h" />
+    <ClInclude Include="include\Structs\Entity.h" />
+    <ClInclude Include="include\Structs\AdvancedEntity.h" />
+    <ClInclude Include="include\Structs\Player.h" />
+    <ClInclude Include="include\World.h" />
+    <ClInclude Include="include\Util\co_defs.h" />
+    <ClInclude Include="include\Database\Statements\GetItemtype.h" />
   </ItemGroup>
 </Project>

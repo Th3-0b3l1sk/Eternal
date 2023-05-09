@@ -10,6 +10,8 @@
 #include "Msg/MsgLoginProofA.h"
 #include "Network/Encryption/IExchange.h"
 #include "Database/Database.h"
+#include "Util/co_defs.h"
+#include "World.h"
 
 int main()
 {
@@ -18,8 +20,9 @@ int main()
 		auto db = std::make_unique<Eternal::Database::Database>("eternal_game", "e_game_db", "e_game_pd");
 		db->load_statements("./game_stmts.txt");
 		Eternal::Server GameServer("127.0.0.1", 5816, std::move(db));
+		auto game_world = std::make_unique<Eternal::World>(GameServer);
 		GameServer._which = Eternal::Server::Which::GAME;
-
+		GameServer.set_world(std::move(game_world));
 		GameServer._on_accept = [&](std::shared_ptr<Eternal::Connection> connection) {
 
 			auto bf = std::make_unique<Blowfish>("DR654dt34trg4UI6");
@@ -63,7 +66,6 @@ int main()
 			}
 			case Eternal::Connection::State::NORMAL:
 			{
-				static constexpr uint8_t SEAL_LEN = UINT8_C(8);
 				auto data = connection->get_buffer().get();
 				connection->get_cipher()->decrypt(data, bytes_received);
 				auto size = *(uint16_t*)data + SEAL_LEN;

@@ -5,6 +5,7 @@
 #include "Database/Database.h"
 #include <string>
 #include <thread>
+#include "World.h"	// NOT USED. KEEP
 
 int main()
 {
@@ -41,5 +42,4 @@ int main()
 	{
 		std::cout << "Exception: " << e.what() << '\n';
 	}
-
 }
