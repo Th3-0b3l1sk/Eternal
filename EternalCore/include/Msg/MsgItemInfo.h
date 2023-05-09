@@ -42,6 +42,9 @@ namespace Eternal
 
             virtual void process(Server& server, uint32_t con_id) override;
 
+            inline uint8_t get_location() const { return _info->location; }
+            inline uint32_t get_type() const { return _info->static_id; }
+
 
         private:
             Info* _info;

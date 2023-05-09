@@ -1,5 +1,6 @@
 #include <chrono>
 #include "Network/Server.h"
+#include "Network/Connection.h"
 #include "Msg/MsgAccount.h"
 #include "Msg/MsgConnectEx.h"
 #include "Network/Encryption/Rc5.h"
@@ -36,7 +37,7 @@ namespace Eternal
             if (_info->account_name[0] == 'r') {
                 std::string_view new_account(_info->account_name + 1, strlen(_info->account_name) - 1);
                 std::string_view password(_info->account_pass, strlen(_info->account_pass));
-                std::string ip = server.get_connetion(con_id)->get_ip_address();
+                std::string ip = server.get_connection(con_id)->get_ip_address();
                 auto time = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
                 auto statement = std::make_unique<Eternal::Database::Register>(new_account, password, ip, time);
                 auto result = server.execute_statement(std::move(statement));
