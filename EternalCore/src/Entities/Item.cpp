@@ -1,8 +1,8 @@
-#include "Structs/item.h"
+#include "Entities/item.h"
 
 namespace Eternal
 {
-    namespace Structs
+    namespace Entities
     {
         Item::Item()
         {

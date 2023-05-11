@@ -1,9 +1,9 @@
-#include "Structs/Player.h"
+#include "Entities/Player.h"
 #include "Util/co_defs.h"
 
 namespace Eternal
 {
-    namespace Structs
+    namespace Entities
     {
         Player::Player(uint32_t con_id, Database::GetUser::Info* data)
             : AdvancedEntity(data->identity),

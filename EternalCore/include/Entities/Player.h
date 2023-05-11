@@ -8,7 +8,7 @@
 
 namespace Eternal
 {
-    namespace Structs
+    namespace Entities
     {
         class Player : public AdvancedEntity
         {

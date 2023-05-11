@@ -2,7 +2,7 @@
 #include <unordered_map>
 #include <memory>
 #include <shared_mutex>
-#include "Structs/Player.h"
+#include "Entities/Player.h"
 
 namespace Eternal
 {
@@ -20,12 +20,12 @@ namespace Eternal
         World(Eternal::Server& game_server);
 
     public:
-        void join_player(std::shared_ptr<Structs::Player> player);
+        void join_player(std::shared_ptr<Entities::Player> player);
         void kick_player(uint32_t player_id);
 
     private:
         Eternal::Server& _server;
-        guarded_pair<std::shared_mutex, std::unordered_map<uint32_t, Ptr<Structs::Player>>> _world_players;
+        guarded_pair<std::shared_mutex, std::unordered_map<uint32_t, Ptr<Entities::Player>>> _world_players;
         bool _is_stopped;
     };
 }

@@ -4,8 +4,8 @@
 #include "Network/Connection.h"
 #include "Database/Statements/GetUserItems.h"
 #include "Database/Statements/GetItemtype.h"
-#include "Structs/Player.h"
-#include "Structs/Item.h"
+#include "Entities/Player.h"
+#include "Entities/Item.h"
 
 namespace  Eternal
 {
@@ -69,7 +69,7 @@ namespace  Eternal
                 auto item_result = server.execute_statement(std::move(item_type_stmt));
                 auto& player = server.get_connection(con_id)->get_player();
                 for (auto& i : item_result) {
-                    player->add_item(std::make_unique<Structs::Item>((Database::GetItemtype::Info*)i.get()));
+                    player->add_item(std::make_unique<Entities::Item>((Database::GetItemtype::Info*)i.get()));
                 }
                 break;
             }

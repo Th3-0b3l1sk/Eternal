@@ -3,7 +3,7 @@
 
 namespace Eternal
 {
-    namespace Structs
+    namespace Entities
     {
         class AdvancedEntity : public Entity
         {

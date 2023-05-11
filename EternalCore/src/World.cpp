@@ -10,7 +10,7 @@ namespace Eternal
 
     }
 
-    void World::join_player(std::shared_ptr<Structs::Player> player)
+    void World::join_player(std::shared_ptr<Entities::Player> player)
     {
         std::unique_lock guard(_world_players.first);
         auto& players = _world_players.second;

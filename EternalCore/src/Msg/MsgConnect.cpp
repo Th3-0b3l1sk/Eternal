@@ -2,7 +2,7 @@
 #include "Msg/MsgTalk.h"
 #include "Msg/MsgData.h"
 #include "Msg/MsgUserInfo.h"
-#include "Structs/Player.h"
+#include "Entities/Player.h"
 #include "Network/Server.h"
 #include "Network/Connection.h"
 #include "World.h"
@@ -52,7 +52,7 @@ namespace Eternal
                     server.send(con_id, msg_data);
                     
                     auto user_data = (Database::GetUser::Info*)result[0].get();
-                    auto player = std::make_shared<Structs::Player>(con_id, user_data);
+                    auto player = std::make_shared<Entities::Player>(con_id, user_data);
                     server.get_connection(con_id)->set_player(player);
                     auto& game_world = server.get_world();
                     game_world->join_player(player);
