@@ -106,6 +106,10 @@
     <Text Include="compliant_format.txt" />
     <Text Include="test_file.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="invalid_ini.ini" />
+    <None Include="test_ini.ini" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

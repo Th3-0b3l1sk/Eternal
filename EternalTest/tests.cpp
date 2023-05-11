@@ -1,10 +1,12 @@
 #include "pch.h"
 #include "CppUnitTest.h"
 #include "Util/StringPacker.h"
+#include "Util/LineReader.h"
+#include "Util/IniFile.h"
 #include "Network/Encryption/TqCipher.h"
 #include "GameServer/Encryption/DiffieHellman.h"
 #include "GameServer/Encryption/Blowfish.h"
-#include "Util/LineReader.h"
+
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -63,6 +65,35 @@ namespace Utilities
 		}
 	};
 
+	TEST_CLASS(IniFile)
+	{
+	public: 
+		TEST_METHOD(IniFile_Ctor)
+		{
+			Assert::ExpectException<std::filesystem::filesystem_error>([]() {
+				Eternal::Util::IniFile ini_file("../EternalTest/non_existent_test_ini.ini");
+				});
+
+			Assert::ExpectException<std::logic_error>([]() {
+				Eternal::Util::IniFile ini_file("../EternalTest/invalid_ini.ini");
+				});
+
+			auto ini_file = Eternal::Util::IniFile("../EternalTest/test_ini.ini");
+			auto port = ini_file.get<int>("SERVER", "port");
+			Assert::AreEqual(port, 55099);
+			auto ip = ini_file.get("SERVER", "ip");
+			Assert::AreEqual(ip, std::string("192.168.1.1"));
+			
+			Assert::ExpectException<std::exception>([&ini_file]() {
+				ini_file.get("NON_EXISTENT_KEY", "VALYE");
+				});
+
+			auto pass = ini_file.get("SETTINGS", "pass");
+			Assert::AreEqual(pass, std::string("N0t~a~r3al~p@ss~00"));
+			auto root_dir = ini_file.get<double>("GLOBAL", "ROOT_DIR");
+			Assert::AreEqual(root_dir, 1.1234);
+		}
+	};
 }
 
 namespace Encryption

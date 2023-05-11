@@ -29,4 +29,8 @@
     <Text Include="test_file.txt" />
     <Text Include="compliant_format.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="test_ini.ini" />
+    <None Include="invalid_ini.ini" />
+  </ItemGroup>
 </Project>
