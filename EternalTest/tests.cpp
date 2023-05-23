@@ -6,7 +6,9 @@
 #include "Network/Encryption/TqCipher.h"
 #include "GameServer/Encryption/DiffieHellman.h"
 #include "GameServer/Encryption/Blowfish.h"
-
+#include "Map/MapData.h"
+#include "Map/MapManager.h"
+#include "Map/Grid.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -169,6 +171,86 @@ namespace Encryption
 			for (size_t i = 0; i < len; ++i) {
 				Assert::AreEqual(data[i], original[i]);
 			}
+		}
+	};
+}
+
+namespace Map
+{
+	TEST_CLASS(MapData)
+	{
+	public:
+		TEST_METHOD(LoadFromDmap)
+		{
+			// todo: fix file to a real dmap
+			auto data = Eternal::Map::MapData(1010);
+			data.load_data(R"(C:\Dev\Eternal\Depends\Nhouse04.DMap)");
+		}
+	};
+
+	TEST_CLASS(MapManager)
+	{
+	public:
+		TEST_METHOD(load_maps)
+		{
+			Eternal::Map::MapManager manager;
+			manager.load_maps(R"(C:\Dev\Eternal\EternalTest\GameMap.ini)");
+		}
+	};
+
+	TEST_CLASS(Grid)
+	{
+	public:
+		TEST_METHOD(set_cell)
+		{
+			/*
+			* * SET THE FIRST ROW TO ALL 1s
+			*/
+
+			const uint32_t width  = 10;
+			const uint32_t height = 10;
+
+			Eternal::Map::Grid grid(width, height);
+			
+			Eternal::Map::Cell cell;
+			cell.accessible = cell.elevation = cell.surface = 1;
+
+			for (int w = 0; w < width; w++)
+				grid.set_cell(cell, 0, w);
+
+			for (int w = 0; w < width; w++) {
+				auto cell = grid.get_cell(0, w);
+				Assert::AreEqual(cell->accessible, (uint16_t)1);
+				Assert::AreEqual(cell->surface,    (uint16_t)1);
+				Assert::AreEqual(cell->elevation,  (int16_t)1);
+			}
+		}
+
+		TEST_METHOD(get_cell)
+		{
+			/*
+			* * SET THE CELL IN THE x ROW, y COL TO ALL 1s
+			*/
+
+			const uint32_t width = 10;
+			const uint32_t height = 10;
+
+			const uint32_t x = 3;	// 4th row
+			const uint32_t y = 5;	// 5th col
+
+			Eternal::Map::Cell c_grid[height][width];
+			Eternal::Map::Grid grid(width, height, (uint8_t*)c_grid);
+			
+			Eternal::Map::Cell cell;
+			cell.accessible = cell.elevation = cell.surface = 1;
+			
+			c_grid[x][y] = cell;
+
+			auto g_cell = grid.get_cell(x, y);
+
+			Assert::AreEqual(g_cell->accessible, (uint16_t)1);
+			Assert::AreEqual(g_cell->surface,    (uint16_t)1);
+			Assert::AreEqual(g_cell->elevation,  (int16_t)1);
 		}
 	};
 }

@@ -17,6 +17,7 @@
 mono_crash.*
 
 # User Directories
+Data
 Depends
 AccountServer/Debug
 AccountServer/Release
@@ -107,6 +108,7 @@ StyleCopReport.xml
 *.pidb
 *.svclog
 *.scc
+*.DMap
 
 # Chutzpah Test files
 _Chutzpah*
