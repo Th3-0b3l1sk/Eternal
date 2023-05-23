@@ -49,8 +49,5 @@ namespace Eternal
 
             return std::move(_values);
         }
-
     }
-
 }
-

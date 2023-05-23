@@ -40,6 +40,15 @@ namespace Eternal
 
                 return _values[root][key];
             }
+            
+            std::unordered_map<std::string,
+                std::unordered_map<std::string, std::string>>::const_iterator cbegin() const { return _values.cbegin(); }
+
+            std::unordered_map<std::string,
+                std::unordered_map<std::string, std::string>>::const_iterator cend() const { return _values.cend(); }
+
+
+            std::size_t entries() const { return _values.size(); }
         public:
             static const std::string GLOBAL;
 
