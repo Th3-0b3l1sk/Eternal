@@ -26,6 +26,7 @@ namespace Eternal
 
                 auto data = std::make_unique<MapData>(work_pair.first); // the map id
                 data->load_data(work_pair.second.c_str());
+                data->pack();
 
                 std::unique_lock lock(_map_data.first);
                 auto& map_data = _map_data.second;

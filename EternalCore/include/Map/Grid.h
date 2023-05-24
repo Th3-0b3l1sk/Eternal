@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdint>
 #include <memory>
+#include <vector>
 
 namespace Eternal
 {
@@ -9,38 +10,42 @@ namespace Eternal
         struct Cell;
         class Grid
         {
+            friend class MapData;
         private:
             typedef  Cell* row_t;
             typedef  row_t* grid_t;
             
         public:
-            Grid(uint32_t width, uint32_t height);
-            Grid(uint32_t width, uint32_t height, uint8_t* grid);
+            Grid() noexcept;
+            Grid(uint32_t width, uint32_t height) ;
+            Grid(uint32_t width, uint32_t height, uint8_t* grid) noexcept;
 
-            ~Grid() {
-                _grid = nullptr;
-            }
+            ~Grid();
         public:
-            size_t get_size() const { return _width * _height; }
+            size_t get_cell_count() const { return _width * _height; }
+            size_t get_grid_size() const;
+
             Cell* get_cell(uint32_t row, uint32_t col);
 
         public:
             void set_cell(const Cell& cell, uint32_t row, uint32_t col);
-
-
-        public:
             std::unique_ptr<Cell[]>&& let_ptr();
+
+        private:
+            uint8_t* _get_raw() { return (uint8_t*)_grid; }
+
 
         private:
             row_t _get_row(uint32_t row);
             row_t _get_col(uint32_t col);
+            void _reset_grid(std::vector<uint8_t>&& new_grid);
 
         private:
             uint32_t _width;
             uint32_t _height;
             grid_t  _grid;
             bool _is_owner;
-            std::unique_ptr<Cell[]> _grid_owner;
+            std::vector<uint8_t> _grid_owner;
         };
     }
 }

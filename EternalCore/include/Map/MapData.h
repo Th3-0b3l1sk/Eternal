@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <vector>
 #include "Util/BinaryRW.h"
+#include "Map/Grid.h"
 
 namespace Eternal
 {
@@ -12,13 +13,15 @@ namespace Eternal
 #pragma pack(push, 1)
         struct Cell
         {
-            Cell()
+            ~Cell() = default;
+
+            Cell() noexcept
                 : accessible{}, surface{}, elevation{}
             {
 
             }
 
-            Cell(const Cell& other)
+            Cell(const Cell& other) noexcept
             {
                 accessible = other.accessible;
                 surface    = other.surface;
@@ -56,25 +59,37 @@ namespace Eternal
         };
 #pragma pack(pop)
 
+        class Grid;
 
         class MapData
         {
 
         public:
             MapData(uint32_t map_id);
-            
+            ~MapData() = default;
+
         public:
-            Util::BinaryRW::unique_deleter load_data(const char* map_file);
+            /* requires absolute path */
+            void load_data(const char* map_file);
             const PortalInfo& get_portal(uint32_t portal_id) const;
+
+        public:
+            void pack();
+            void unpack();
+
+            // FOR USE IN THE UNIT TESTS 
+            const uint8_t* _get_raw_grid() const { return _grid->_get_raw(); }
+            const uint32_t _get_grid_size() const { return _grid->get_grid_size(); }
 
         private:
             static Util::BinaryRW::unique_deleter _load_file(const char* map_file);
 
         private:
-            // collection of cells / grid
-            // is_packed
-            std::unordered_map<uint32_t, PortalInfo> _portals;
+            bool _is_packed;
+            uint32_t _packed_size;
             std::uint32_t _map_id;
+            std::unique_ptr<Map::Grid> _grid;
+            std::unordered_map<uint32_t, PortalInfo> _portals;          
         };
     }
 }

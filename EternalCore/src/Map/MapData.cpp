@@ -1,5 +1,5 @@
 #include "Map/MapData.h"
-#include "Map/Grid.h"
+#include "Util/Packer.h"
 #include <string>
 
 namespace Eternal
@@ -7,27 +7,27 @@ namespace Eternal
     namespace Map
     {
         MapData::MapData(uint32_t map_id)
-            : _map_id{ map_id }
+            : _map_id{ map_id }, _is_packed{ false }, _grid{ nullptr }
+        , _packed_size{ 0 }
         {
 
         }
 
         Util::BinaryRW::unique_deleter MapData::_load_file(const char* map_file)
-        {
+        {           
             std::filesystem::path map_path(map_file);
             auto current_path = std::filesystem::current_path();
             map_path = "../Data" / map_path;
             Util::BinaryRW reader(map_path);
-
             return reader.let_ptr();
         }
 
-        Util::BinaryRW::unique_deleter MapData::load_data(const char* map_file)
+        void MapData::load_data(const char* map_file)
         {
             try {
                 auto file_in_mem_ptr = _load_file(map_file);
                 if (!file_in_mem_ptr)
-                    return file_in_mem_ptr;
+                    return;
 
                    /*
              +-------------+------------+-------------------------------------+
@@ -57,13 +57,13 @@ namespace Eternal
                 auto width  = binary_reader.read<uint32_t>();
                 auto height = binary_reader.read<uint32_t>();
                 Cell* cells = nullptr;
-                Map::Grid grid(width, height);
+                _grid = std::make_unique<Map::Grid>(width, height);
 
                 for (uint16_t h{ 0 }; h < height; h++) {
                     uint32_t computed_checksum = {};
                     for (uint16_t w{ 0 }; w < width; w++) {
                         cells = binary_reader.cast<Cell>();
-                        grid.set_cell(*cells, h, w);
+                        _grid->set_cell(*cells, h, w);
                         computed_checksum += (cells->accessible * (cells->surface + h + 1)) + ((cells->elevation + 2) * (w + 1 + cells->surface));
                         binary_reader.seek_r(sizeof(Cell));
                     }
@@ -98,8 +98,9 @@ namespace Eternal
                         auto start_x = binary_reader.read<uint32_t>();
                         auto start_y = binary_reader.read<uint32_t>();
                         try {
-                            std::string for_test = "../Depends/" + std::string(*scene_file);
-                            Util::BinaryRW scene_reader(for_test);
+                            // TODO: check out this path
+                            std::string scene_path = "../Scene/" + std::string(*scene_file);
+                            Util::BinaryRW scene_reader(scene_path);
 
                             /*
                             * u32 amount @$;
@@ -137,7 +138,7 @@ namespace Eternal
                                     size_t pos_y = ((start_y + scene_offset_y) + h) - height;
                                     if (pos_x > UINT16_MAX || pos_y > UINT16_MAX)
                                         throw std::exception{ "Invalid cell position\n" };
-                                    auto g_cell = grid.get_cell(pos_x, pos_y);
+                                    auto g_cell = _grid->get_cell(pos_x, pos_y);
                                     g_cell->accessible = cell->accessible;
                                     g_cell->elevation  = cell->elevation;
                                     scene_reader.seek_r(sizeof(Cell));
@@ -147,6 +148,7 @@ namespace Eternal
 
                         catch (std::exception& e) {
                             // TODO: implement the exception handler
+                            throw;
                         }
                         break;
                     }
@@ -174,11 +176,16 @@ namespace Eternal
 
                     }
                 }
+
+                
             }
             catch (std::exception& what)
             {
                 // TODO: implement the handler
+                throw;
             }
+
+            return;
         }
 
         const PortalInfo& MapData::get_portal(uint32_t portal_id) const
@@ -187,6 +194,50 @@ namespace Eternal
                 return _portals.at(portal_id);
             else
                 throw std::exception{ "The portal doesn't exist\n" };
+        }
+
+        void MapData::pack()
+        {
+            if (_is_packed)
+                return;
+
+            using Util::Packer;
+            auto grid_size = _get_grid_size();
+            auto packed_size = Packer::get_packed_size(grid_size);
+            auto packed_grid = std::vector<uint8_t>(packed_size);
+            auto result = Packer::pack((char*)_grid->_get_raw(), (char*)packed_grid.data(), grid_size, packed_size);
+            if (result > 0) {
+                packed_grid.resize(result);
+                packed_grid.shrink_to_fit();
+            }
+            else
+                ;   // TODO: handle error
+
+            _packed_size = result;
+            _grid->_reset_grid(std::move(packed_grid));
+            _is_packed = true;
+        }
+
+
+        void MapData::unpack()
+        {
+            if (!_is_packed)
+                return;
+            
+            using Util::Packer;
+            auto unpacked_size = _get_grid_size();
+            auto unpacked_grid = std::vector<uint8_t>(unpacked_size);
+            auto result = Packer::unpack((char*)_grid->_get_raw(), (char*)unpacked_grid.data(), _packed_size, unpacked_size);
+            if (result > 0) {
+                unpacked_grid.resize(result);
+                unpacked_grid.shrink_to_fit();
+            }
+            else
+                ;   // TODO: handle error
+
+            _packed_size = 0;
+            _grid->_reset_grid(std::move(unpacked_grid));
+            _is_packed = false;
         }
     }
 }

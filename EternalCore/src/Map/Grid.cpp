@@ -5,18 +5,33 @@ namespace Eternal
 {
     namespace Map
     {
+        Grid::Grid() noexcept
+            :
+            _width{ 0 }, _height{ 0 }, _is_owner{ false },
+            _grid{ nullptr }
+        {
+
+        }
+
         Grid::Grid(uint32_t width, uint32_t height)
             : _width{ width }, _height{ height }, _grid{ nullptr },
-            _is_owner{ true }, _grid_owner{ nullptr }
+            _is_owner{ true }
         {
-            _grid_owner = std::make_unique<Cell[]>(_width * _height);
-            _grid = (grid_t)_grid_owner.get();
+            _grid_owner.resize(width * height * sizeof(Cell));
+            _grid = (grid_t)_grid_owner.data();
         }
-        Grid::Grid(uint32_t width, uint32_t height, uint8_t* grid)
+        Grid::Grid(uint32_t width, uint32_t height, uint8_t* grid) noexcept
             : _width{ width }, _height{ height }, _grid{ (grid_t)grid },
-            _is_owner{ false }, _grid_owner{ nullptr }
+            _is_owner{ false }
         {
             
+        }
+
+        Grid::~Grid()
+        {
+            _grid = nullptr;
+            _grid_owner.resize(0);
+            _grid_owner.shrink_to_fit();
         }
 
         Grid::row_t Grid::_get_row(uint32_t row)
@@ -33,6 +48,17 @@ namespace Eternal
                 return nullptr;
 
             return (row_t)((uint32_t)_grid + (col * sizeof(Cell)));
+        }
+
+        void Grid::_reset_grid(std::vector<uint8_t>&& new_grid)
+        {
+            _grid_owner = std::move(new_grid);
+            _grid = (grid_t)_grid_owner.data();
+        }
+
+        size_t Grid::get_grid_size() const
+        {
+            return _width * _height * sizeof(Cell);
         }
 
         Cell* Grid::get_cell(uint32_t row, uint32_t col)
@@ -54,17 +80,6 @@ namespace Eternal
                 return;
 
             *grid_cell = cell;
-        }
-
-        std::unique_ptr<Cell[]>&& Grid::let_ptr()
-        {
-            if (_is_owner) {
-                _is_owner = false;
-                _grid = nullptr;
-                return std::move(_grid_owner);
-            }
-            
-            throw std::exception{ "Attempting to move a ptr that's not owned by the grid\n" };
         }
     }
 }
