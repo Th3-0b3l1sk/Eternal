@@ -98,6 +98,12 @@
     <ClCompile Include="src\Map\Grid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Util\Packer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Depends\lz4\lz4.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Msg\MsgAccount.h" />
@@ -138,5 +144,6 @@
     <ClInclude Include="include\Util\comms.h" />
     <ClInclude Include="include\Util\BinaryRW.h" />
     <ClInclude Include="include\Map\Grid.h" />
+    <ClInclude Include="include\Util\Packer.h" />
   </ItemGroup>
 </Project>

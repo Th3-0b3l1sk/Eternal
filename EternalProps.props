@@ -6,9 +6,9 @@
   </PropertyGroup>
   <PropertyGroup>
     <OutDir>$(SolutionDir)\$(ProjectName)\Bake\$(Configuration)\</OutDir>
-    <IncludePath>$(SolutionDir)\EternalCore\include;$(SolutionDir)\Depends\;C:\Dev\Eternal\Depends\openssl\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Dev\Eternal\Depends\lz4;$(SolutionDir)\EternalCore\include;$(SolutionDir)\Depends\;C:\Dev\Eternal\Depends\openssl\include;$(IncludePath)</IncludePath>
     <IntDir>$(SolutionDir)\$(ProjectName)\Bake\Intermediate\$(Configuration)\</IntDir>
-    <LibraryPath>C:\Dev\Eternal\Depends\openssl\lib;$(SolutionDir)\EternalCore\Bake\$(Configuration)\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>C:\Dev\Eternal\Depends\lz4;C:\Dev\Eternal\Depends\openssl\lib;$(SolutionDir)\EternalCore\Bake\$(Configuration)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
@@ -20,6 +20,9 @@
       <AdditionalDependencies>EternalCore.lib;libcrypto.lib;Winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:\Dev\Eternal\Depends\openssl\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
     <BuildMacro Include="WIN32_LEAN_AND_MEAN">

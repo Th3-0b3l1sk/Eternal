@@ -32,5 +32,6 @@
   <ItemGroup>
     <None Include="test_ini.ini" />
     <None Include="invalid_ini.ini" />
+    <None Include="liblz4.dll" />
   </ItemGroup>
 </Project>

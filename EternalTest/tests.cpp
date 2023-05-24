@@ -3,6 +3,7 @@
 #include "Util/StringPacker.h"
 #include "Util/LineReader.h"
 #include "Util/IniFile.h"
+#include "Util/Packer.h"
 #include "Network/Encryption/TqCipher.h"
 #include "GameServer/Encryption/DiffieHellman.h"
 #include "GameServer/Encryption/Blowfish.h"
@@ -96,6 +97,32 @@ namespace Utilities
 			Assert::AreEqual(root_dir, 1.1234);
 		}
 	};
+
+	TEST_CLASS(Packer)
+	{
+		TEST_METHOD(pack_unpack)
+		{
+			// lol it required more bytes to pack the string than
+			// the actual bytes used by the actual string
+			char data[] = "testing the lz4 packing packer hmmp || ?!";
+			const size_t data_len = strlen(data) + 1;
+			using Eternal::Util::Packer;
+
+			auto packed_size = Packer::get_packed_size(data_len);
+
+			auto packed_data = (char*)malloc(packed_size);
+			auto result  = Packer::pack(data, packed_data, data_len, packed_size);
+			Assert::AreNotEqual(result, 0);
+
+			if (result > 0)
+				packed_data = (char*)realloc(packed_data, result);
+
+			auto unpacked_data = new char[data_len];
+			auto uresult = Packer::unpack(packed_data, unpacked_data, result, (int)data_len);
+			for (auto i{ 0 }; i < data_len; i++)
+				Assert::AreEqual(data[i], unpacked_data[i]);
+		}
+	};
 }
 
 namespace Encryption
@@ -184,7 +211,31 @@ namespace Map
 		{
 			// todo: fix file to a real dmap
 			auto data = Eternal::Map::MapData(1010);
-			data.load_data(R"(C:\Dev\Eternal\Depends\Nhouse04.DMap)");
+			data.load_data(R"(C:\Dev\Eternal\Depends\street.DMap)");
+		}
+
+		TEST_METHOD(pack_unpack)
+		{
+			auto data = Eternal::Map::MapData(1010);
+			data.load_data(R"(C:\Dev\Eternal\Depends\street.DMap)");
+			auto bsize = data._get_grid_size();
+
+			data.pack();
+			data.unpack();
+			auto pp = data._get_raw_grid();
+
+			auto size1 = data._get_grid_size();
+
+			Assert::AreEqual(bsize, size1);
+
+			auto unpacked = Eternal::Map::MapData(1010);
+			unpacked.load_data(R"(C:\Dev\Eternal\Depends\street.DMap)");
+			auto up = unpacked._get_raw_grid();
+			auto size2 = unpacked._get_grid_size();
+
+			Assert::AreEqual(size1, size2);
+			for (auto i{ 0 }; i < size1; i++)
+				Assert::AreEqual(up[i], pp[i]);
 		}
 	};
 

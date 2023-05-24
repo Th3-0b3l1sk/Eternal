@@ -108,6 +108,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="invalid_ini.ini" />
+    <None Include="liblz4.dll" />
     <None Include="test_ini.ini" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
