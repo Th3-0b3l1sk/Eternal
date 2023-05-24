@@ -7,7 +7,30 @@ namespace Eternal
 {
     namespace Map
     {
-        struct Cell;
+#pragma pack(push, 1)
+        struct Cell
+        {
+            ~Cell() = default;
+
+            Cell() noexcept
+                : accessible{}, surface{}, elevation{}
+            {
+
+            }
+
+            Cell(const Cell& other) noexcept
+            {
+                accessible = other.accessible;
+                surface = other.surface;
+                elevation = other.elevation;
+            }
+
+            uint16_t accessible;
+            uint16_t surface;
+            int16_t  elevation;
+        };
+#pragma pack(pop)
+
         class Grid
         {
             friend class MapData;

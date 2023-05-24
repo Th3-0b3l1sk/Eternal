@@ -3,36 +3,14 @@
 #include <memory>
 #include <unordered_map>
 #include <vector>
-#include "Util/BinaryRW.h"
 #include "Map/Grid.h"
+#include "Util/BinaryRW.h"
 
 namespace Eternal
 {
     namespace Map
     {
 #pragma pack(push, 1)
-        struct Cell
-        {
-            ~Cell() = default;
-
-            Cell() noexcept
-                : accessible{}, surface{}, elevation{}
-            {
-
-            }
-
-            Cell(const Cell& other) noexcept
-            {
-                accessible = other.accessible;
-                surface    = other.surface;
-                elevation  = other.elevation;
-            }
-
-            uint16_t accessible;
-            uint16_t surface;
-            int16_t  elevation;
-        };
-
         struct DMapHeader
         {
             uint64_t file_version;
@@ -58,8 +36,6 @@ namespace Eternal
             EFFECT_3DNEW  = 19,
         };
 #pragma pack(pop)
-
-        class Grid;
 
         class MapData
         {
