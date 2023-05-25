@@ -42,6 +42,8 @@ namespace Eternal
 
         public:
             MapData(uint32_t map_id);
+            MapData(MapData&& other);
+            MapData() = default;
             ~MapData() = default;
 
         public:

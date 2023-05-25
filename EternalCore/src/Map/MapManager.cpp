@@ -3,8 +3,9 @@
 #include <thread>
 #include <vector>
 #include "Map/MapManager.h"
-#include "Map/MapData.h"
 #include "Util/IniFile.h"
+#include "Network/Server.h"
+#include "Database/Statements/GetMap.h"
 #include <unordered_map>
 
 namespace Eternal
@@ -21,16 +22,19 @@ namespace Eternal
                 }
 
                 auto work_pair = maps.back();
+                auto id = work_pair.first;
                 maps.pop_back();
                 _work_mtx.unlock();
 
-                auto data = std::make_unique<MapData>(work_pair.first); // the map id
+                auto data = std::make_shared<MapData>(id); // the map id
                 data->load_data(work_pair.second.c_str());
-                data->pack();
+                
+                std::unique_lock game_map_lock(_game_maps.first);
+                auto& game_maps = _game_maps.second;
+                if (game_maps.find(id) == game_maps.end())
+                    continue;
 
-                std::unique_lock lock(_map_data.first);
-                auto& map_data = _map_data.second;
-                map_data[work_pair.first] = std::move(data);
+                game_maps[id]->set_data(data);
             }
         }
 
@@ -49,7 +53,7 @@ namespace Eternal
                 const uint32_t hardware_concurrency = std::thread::hardware_concurrency();
                 for (auto i{ 0 }; i < hardware_concurrency; i++) 
                     work_queue.push_back(std::async(std::launch::async, 
-                        std::bind(&MapManager::load_map_and_pack, this, maps)));
+                        std::bind(&MapManager::load_map_and_pack, this, std::ref(maps))));
 
                 for (auto& future : work_queue)
                     future.wait();
@@ -58,6 +62,34 @@ namespace Eternal
             {
                 std::cout << "Something went horribly wrong! Error code: " << e.what();
             }
+        }
+
+        void MapManager::load_db_maps(Server& server)
+        {
+            auto stmt = std::make_unique<Eternal::Database::GetMap>();
+            auto result = server.execute_statement(std::move(stmt));
+            if (result.size() == 0)
+                throw std::exception{ "Failed to load game data from the database\n" };
+
+            std::unique_lock lock(_game_maps.first);
+            for (auto&& map : result) {
+                auto game_map = std::make_unique<GameMap>(std::move(map));
+                auto& _maps = _game_maps.second;
+                auto _map_id = game_map->get_map_id();
+                _maps[_map_id] = std::move(game_map);
+            }
+        }
+
+        std::unique_ptr<GameMap>& MapManager::get_map(uint32_t map_id)
+        {
+            std::shared_lock lock(_game_maps.first);
+            auto& _maps = _game_maps.second;
+            if (_maps.find(map_id) == _maps.end()) {
+                std::string error_msg = "Couldn't find the map with the id " + std::to_string(map_id);
+                throw std::exception{ error_msg.c_str() };
+            }
+
+            return _maps[map_id];
         }
     }
 }

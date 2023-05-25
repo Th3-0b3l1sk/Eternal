@@ -1,5 +1,6 @@
 #include "Map/MapData.h"
 #include "Util/Packer.h"
+#include <Windows.h>
 #include <string>
 
 namespace Eternal
@@ -11,6 +12,15 @@ namespace Eternal
         , _packed_size{ 0 }
         {
 
+        }
+
+        MapData::MapData(MapData&& other)
+            : _map_id{ other._map_id }, _is_packed{ other._is_packed },
+            _packed_size{ other._packed_size }
+
+        {
+            _grid = std::move(other._grid);
+            _portals = std::move(other._portals);
         }
 
         Util::BinaryRW::unique_deleter MapData::_load_file(const char* map_file)
@@ -148,7 +158,8 @@ namespace Eternal
 
                         catch (std::exception& e) {
                             // TODO: implement the exception handler
-                            throw;
+                            OutputDebugString(e.what());
+                            //throw;
                         }
                         break;
                     }
@@ -177,12 +188,12 @@ namespace Eternal
                     }
                 }
 
-                
+                this->pack();
             }
             catch (std::exception& what)
             {
-                // TODO: implement the handler
-                throw;
+                OutputDebugString(what.what());
+                //throw;
             }
 
             return;
