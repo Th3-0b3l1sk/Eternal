@@ -20,6 +20,7 @@ namespace Eternal
             uint8_t get_level() const { return _level; }
             uint16_t get_current_hp() const { return _current_hp; }
             virtual uint16_t get_max_hp () const { return _max_hp; }
+            virtual uint16_t get_pose() const { return _pose; }
 
         public:
             bool is_alive() const { return _current_hp > 0; }
@@ -27,7 +28,8 @@ namespace Eternal
         protected:
             uint8_t _level;
             uint16_t _current_hp;
-            uint16_t _max_hp;          
+            uint16_t _max_hp;       
+            uint16_t _pose;
         };
     }
 }

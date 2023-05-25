@@ -3,20 +3,14 @@
 #include <unordered_map>
 #include <memory>
 #include <shared_mutex>
+#include "Util/comms.h"
 
 namespace Eternal
 {
     namespace Entities
     {
-        class Entity
+        class Entity: public std::enable_shared_from_this<Entity>
         {
-        protected:
-            template <typename Mtx, typename Cont>
-            using guarded_pair = std::pair<Mtx, Cont>;
-
-            template <typename Data>
-            using Ptr = std::unique_ptr<Data>;
-
         public:
             virtual ~Entity() = default;
             
@@ -24,6 +18,8 @@ namespace Eternal
             Entity(uint32_t uid) 
                 :  _id{ uid } 
             { }
+
+            Entity() = default;
 
         public:
             void set_map(uint32_t map_id) { _map = map_id; }
@@ -39,6 +35,15 @@ namespace Eternal
             uint8_t get_dir() const { return _dir; }
             std::string_view get_name() const { return _name; }
 
+            void clear_bc_set();
+            void remove_from_bc_set(std::shared_ptr<Entity> entity);
+            void add_to_bc_set(std::shared_ptr<Entity> entity);
+            
+            virtual void inform(std::shared_ptr<Entity> entity)
+            {
+
+            }
+
         protected:    
             std::string _name;
             uint32_t _id;
@@ -48,7 +53,8 @@ namespace Eternal
             uint16_t _y;
             uint8_t _dir;
 
-            guarded_pair<std::shared_mutex, std::unordered_map<uint32_t, Ptr<Entity>>> _view_set;
+            guarded_pair<std::shared_mutex, 
+                std::unordered_map<uint32_t, std::shared_ptr<Entity>>> _view_set;
         };
     }
 }

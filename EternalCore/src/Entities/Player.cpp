@@ -1,13 +1,15 @@
 #include "Entities/Player.h"
 #include "Util/co_defs.h"
+#include "Msg/MsgPlayer.h"
+#include "Network/Connection.h"
+#include "Network/Server.h"
 
 namespace Eternal
 {
     namespace Entities
     {
-        Player::Player(uint32_t con_id, Database::GetUser::Info* data)
-            : AdvancedEntity(data->identity),
-            _connection_id{ con_id }
+        Player::Player(Connection& connection, Database::GetUser::Info* data)
+            : AdvancedEntity(data->identity), _connection(connection)
         {
             _info.mate       = std::string{ (char*)data->mate, MAX_NAME_LEN };
             _info.hair       = data->hair;
@@ -47,5 +49,19 @@ namespace Eternal
         void Player::add_item(std::unique_ptr<Item>&& item)
         {
         }
+
+        void Player::inform(std::shared_ptr<Entity> entity)
+        {
+            auto player = (Player*)entity.get();
+            auto msg = std::make_shared<Msg::MsgPlayer>(*player);
+            _connection.send_over_server(msg);
+            
+        }
+
+        uint32_t Player::get_con_id() const
+        {
+            return _connection.get_con_uid();
+        }
+      
     }
 }
