@@ -1,5 +1,9 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include "pch.h"
 #include "CppUnitTest.h"
+#include "Network/Server.h"
+#include "World.h"
+#include "Database/database.h"
 #include "Util/StringPacker.h"
 #include "Util/LineReader.h"
 #include "Util/IniFile.h"
@@ -10,6 +14,7 @@
 #include "Map/MapData.h"
 #include "Map/MapManager.h"
 #include "Map/Grid.h"
+#include "Database/Statements/GetMap.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -302,6 +307,27 @@ namespace Map
 			Assert::AreEqual(g_cell->accessible, (uint16_t)1);
 			Assert::AreEqual(g_cell->surface,    (uint16_t)1);
 			Assert::AreEqual(g_cell->elevation,  (int16_t)1);
+		}
+	};
+}
+
+namespace Database
+{
+	TEST_CLASS(GetMap)
+	{
+	public:
+		TEST_METHOD(execute)
+		{
+			const uint32_t num_of_entries = 155;	// From the database maps table
+
+			auto db = std::make_unique<Eternal::Database::Database>("eternal_game", "e_game_db", "e_game_pd");
+			db->load_statements(R"(C:\Dev\Eternal\GameServer\game_stmts.txt)");
+			Eternal::Server test_server("127.0.0.1", 5816, std::move(db));
+
+			auto stmt = std::make_unique<Eternal::Database::GetMap>();
+			auto result = test_server.execute_statement(std::move(stmt));
+			
+			Assert::AreEqual(result.size(), num_of_entries);
 		}
 	};
 }
