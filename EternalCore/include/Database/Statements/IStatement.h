@@ -16,6 +16,7 @@ namespace Eternal
             GET_USER       = 2,
             GET_USER_ITEMS = 3,
             GET_ITEMTYPE   = 4,
+            GET_MAP        = 5,
 
         };
 
