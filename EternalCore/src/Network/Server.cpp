@@ -1,6 +1,8 @@
 #include <iostream>
 #include "Network/Server.h"
 #include "Network/Connection.h"
+#include "Database/Database.h"
+#include "Util/IniFile.h"
 #include "World.h"
 
 namespace Eternal
@@ -22,8 +24,10 @@ namespace Eternal
 		// TODO: proper logger
 		std::cout << " Accepeted connection from: " << peer.remote_endpoint().address().to_string() << " port: " << peer.remote_endpoint().port() << '\n';
 
-		std::shared_ptr<Connection> client = std::make_shared<Connection>( std::move(peer), std::bind(&Server::on_receive, this ,std::placeholders::_1, std::placeholders::_2));
-		auto unique_id = client->unique_id;
+		std::shared_ptr<Connection> client = std::make_shared<Connection>( std::move(peer), 
+			std::bind(&Server::on_receive, this ,std::placeholders::_1, std::placeholders::_2), *this);
+
+		auto unique_id = client->get_con_uid();
 		_connections.insert({ unique_id, std::move(client) });
 
 		_on_accept(_connections.at(unique_id));
@@ -150,5 +154,23 @@ namespace Eternal
 		_io_context{ std::make_shared<asio::io_context>() }, _acceptor{*_io_context}
 	{
 		init(ip, port);
+	}
+
+	Server::Server(std::string_view config_file)
+		: _io_context{ std::make_shared<asio::io_context>() }, _acceptor{ *_io_context }
+
+	{
+		_config = std::make_unique<Util::IniFile>(config_file);
+		auto author = _config->get("server", "author");
+		auto ip     = _config->get("server", "ip");
+		auto port   = _config->get<uint16_t>("server", "port");
+		init(ip, port);
+
+		auto dsn   = _config->get("database", "dsn");
+		auto usr   = _config->get("database", "usr");
+		auto pwd   = _config->get("database", "pwd");
+		auto stmts = _config->get("database", "stmts");
+		_database = std::make_unique<Database::Database>(dsn, usr, pwd);
+		_database->load_statements(stmts);
 	}
 }

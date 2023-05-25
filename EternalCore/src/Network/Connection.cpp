@@ -1,15 +1,19 @@
 #include <iostream> // TODO: remove
+#include <algorithm>
+#include "Util/co_defs.h"
+#include "Entities/Player.h"
 #include "Network/Connection.h"
+#include "Network/Server.h"
 
 namespace Eternal
 {
     uint32_t Connection::id = 0;
 
-    Connection::Connection(tcp::socket&& client_socket, fn_on_receive_callback on_receive_callback)
+    Connection::Connection(tcp::socket&& client_socket, fn_on_receive_callback on_receive_callback, Server& server)
         : _client_socket(std::move(client_socket)),
         _on_receive_callback(on_receive_callback),
         _buffer(new uint8_t[BUF_SIZE] {}),
-        unique_id(++id)
+        _unique_id(++id), _server(server)
     {
         if (_on_receive_callback == nullptr)
             throw std::exception{}; // todo: proper exception
@@ -68,4 +72,13 @@ namespace Eternal
         asio::write(_client_socket, asio::const_buffer{ data.get(), len });
     }
 
+    uint32_t Connection::get_player_id() const
+    {
+        return _player->get_id(); 
+    }
+
+    void Connection::send_over_server(std::shared_ptr<Msg::NetMsg> msg)
+    {
+        _server.send(_unique_id, msg);
+    }
 }

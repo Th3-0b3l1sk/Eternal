@@ -5,11 +5,20 @@
 #include <unordered_map>
 #include <vector>
 #include "Msg/NetMsg.h"
-#include "Database/Database.h"
-
 
 namespace Eternal
 {
+	namespace Database
+	{
+		class Database;
+		class IStatement;
+	};
+
+	namespace Util
+	{
+		class IniFile;
+	};
+
 	using asio::ip::tcp;
 	class World;
 	class Connection;
@@ -50,6 +59,7 @@ namespace Eternal
 
 		public:
 			void run();
+			std::unique_ptr<Util::IniFile>& get_config() { return _config; }
 
 		public:
 			std::function<void(std::shared_ptr<Connection>, size_t)> _on_receive;
@@ -64,5 +74,6 @@ namespace Eternal
 			std::vector<std::thread> _thread_pool;
 			std::unique_ptr<Database::Database> _database;
 			std::unique_ptr<Eternal::World> _game_world;	// To be used only in the game server
+			std::unique_ptr<Util::IniFile> _config;
 		};
 }
