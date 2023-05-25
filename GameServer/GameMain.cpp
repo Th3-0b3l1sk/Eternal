@@ -11,15 +11,15 @@
 #include "Network/Encryption/IExchange.h"
 #include "Database/Database.h"
 #include "Util/co_defs.h"
+#include "Util/IniFile.h"
 #include "World.h"
+
 
 int main()
 {
 	try {
 		
-		auto db = std::make_unique<Eternal::Database::Database>("eternal_game", "e_game_db", "e_game_pd");
-		db->load_statements("./game_stmts.txt");
-		Eternal::Server GameServer("127.0.0.1", 5816, std::move(db));
+		Eternal::Server GameServer("./config.ini");
 		auto game_world = std::make_unique<Eternal::World>(GameServer);
 		GameServer._which = Eternal::Server::Which::GAME;
 		GameServer.set_world(std::move(game_world));
@@ -32,7 +32,7 @@ int main()
 			std::unique_ptr<Eternal::Encryption::IExchange> dh(new DiffieHellman(P, G));
 			dh->generate_key();
 			auto msg = std::make_shared<MsgLoginProofA>( P, G, dh->get_public_key() );
-			GameServer.send(connection->unique_id, msg);
+			GameServer.send(connection->get_con_uid(), msg);
 			connection->set_exchange(std::move(dh));
 			connection->set_state(Eternal::Connection::State::KEY_EXCHANGE);
 		};
@@ -75,7 +75,7 @@ int main()
 					auto packet = new uint8_t[packet_size];
 					memcpy_s(packet, packet_size, data, packet_size);
 					auto msg = Eternal::Msg::NetMsg::create(std::shared_ptr<uint8_t[]>(packet), packet_size);
-					msg->process(GameServer, connection->unique_id);
+					msg->process(GameServer, connection->get_con_uid());
 					if (size >= bytes_received)
 						break;
 					data += size;

@@ -3,6 +3,7 @@
 #include "Network/Connection.h"
 #include "Network/Encryption/TqCipher.h"
 #include "Database/Database.h"
+#include "Util/IniFile.h"
 #include <string>
 #include <thread>
 #include "World.h"	// NOT USED. KEEP
@@ -10,10 +11,8 @@
 int main()
 {
 	try {
-		auto account_db = std::make_unique<Eternal::Database::Database>("eternal_account", "e_account_db", "e_account_pd");
-		account_db->load_statements("./account_stmts.txt");
 
-		Eternal::Server AccountServer("127.0.0.1", 55099, std::move(account_db));
+		Eternal::Server AccountServer("./config.ini");
 		AccountServer._which = Eternal::Server::Which::ACCOUNT;
 
 		AccountServer._on_accept = [&](std::shared_ptr<Eternal::Connection> connection) {
@@ -27,7 +26,7 @@ int main()
 			auto data = connection->get_buffer().get();
 			connection->get_cipher()->decrypt(data, bytes_received);
 			auto msg = Eternal::Msg::NetMsg::create(connection->get_buffer(), bytes_received);	
-			msg->process(AccountServer, connection->unique_id);
+			msg->process(AccountServer, connection->get_con_uid());
 		};
 
 		AccountServer.take_over();
