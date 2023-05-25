@@ -4,8 +4,11 @@
 #include "Network/Connection.h"
 #include "Database/Statements/GetUserItems.h"
 #include "Database/Statements/GetItemtype.h"
+#include "Database/Statements/GetUser.h"
 #include "Entities/Player.h"
 #include "Entities/Item.h"
+#include "World.h"
+#include <chrono>
 
 namespace  Eternal
 {
@@ -39,21 +42,33 @@ namespace  Eternal
             {
             case ActionType::ACTION_SET_LOCATION:
             {
-                // TODO: proper logic
+                auto con = server.get_connection(con_id);
+                auto& player = con->get_player();
+
+                auto now = std::chrono::high_resolution_clock::now();
+                auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
                 auto msg_action = std::make_shared<Msg::MsgAction>(ActionType::ACTION_SET_LOCATION,
-                    0,
-                    1000001,
-                    1036,
-                    198,
-                    186,
-                    1  );
+                    milliseconds,
+                    player->get_id(),
+                    player->get_map(),
+                    player->get_x(),
+                    player->get_y(),
+                    player->get_dir()); // direction
+
                 server.send(con_id, msg_action);
+                
+                // add the player to the map
+                auto& map_mgr = server.get_world()->get_map_manager();
+                auto& map = map_mgr->get_map(player->get_map());
+                map->add_player(player);
+                
                 break;
+
             }
             case ActionType::ACTION_SEND_ITEMS:
             {
                 auto con = server.get_connection(con_id);
-                auto stmt = std::make_unique<Database::GetUserItems>(con->player_id);
+                auto stmt = std::make_unique<Database::GetUserItems>(con->get_player_id());
                 auto result = server.execute_statement(std::move(stmt));
                 std::vector<uint32_t> item_ids;
                 for (auto& i : result) {

@@ -41,7 +41,7 @@ namespace Eternal
                     server.send(con_id, msg_talk);
                 }
                 else {
-                    server.get_connection(con_id)->player_id = _info->client_identity;   // TODO: replace with a proper player struct
+                    auto& connection = server.get_connection(con_id);
                     // TODO: use enums
                     auto msg_talk_reply = std::make_shared<Msg::MsgTalk>(SYSTEM, ALLUSERS, "", ANSWER_OK, 2101, 0x00FFFFFF);
                     server.send(con_id, msg_talk_reply);
@@ -50,10 +50,11 @@ namespace Eternal
                     std::tm* lt = std::localtime(&time);
                     auto msg_data = std::make_shared<Msg::MsgData>(lt->tm_year, lt->tm_mon, lt->tm_yday, lt->tm_mday, lt->tm_hour,  lt->tm_min, lt->tm_sec);
                     server.send(con_id, msg_data);
-                    
+
                     auto user_data = (Database::GetUser::Info*)result[0].get();
-                    auto player = std::make_shared<Entities::Player>(con_id, user_data);
-                    server.get_connection(con_id)->set_player(player);
+                    auto player = std::make_shared<Entities::Player>(*connection, user_data);
+
+                    connection->set_player(player);
                     auto& game_world = server.get_world();
                     game_world->join_player(player);
                     

@@ -18,6 +18,7 @@ namespace Eternal
             MSG_USER_INFO   = 1006,
             MSG_ACTION      = 1010,
             MSG_ITEM_INFO   = 1008,
+            MSG_PLAYER      = 1014,
 
 
         };

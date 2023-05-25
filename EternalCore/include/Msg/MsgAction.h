@@ -34,7 +34,7 @@ namespace Eternal
         public:
             MsgAction(std::shared_ptr<uint8_t[]>&& data, size_t len);
             MsgAction(ActionType action, uint32_t time_stamp, uint32_t identity, 
-                uint32_t data1, uint16_t x, uint16_t y, uint32_t direction);
+                uint32_t data, uint16_t x, uint16_t y, uint32_t direction);
             virtual ~MsgAction() = default;
 
         public:
