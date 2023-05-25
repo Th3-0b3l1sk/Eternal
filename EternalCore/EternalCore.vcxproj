@@ -95,6 +95,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Depends\lz4\lz4.c" />
+    <ClCompile Include="src\Entities\ItemManager.cpp" />
+    <ClCompile Include="src\Msg\MsgPlayer.cpp" />
+    <ClCompile Include="src\Entities\Entity.cpp" />
+    <ClCompile Include="src\Database\Statements\GetMap.cpp" />
+    <ClCompile Include="src\Map\GameMap.cpp" />
     <ClCompile Include="src\Util\Packer.cpp" />
     <ClCompile Include="src\Map\Grid.cpp" />
     <ClCompile Include="src\Util\BinaryRW.cpp" />
@@ -127,6 +132,8 @@
     <ClCompile Include="src\World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Database\Statements\GetMap.h" />
+    <ClInclude Include="include\Map\GameMap.h" />
     <ClInclude Include="include\Map\Grid.h" />
     <ClInclude Include="include\Database\Statements\GetItemtype.h" />
     <ClInclude Include="include\Database\Statements\GetUserItems.h" />
@@ -166,6 +173,8 @@
     <ClInclude Include="include\Map\MapData.h" />
     <ClInclude Include="include\Map\MapManager.h" />
     <ClInclude Include="include\Util\Packer.h" />
+    <ClInclude Include="include\Msg\MsgPlayer.h" />
+    <ClInclude Include="include\Entities\ItemManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

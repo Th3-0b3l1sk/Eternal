@@ -24,6 +24,7 @@ namespace Eternal
 	class Connection;
 	class Server
 		{
+		friend class World;	// for the db
 		public:
 		enum class Which
 		{

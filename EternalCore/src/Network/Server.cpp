@@ -3,6 +3,7 @@
 #include "Network/Connection.h"
 #include "Database/Database.h"
 #include "Util/IniFile.h"
+#include "Entities/ItemManager.h"
 #include "World.h"
 
 namespace Eternal

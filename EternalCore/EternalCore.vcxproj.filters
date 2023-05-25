@@ -104,6 +104,21 @@
     <ClCompile Include="..\Depends\lz4\lz4.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Map\GameMap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Database\Statements\GetMap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Entities\Entity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Msg\MsgPlayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Entities\ItemManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Msg\MsgAccount.h" />
@@ -145,5 +160,9 @@
     <ClInclude Include="include\Util\BinaryRW.h" />
     <ClInclude Include="include\Map\Grid.h" />
     <ClInclude Include="include\Util\Packer.h" />
+    <ClInclude Include="include\Map\GameMap.h" />
+    <ClInclude Include="include\Database\Statements\GetMap.h" />
+    <ClInclude Include="include\Msg\MsgPlayer.h" />
+    <ClInclude Include="include\Entities\ItemManager.h" />
   </ItemGroup>
 </Project>

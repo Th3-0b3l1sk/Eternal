@@ -6,7 +6,9 @@
 #include "Util/IniFile.h"
 #include <string>
 #include <thread>
+#include "Entities/ItemManager.h" // NOT USED. KEEP
 #include "World.h"	// NOT USED. KEEP
+
 
 int main()
 {

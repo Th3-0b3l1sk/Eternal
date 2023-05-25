@@ -2,13 +2,21 @@
 #include <unordered_map>
 #include <memory>
 #include <shared_mutex>
-#include "Entities/Player.h"
 #include "Util/comms.h"
+#include "Map//MapManager.h"
+#include "Entities/Item.h"
 
 #define TD(x) ;
 
 namespace Eternal
 {
+    namespace Entities
+    {
+        class Player;
+        class Item;       
+        class ItemManager;
+    };
+
     class Server;
     class World
     {
@@ -17,16 +25,26 @@ namespace Eternal
         using Ptr = std::shared_ptr<Data>;
 
     public:
-        World(Eternal::Server& game_server);
+        World(Eternal::Server& game_server) noexcept;
 
     public:
         void join_player(std::shared_ptr<Entities::Player> player);
         void kick_player(uint32_t player_id);
 
+    public:
+        std::unique_ptr<Map::MapManager>& get_map_manager() { return _map_manager; }
+        std::unique_ptr<Entities::ItemManager>& get_item_manager();
+
+    private:
+        void _init();
+
     private:
         Eternal::Server& _server;
         guarded_pair<std::shared_mutex, std::unordered_map<uint32_t, Ptr<Entities::Player>>> _world_players;
-        TD(std::unique_ptr<MapManager> manager);
+        std::unique_ptr<Entities::ItemManager> _item_manager;
+        std::unique_ptr<Map::MapManager> _map_manager;
         bool _is_stopped;
+
+        std::string _game_map_ini;
     };
 }
