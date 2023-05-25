@@ -52,7 +52,7 @@ namespace Eternal
             };
 #pragma pack(pop)
         public:
-            GetItemtype(uint32_t item_id);
+            GetItemtype(uint32_t item_id = 0);
             GetItemtype(std::vector<uint32_t> item_ids);
             virtual ~GetItemtype() = default;
             virtual SQLRETURN bind() override;

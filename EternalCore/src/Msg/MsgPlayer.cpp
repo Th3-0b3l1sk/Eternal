@@ -1,5 +1,7 @@
 #include "Msg/MsgPlayer.h"
 #include "Util/StringPacker.h"
+#include "Util/co_defs.h"
+#include "Entities/Item.h"
 
 namespace Eternal
 {
@@ -24,9 +26,22 @@ namespace Eternal
             _info->status = 0;
             _info->synid_rank = 0;
 
-            // TODO: items ... 
+            auto equipment = player.get_equipment_by_pos(POS_GARMENT);
+            _info->garment_type = equipment? equipment->get_type() : 0;
+            
+            equipment = player.get_equipment_by_pos(POS_ARMET);
+            _info->armet_type  = equipment? equipment->get_type()  : 0;
+            _info->armet_color = equipment? equipment->get_color() : 0;
 
+            equipment = player.get_equipment_by_pos(POS_ARMOR);
+            _info->armor_type  = equipment? equipment->get_type()  : 0;
+            _info->armor_color = equipment? equipment->get_color() : 0;
 
+            equipment = player.get_equipment_by_pos(POS_RWEAPON);
+            _info->rweapon_type = equipment? equipment->get_type() : 0;
+
+            equipment = player.get_equipment_by_pos(POS_LWEAPON);
+            _info->lweapon_type= equipment? equipment->get_type()  : 0;
 
             memset(_info->_padding1, 0x0, sizeof(_info->_padding1));
             memset(_info->_padding2, 0x0, sizeof(_info->_padding2));
@@ -45,11 +60,8 @@ namespace Eternal
             _info->nobility_rank = 0;
             _info->nobility_uid = player.get_id();
 
-            // TODO: equipment ... 
-
             Util::StringPacker packer(_info->strings);
             packer.AddString(player.get_name().data());
-
         }
 
         void MsgPlayer::process(Server& server, uint32_t con_id)

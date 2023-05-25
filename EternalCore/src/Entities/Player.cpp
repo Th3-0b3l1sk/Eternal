@@ -3,6 +3,8 @@
 #include "Msg/MsgPlayer.h"
 #include "Network/Connection.h"
 #include "Network/Server.h"
+#include "Entities/Item.h"
+
 
 namespace Eternal
 {
@@ -46,22 +48,56 @@ namespace Eternal
             _y               = data->record_y;
             _dir             = 1;   // TODO: replace with an enum
         }
-        void Player::add_item(std::unique_ptr<Item>&& item)
+
+        void Player::add_item(Item&& item)
         {
+            auto my_item = std::make_unique<Item>(item);
+            std::shared_lock sinv_lk(_inventory.first);
+            auto current_index = _inventory.second.size();
+
+            if (item.get_position() == POS_INVENTORY) {
+                if (current_index >= MAX_INVENTORY)
+                    return; // TODO: tell the player inventory is full
+                
+                sinv_lk.unlock();
+                std::unique_lock uinv_lk(_inventory.first);
+                auto& inventory = _inventory.second;
+                inventory[current_index] = std::move(my_item);
+            }
+            else {
+                std::unique_lock ueq_lk(_equipment.first);
+                auto& equipments = _equipment.second;
+                auto item_pos = (uint8_t)item.get_position();
+                if (!equipments[item_pos])
+                    equipments[item_pos] = std::move(my_item);
+                else
+                    ;// TODO: remove the item from the equipments and add it to the inventory
+            }
         }
 
         void Player::inform(std::shared_ptr<Entity> entity)
         {
             auto player = (Player*)entity.get();
             auto msg = std::make_shared<Msg::MsgPlayer>(*player);
-            _connection.send_over_server(msg);
-            
+            _connection.send_over_server(msg); 
         }
 
         uint32_t Player::get_con_id() const
         {
             return _connection.get_con_uid();
         }
-      
+
+       const Item* Player::get_equipment_by_pos(uint8_t pos)  const
+        {
+           if (pos >= MAX_EQUIPMENT)
+               return nullptr;
+
+           std::shared_lock esh_lk(_equipment.first);
+           auto& equipment = _equipment.second;
+           if (!equipment[pos])
+               return nullptr;
+
+           return equipment[pos].get();
+        }     
     }
 }

@@ -9,6 +9,7 @@
 #include "Msg/MsgConnectEx.h"
 #include "Msg/MsgLoginProofA.h"
 #include "Network/Encryption/IExchange.h"
+#include "Entities/ItemManager.h"
 #include "Database/Database.h"
 #include "Util/co_defs.h"
 #include "Util/IniFile.h"

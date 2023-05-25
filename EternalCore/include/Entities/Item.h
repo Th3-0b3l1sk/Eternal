@@ -1,8 +1,8 @@
 #pragma once
 #include <cstdint>
 #include <string>
-#include <memory>
-#include "Database/Statements/GetItemtype.h"
+#include "Database/Statements/GetUserItems.h"
+#include "Util/co_defs.h"
 
 namespace Eternal
 {
@@ -10,66 +10,38 @@ namespace Eternal
     {
         class Item
         {
-        public:
-            enum class Position : uint8_t
-            {
-                INVENTORY = 0,
-                ARMET,
-                NECKLACE,
-                ARMOR,
-                RWEAPON,
-                LWEAPON,
-                RING,
-                GOURD,
-                SHOES,
-                GARMENT,
-            };
-
-            static constexpr size_t MAX_EQUIPMENT = 9;
-#pragma pack(push, 1)
-            struct Info
-            {
-                uint32_t id;
-                std::string name;
-                uint8_t req_prof;
-                uint8_t req_weaponskill;
-                uint8_t req_level;
-                uint8_t req_sex;
-                uint16_t req_force;
-                uint16_t req_speed;
-                uint16_t req_health;
-                uint16_t req_soul;
-                uint32_t price;
-                uint16_t atk_max;
-                uint16_t atk_min;
-                uint16_t defense;
-                uint16_t dexterity;
-                uint16_t dodge;
-                uint16_t health;
-                uint16_t mana;
-                uint16_t durability;
-                uint16_t durability_limit;
-                uint8_t gem1;
-                uint8_t gem2;
-                uint8_t magic1;
-                uint8_t magic2;
-                uint8_t magic3;
-                uint16_t magic_atk;
-                uint16_t magic_def;
-                uint16_t atk_range;
-                uint16_t atk_speed;
-
-                Info()
-                    : name{ "Default" }
-                { }
-            };
-#pragma pack(pop)
 
         public:
             Item();
-            Item(Database::GetItemtype::Info* data);
+            Item(Database::GetUserItems::Info* data);
+            Item(const Item& other) = default;
+            Item(Item&& other) = default;
+
+        public:
+            uint8_t get_position() const { return _position; }
+            uint32_t get_type() const { return _type; }
+            uint8_t get_color() const { return _color; }
+
         private:
-            std::unique_ptr<uint8_t[]> _info;
+
+            uint32_t _id;
+            uint32_t _type;
+            uint32_t _owner_id;
+            uint32_t _player_id;
+            uint16_t _durability;
+            uint16_t _durability_limit;
+            uint8_t  _ident;
+            uint8_t  _position;
+            uint8_t  _gem1;
+            uint8_t  _gem2;
+            uint8_t  _magic1;
+            uint8_t  _magic2;
+            uint8_t  _magic3;
+            uint8_t  _restrian;
+            uint8_t  _bless;
+            uint8_t  _enchant;
+            uint8_t  _locked;
+            uint8_t  _color;
         };
     }
 }

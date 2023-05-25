@@ -42,19 +42,16 @@ namespace Eternal
             
             std::unique_lock<std::shared_mutex> lock(_entities.first);
             auto& entities = _entities.second;
-            std::for_each(entities.begin(), entities.end(),
-                [&entity_id](std::pair<uint32_t, std::shared_ptr<Entities::Entity>> e) {
-                    if (entity_id == e.second->get_id())
-                        throw std::exception{ "Attempting to add a player to the map failed since the player exists." };
-                });
+            if(entities.find(entity_id) != entities.end())
+                throw std::exception{ "Attempting to add a player to the map failed since the player exists." };
 
             entities[entity_id] = entity;
-            // TODO: send map info
-
             entity->clear_bc_set();
-            
-            lock.unlock();
-            update_bc_set(entity);
+            _update_bc_set(entity);
+
+            //
+            // TODO: send map info
+            //
         }
 
         // TODO: find a better place
@@ -67,18 +64,17 @@ namespace Eternal
         }
 
 
-        void GameMap::update_bc_set(std::shared_ptr<Entities::Entity>& entity)
+        void GameMap::_update_bc_set(std::shared_ptr<Entities::Entity> entity)
         {
             auto entity_id = entity->get_id();
-            std::unique_lock<std::shared_mutex> lock(_entities.first);
             auto& entities = _entities.second;
             
             if (entities.find(entity_id) != entities.end()) {
                 for (auto& e : entities) {
                     if (e.second->get_id() == entity_id)
                         continue;
-                    auto& ee = e.second;
-
+                    
+                    auto ee = e.second;
                     // TODO: find a better place
                     const uint32_t CELLS_PER_VIEW = 18;
                     if (_distance(entity->get_x(), entity->get_y(), ee->get_x(), ee->get_y()) <= 18) {

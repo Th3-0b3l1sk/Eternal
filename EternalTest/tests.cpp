@@ -15,6 +15,7 @@
 #include "Map/MapManager.h"
 #include "Map/Grid.h"
 #include "Database/Statements/GetMap.h"
+#include "Entities/ItemManager.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -328,6 +329,24 @@ namespace Database
 			auto result = test_server.execute_statement(std::move(stmt));
 			
 			Assert::AreEqual(result.size(), num_of_entries);
+		}
+	};
+}
+
+namespace Entities
+{
+	TEST_CLASS(ItemManager)
+	{
+	public:
+		TEST_METHOD(load_all_items)
+		{
+			const uint32_t ITEMS_COUNT = 6861;
+			auto db = std::make_unique<Eternal::Database::Database>("eternal_game", "e_game_db", "e_game_pd");
+			db->load_statements(R"(C:\Dev\Eternal\GameServer\game_stmts.txt)");
+
+			Eternal::Entities::ItemManager mgr(*db);
+			auto items_count = mgr.get_items_count();
+			Assert::AreEqual(items_count, ITEMS_COUNT);
 		}
 	};
 }

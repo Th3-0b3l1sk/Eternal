@@ -8,6 +8,8 @@ namespace Eternal
             : IStatement(StatementID::GET_ITEMTYPE)
         {
             _info = std::make_unique<uint8_t[]>(sizeof(Info));
+            auto info = (Info*)_info.get();
+            info->id = item_id;
         }
         GetItemtype::GetItemtype(std::vector<uint32_t> item_ids)
             : IStatement(StatementID::GET_ITEMTYPE)
@@ -43,7 +45,7 @@ namespace Eternal
             SQLRETURN rc = SQL_NO_DATA;
             auto data = std::vector<std::unique_ptr<uint8_t[]>>{};
             Info* ptr = (Info*)new uint8_t[sizeof(Info)]{};
-
+            
             TRYODBC(_hStatement, SQL_HANDLE_STMT, 
                 SQLBindCol(_hStatement, 1,   SQL_C_ULONG,     &ptr->id,              0, nullptr));
             TRYODBC(_hStatement, SQL_HANDLE_STMT,             
@@ -118,7 +120,7 @@ namespace Eternal
                 SQLBindCol(_hStatement, 36,  SQL_C_UTINYINT,  &ptr->type_mask,       0, nullptr));
             TRYODBC(_hStatement, SQL_HANDLE_STMT,                                                                                     
                 SQLBindCol(_hStatement, 37,  SQL_C_ULONG,     &ptr->cps_price,       0, nullptr));
-                 
+                
             while (SQLFetch(_hStatement) == SQL_SUCCESS)
             {
                 auto citem = std::make_unique<uint8_t[]>(sizeof(Info));
@@ -138,10 +140,20 @@ namespace Eternal
 
         void GetItemtype::hook_stmt(std::string& stmt)
         {
+            auto info = (Info*)_info.get();
             // default stmt: where [_id]=?
-            if (_item_ids.empty())
+            if (_item_ids.empty() && info->id != 0)
                 return;
+            
+            // load all items
+            if (info->id == 0) {
+                static const char* segment = " OR 1=1";
+                std::string new_statement = stmt + segment;
+                stmt = std::move(new_statement);
+                return;
+            }
 
+            // load a subset of the items
             auto remaining = _item_ids.size() - 1;
             static const char* segment = " OR [_id]=?";
             std::string new_statement = stmt;

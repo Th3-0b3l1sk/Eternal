@@ -3,10 +3,9 @@
 #include "Network/Server.h"
 #include "Network/Connection.h"
 #include "Database/Statements/GetUserItems.h"
-#include "Database/Statements/GetItemtype.h"
 #include "Database/Statements/GetUser.h"
 #include "Entities/Player.h"
-#include "Entities/Item.h"
+#include "Entities/ItemManager.h"
 #include "World.h"
 #include <chrono>
 
@@ -42,7 +41,7 @@ namespace  Eternal
             {
             case ActionType::ACTION_SET_LOCATION:
             {
-                auto con = server.get_connection(con_id);
+                auto& con = server.get_connection(con_id);
                 auto& player = con->get_player();
 
                 auto now = std::chrono::high_resolution_clock::now();
@@ -70,22 +69,19 @@ namespace  Eternal
                 auto con = server.get_connection(con_id);
                 auto stmt = std::make_unique<Database::GetUserItems>(con->get_player_id());
                 auto result = server.execute_statement(std::move(stmt));
+                auto& item_mgr = server.get_world()->get_item_manager();
+                auto& player = server.get_connection(con_id)->get_player();
                 std::vector<uint32_t> item_ids;
+
                 for (auto& i : result) {
                     auto msg_item = std::make_shared<Msg::MsgItemInfo>(i.get());
                     item_ids.push_back(msg_item->get_type());
+                    player->add_item((Database::GetUserItems::Info*)i.get());
                     server.send(con_id, msg_item);
                 }
 
-                // TODO: move to a proper location
-                if (item_ids.empty())
-                    return;
-                auto item_type_stmt = std::make_unique<Database::GetItemtype>(item_ids);
-                auto item_result = server.execute_statement(std::move(item_type_stmt));
-                auto& player = server.get_connection(con_id)->get_player();
-                for (auto& i : item_result) {
-                    player->add_item(std::make_unique<Entities::Item>((Database::GetItemtype::Info*)i.get()));
-                }
+                // TODO: should i move it inside the loop?
+                player->update_bc_set();
                 break;
             }
             }

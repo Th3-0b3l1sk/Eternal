@@ -2,10 +2,10 @@
 #include <array>
 #include <unordered_map>
 #include <memory>
+#include "Util/co_defs.h"
 #include "Util/comms.h"
 #include "Database/Statements/GetUser.h"
-#include "AdvancedEntity.h"
-#include "Item.h"
+#include "Entities/AdvancedEntity.h"
 #include "Msg/NetMsg.h"
 
 namespace Eternal
@@ -14,6 +14,7 @@ namespace Eternal
 
     namespace Entities
     {
+        class Item;
         class Player : public AdvancedEntity
         {
         private:
@@ -53,7 +54,7 @@ namespace Eternal
             virtual ~Player() = default;
 
         public:
-            void add_item(std::unique_ptr<Item>&& item);
+            void add_item(Item&& item);
             virtual void inform(std::shared_ptr<Entity> entity);
 
 
@@ -61,14 +62,14 @@ namespace Eternal
             uint32_t get_con_id() const;
             uint16_t get_hair() const { return _info.hair; }
             uint16_t get_rebirth() const { return _info.rebirth; }
-            
+            const Item* get_equipment_by_pos(uint8_t pos) const;
 
 
         private:
             PlayerInfo _info;
             Connection& _connection;
-            guarded_pair<std::shared_mutex, std::array<Ptr<Item>, Item::MAX_EQUIPMENT>> _equipment;
-            guarded_pair<std::shared_mutex, std::unordered_map<uint32_t, Ptr<Item>>> _inventory;
+            mutable guarded_pair<std::shared_mutex, std::array<Ptr<Item>, MAX_EQUIPMENT>> _equipment;
+            mutable guarded_pair<std::shared_mutex, std::unordered_map<uint8_t, Ptr<Item>>> _inventory;
         };
     }
 }

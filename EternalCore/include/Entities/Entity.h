@@ -38,6 +38,7 @@ namespace Eternal
             void clear_bc_set();
             void remove_from_bc_set(std::shared_ptr<Entity> entity);
             void add_to_bc_set(std::shared_ptr<Entity> entity);
+            void update_bc_set();
             
             virtual void inform(std::shared_ptr<Entity> entity)
             {

@@ -26,7 +26,8 @@ namespace Eternal
 
             void add_player(std::shared_ptr<Entities::Entity> entity);
 
-            void update_bc_set(std::shared_ptr<Entities::Entity>& entity);
+        private:
+            void _update_bc_set(std::shared_ptr<Entities::Entity> entity);
 
         private:
             std::shared_ptr<MapData> _data;

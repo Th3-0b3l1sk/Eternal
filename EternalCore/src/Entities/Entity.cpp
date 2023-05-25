@@ -40,5 +40,13 @@ namespace Eternal
             // TODO: check if player
             entity->inform(shared_from_this());
         }
+
+        void Entity::update_bc_set()
+        {
+            std::shared_lock lock(_view_set.first);
+            auto& view_set = _view_set.second;
+            for (const auto& entity : view_set)
+                entity.second->inform(shared_from_this());
+        }
     }
 }
