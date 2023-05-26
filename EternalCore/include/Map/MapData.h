@@ -58,6 +58,8 @@ namespace Eternal
             // FOR USE IN THE UNIT TESTS 
             const uint8_t* _get_raw_grid() const { return _grid->_get_raw(); }
             const uint32_t _get_grid_size() const { return _grid->get_grid_size(); }
+            Cell& get_cell(uint16_t x, uint16_t y) { return *_grid->get_cell(x, y); }
+
 
         private:
             static Util::BinaryRW::unique_deleter _load_file(const char* map_file);

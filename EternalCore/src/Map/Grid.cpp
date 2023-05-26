@@ -79,6 +79,7 @@ namespace Eternal
                 return;
 
             *grid_cell = cell;
+            grid_cell->accessible = cell.accessible != 1;
         }
     }
 }

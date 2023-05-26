@@ -1,5 +1,9 @@
 #include "Map/GameMap.h"
 #include "Map/MapData.h"
+#include "Entities/Entity.h"
+#include "Entities/Player.h"
+#include "Entities/Npc.h"
+#include "Entities/Item.h"
 
 namespace Eternal
 {
@@ -22,7 +26,7 @@ namespace Eternal
         size_t GameMap::get_player_count()
         {
             std::shared_lock lock(_entities.first);
-            return _entities.second.size();
+            return _player_count;
         }
 
         void GameMap::set_data(std::shared_ptr<MapData> data)
@@ -30,24 +34,40 @@ namespace Eternal
             _data = std::move(data);
         }
 
+        void GameMap::add_npc(std::shared_ptr<Entities::Entity> entity)
+        {
+            auto entity_id = entity->get_id();
+            
+            std::unique_lock<std::shared_mutex> lock(_entities.first);
+            auto& entities = _entities.second;
+            if (entities.find(entity_id) != entities.end())
+                throw std::exception{ "Attempting to add a player to the map failed since the player exists." };
+
+            entities[entity_id] = entity;
+        }
+
         void GameMap::add_player(std::shared_ptr<Entities::Entity> entity)
         {
             auto entity_id = entity->get_id();
             
-            // TODO: if entity is player ... 
-            if (get_player_count() == 0) {
-                std::unique_lock<std::shared_mutex> lock(_entities.first);
-                _data->unpack();
+            // TODO: check if player
+            if (1) {
+                if (get_player_count() == 0) {
+                    std::unique_lock<std::shared_mutex> lock(_entities.first);
+                    _data->unpack();
+                }
             }
-            
+
             std::unique_lock<std::shared_mutex> lock(_entities.first);
             auto& entities = _entities.second;
             if(entities.find(entity_id) != entities.end())
                 throw std::exception{ "Attempting to add a player to the map failed since the player exists." };
 
             entities[entity_id] = entity;
+            _player_count++;
+
             entity->clear_bc_set();
-            _update_bc_set(entity);
+            update_bc_set(entity);
 
             //
             // TODO: send map info
@@ -63,8 +83,7 @@ namespace Eternal
             return std::sqrt(x_diff * x_diff + y_diff * y_diff);
         }
 
-
-        void GameMap::_update_bc_set(std::shared_ptr<Entities::Entity> entity)
+        void GameMap::update_bc_set(std::shared_ptr<Entities::Entity> entity)
         {
             auto entity_id = entity->get_id();
             auto& entities = _entities.second;
@@ -87,6 +106,24 @@ namespace Eternal
                     }
                 }
             }
+        }
+
+        bool GameMap::attempt_jump(std::shared_ptr<Entities::Entity> entity, uint16_t old_x, uint16_t old_y, uint16_t new_x, uint16_t new_y, uint8_t dir)
+        {
+            auto distance = _distance(old_x, old_y, new_x, new_y);
+            // TODO: find a better place
+            const uint32_t MAX_JUMP_DISTANCE = 18;
+            if (distance <= MAX_JUMP_DISTANCE) {
+                auto& cell = _data->get_cell(new_x, new_y);
+                if (!cell.accessible)
+                    return false;
+
+                entity->set_pos(new_x, new_y);
+                entity->set_dir(dir);   // TODO: needs sanitization
+                return true;
+            }
+            else
+                return false;   // TODO: set flyback
         }
     }
 }
