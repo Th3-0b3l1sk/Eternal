@@ -11,4 +11,4 @@ Eternal is a C++ multi-threaded private server emulator targeting the client ver
  4. [lz4](https://github.com/lz4/lz4)
 
 ### Screenshots
-![](./screenshots/eternal_multiplayer.PNG?raw=true "")
+![](./screenshots/eternal_npcs.PNG?raw=true "")
