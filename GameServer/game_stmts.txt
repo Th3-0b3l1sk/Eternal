@@ -1,4 +1,5 @@
 get_user=SELECT * FROM [e_game_db].[dbo].[users] WHERE [_identity]=?
 get_user_items=SELECT * FROM [e_game_db].[dbo].[items] WHERE [_owner_id]=?
 get_itemtype=SELECT * FROM [e_game_db].[dbo].[itemtype] WHERE [_id]=?
-get_map= SELECT * FROM[e_game_db].[dbo].[maps] WHERE [_id]=?
+get_map= SELECT * FROM [e_game_db].[dbo].[maps] WHERE [_id]=?
+get_npc=SELECT* FROM [e_game_db].[dbo].[npcs] WHERE [_id]=?

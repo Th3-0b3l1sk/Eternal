@@ -92,6 +92,8 @@ namespace Eternal
                 return "get_itemtype";
             case Eternal::Database::StatementID::GET_MAP:
                 return "get_map";
+            case Eternal::Database::StatementID::GET_NPC:
+                return "get_npc";
             default:
                 throw std::exception{ "Invalid statement id" };
             }
