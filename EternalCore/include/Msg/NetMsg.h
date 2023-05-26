@@ -19,9 +19,9 @@ namespace Eternal
             MSG_ACTION      = 1010,
             MSG_ITEM_INFO   = 1008,
             MSG_PLAYER      = 1014,
-
-
+            MSG_NPC_INFO    = 2030,
         };
+
 #pragma pack(push, 1)
         struct Header
         {

@@ -13,7 +13,8 @@ namespace Eternal
             {
                 ACTION_SET_LOCATION = 74,
                 ACTION_SEND_ITEMS   = 75,
-
+                ACTION_FLYMAP       = 86,
+                ACTION_JUMP         = 133,
             };
 
         private:
@@ -23,7 +24,13 @@ namespace Eternal
                 Msg::Header header;
                 uint32_t   client_timestamp;
                 uint32_t   identity;
-                uint32_t   data;
+                union { 
+                    struct { // Used by ACTION_JUMP
+                        uint16_t   new_x;
+                        uint16_t   new_y;
+                    };
+                    uint32_t data;
+                };
                 uint16_t   x;
                 uint16_t   y;
                 uint16_t   direction;

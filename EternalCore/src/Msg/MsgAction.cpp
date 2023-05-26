@@ -5,7 +5,9 @@
 #include "Database/Statements/GetUserItems.h"
 #include "Database/Statements/GetUser.h"
 #include "Entities/Player.h"
+#include "Entities/Item.h"
 #include "Entities/ItemManager.h"
+#include "Map/MapManager.h"
 #include "World.h"
 #include <chrono>
 
@@ -52,7 +54,7 @@ namespace  Eternal
                     player->get_map(),
                     player->get_x(),
                     player->get_y(),
-                    player->get_dir()); // direction
+                    player->get_dir()); 
 
                 server.send(con_id, msg_action);
                 
@@ -82,6 +84,44 @@ namespace  Eternal
 
                 // TODO: should i move it inside the loop?
                 player->update_bc_set();
+                break;
+            }
+            case ActionType::ACTION_JUMP:
+            {
+                auto& player = server.get_connection(con_id)->get_player();
+                auto map_id = player->get_map();
+                auto& map = server.get_world()->get_map_manager()->get_map(map_id);
+
+                auto old_x = player->get_x();
+                auto old_y = player->get_y();
+                auto new_x = _info->new_x;
+                auto new_y = _info->new_y;
+                auto dir = _info->direction;
+                auto now = std::chrono::high_resolution_clock::now();
+                auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
+                auto flyback = std::make_shared<Eternal::Msg::MsgAction>(
+                    ActionType::ACTION_FLYMAP,
+                    milliseconds,
+                    player->get_id(),
+                    map_id,
+                    old_x,
+                    old_y,
+                    dir
+                );
+
+                if (map->attempt_jump(player, old_x, old_y, new_x, new_y, dir)) {
+                    auto jump = flyback;
+                    jump->_info->action_type = ActionType::ACTION_JUMP;
+                    jump->_info->new_x = new_x;
+                    jump->_info->new_y = new_y;
+                    map->update_bc_set(player);
+                    
+                    server.send(con_id, jump);
+                    player->update_bc_set(jump);
+                }
+                else
+                    server.send(con_id, flyback);
+
                 break;
             }
             }
