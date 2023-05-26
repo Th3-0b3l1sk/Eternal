@@ -15,7 +15,9 @@
 #include "Map/MapManager.h"
 #include "Map/Grid.h"
 #include "Database/Statements/GetMap.h"
+#include "Database/Statements/GetNpc.h"
 #include "Entities/ItemManager.h"
+#include "Entities/NpcManager.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -331,6 +333,24 @@ namespace Database
 			Assert::AreEqual(result.size(), num_of_entries);
 		}
 	};
+
+	TEST_CLASS(GetNpc)
+	{
+	public:
+		TEST_METHOD(execute)
+		{
+			const uint32_t num_of_entries = 564;	// From the database maps table
+
+			auto db = std::make_unique<Eternal::Database::Database>("eternal_game", "e_game_db", "e_game_pd");
+			db->load_statements(R"(C:\Dev\Eternal\GameServer\game_stmts.txt)");
+			Eternal::Server test_server("127.0.0.1", 5816, std::move(db));
+
+			auto stmt = std::make_unique<Eternal::Database::GetNpc>();
+			auto result = test_server.execute_statement(std::move(stmt));
+
+			Assert::AreEqual(result.size(), num_of_entries);
+		}
+	};
 }
 
 namespace Entities
@@ -347,6 +367,21 @@ namespace Entities
 			Eternal::Entities::ItemManager mgr(*db);
 			auto items_count = mgr.get_items_count();
 			Assert::AreEqual(items_count, ITEMS_COUNT);
+		}
+	};
+
+	TEST_CLASS(NpcManager)
+	{
+	public:
+		TEST_METHOD(load_all_npcs)
+		{
+			const uint32_t NPCS_COUNT = 564;
+			auto db = std::make_unique<Eternal::Database::Database>("eternal_game", "e_game_db", "e_game_pd");
+			db->load_statements(R"(C:\Dev\Eternal\GameServer\game_stmts.txt)");
+
+			Eternal::Entities::NpcManager mgr(*db);
+			auto items_count = mgr.get_npcs_count();
+			Assert::AreEqual(items_count, NPCS_COUNT);
 		}
 	};
 }
