@@ -7,6 +7,8 @@
 #include <string>
 #include <thread>
 #include "Entities/ItemManager.h" // NOT USED. KEEP
+#include "Entities/NpcManager.h" // NOT USED. KEEP
+#include "Map/MapManager.h" // NOT USED. KEEP
 #include "World.h"	// NOT USED. KEEP
 
 

@@ -119,6 +119,18 @@
     <ClCompile Include="src\Entities\ItemManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Entities\Npc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Msg\MsgNpcInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Database\Statements\GetNpc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Entities\NpcManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Msg\MsgAccount.h" />
@@ -164,5 +176,9 @@
     <ClInclude Include="include\Database\Statements\GetMap.h" />
     <ClInclude Include="include\Msg\MsgPlayer.h" />
     <ClInclude Include="include\Entities\ItemManager.h" />
+    <ClInclude Include="include\Entities\Npc.h" />
+    <ClInclude Include="include\Msg\MsgNpcInfo.h" />
+    <ClInclude Include="include\Database\Statements\GetNpc.h" />
+    <ClInclude Include="include\Entities\NpcManager.h" />
   </ItemGroup>
 </Project>

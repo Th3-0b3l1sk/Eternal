@@ -95,6 +95,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Depends\lz4\lz4.c" />
+    <ClCompile Include="src\Entities\NpcManager.cpp" />
+    <ClCompile Include="src\Database\Statements\GetNpc.cpp" />
+    <ClCompile Include="src\Msg\MsgNpcInfo.cpp" />
+    <ClCompile Include="src\Entities\Npc.cpp" />
     <ClCompile Include="src\Entities\ItemManager.cpp" />
     <ClCompile Include="src\Msg\MsgPlayer.cpp" />
     <ClCompile Include="src\Entities\Entity.cpp" />
@@ -132,6 +136,7 @@
     <ClCompile Include="src\World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Database\Statements\GetNpc.h" />
     <ClInclude Include="include\Database\Statements\GetMap.h" />
     <ClInclude Include="include\Map\GameMap.h" />
     <ClInclude Include="include\Map\Grid.h" />
@@ -175,6 +180,9 @@
     <ClInclude Include="include\Util\Packer.h" />
     <ClInclude Include="include\Msg\MsgPlayer.h" />
     <ClInclude Include="include\Entities\ItemManager.h" />
+    <ClInclude Include="include\Entities\Npc.h" />
+    <ClInclude Include="include\Msg\MsgNpcInfo.h" />
+    <ClInclude Include="include\Entities\NpcManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

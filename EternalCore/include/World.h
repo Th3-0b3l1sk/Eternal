@@ -3,8 +3,6 @@
 #include <memory>
 #include <shared_mutex>
 #include "Util/comms.h"
-#include "Map//MapManager.h"
-#include "Entities/Item.h"
 
 #define TD(x) ;
 
@@ -15,6 +13,12 @@ namespace Eternal
         class Player;
         class Item;       
         class ItemManager;
+        class NpcManager;
+    };
+
+    namespace Map
+    {
+        class MapManager;
     };
 
     class Server;
@@ -32,8 +36,9 @@ namespace Eternal
         void kick_player(uint32_t player_id);
 
     public:
-        std::unique_ptr<Map::MapManager>& get_map_manager() { return _map_manager; }
+        std::unique_ptr<Map::MapManager>& get_map_manager();
         std::unique_ptr<Entities::ItemManager>& get_item_manager();
+        std::unique_ptr<Entities::NpcManager>& get_npc_manager();
 
     private:
         void _init();
@@ -42,9 +47,9 @@ namespace Eternal
         Eternal::Server& _server;
         guarded_pair<std::shared_mutex, std::unordered_map<uint32_t, Ptr<Entities::Player>>> _world_players;
         std::unique_ptr<Entities::ItemManager> _item_manager;
+        std::unique_ptr<Entities::NpcManager> _npc_manager;
         std::unique_ptr<Map::MapManager> _map_manager;
         bool _is_stopped;
-
         std::string _game_map_ini;
     };
 }

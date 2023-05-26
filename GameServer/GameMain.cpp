@@ -10,6 +10,8 @@
 #include "Msg/MsgLoginProofA.h"
 #include "Network/Encryption/IExchange.h"
 #include "Entities/ItemManager.h"
+#include "Entities/NpcManager.h"
+#include "Map/MapManager.h"
 #include "Database/Database.h"
 #include "Util/co_defs.h"
 #include "Util/IniFile.h"
