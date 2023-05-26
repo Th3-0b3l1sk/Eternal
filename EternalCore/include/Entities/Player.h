@@ -56,6 +56,13 @@ namespace Eternal
         public:
             void add_item(Item&& item);
             virtual void inform(std::shared_ptr<Entity> entity);
+            virtual void send_me(std::shared_ptr<Msg::NetMsg> msg);
+            virtual void remove_from_bc_set(std::shared_ptr<Entity> entity) override;
+            virtual void clear_bc_set() override;
+            virtual void add_to_bc_set(std::shared_ptr<Entity> entity) override;
+            virtual void update_bc_set() override;
+            virtual void update_bc_set(std::shared_ptr<Msg::NetMsg> msg);
+
 
 
         public:

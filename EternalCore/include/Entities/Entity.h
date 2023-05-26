@@ -7,6 +7,11 @@
 
 namespace Eternal
 {
+    namespace Msg
+    {
+        class NetMsg;
+    }
+
     namespace Entities
     {
         class Entity: public std::enable_shared_from_this<Entity>
@@ -35,24 +40,29 @@ namespace Eternal
             uint8_t get_dir() const { return _dir; }
             std::string_view get_name() const { return _name; }
 
-            void clear_bc_set();
-            void remove_from_bc_set(std::shared_ptr<Entity> entity);
-            void add_to_bc_set(std::shared_ptr<Entity> entity);
-            void update_bc_set();
-            
+            virtual void clear_bc_set() 
+            {};
+            virtual void remove_from_bc_set(std::shared_ptr<Entity> entity) 
+            {};
+            virtual void add_to_bc_set(std::shared_ptr<Entity> entity) 
+            {};
+            virtual void send_me(std::shared_ptr<Msg::NetMsg> msg)
+            {};
+            virtual void update_bc_set() 
+            {};
+            virtual void update_bc_set(std::shared_ptr<Msg::NetMsg> msg)
+            {};
             virtual void inform(std::shared_ptr<Entity> entity)
-            {
-
-            }
+            {};
 
         protected:    
-            std::string _name;
-            uint32_t _id;
-            uint32_t _look;
-            uint32_t _map;
-            uint16_t _x;
-            uint16_t _y;
-            uint8_t _dir;
+            std::string _name{ "UNKOWN" };
+            uint32_t _id{};
+            uint32_t _look{};
+            uint32_t _map{};
+            uint16_t _x{};
+            uint16_t _y{};
+            uint8_t _dir{};
 
             guarded_pair<std::shared_mutex, 
                 std::unordered_map<uint32_t, std::shared_ptr<Entity>>> _view_set;
