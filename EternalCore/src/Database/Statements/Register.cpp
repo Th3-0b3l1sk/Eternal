@@ -4,43 +4,40 @@ namespace Eternal
 {
     namespace Database
     {
-        Register::Register()
-            : IStatement(Eternal::Database::StatementID::REGISTER)
+        Register::Register(SQLHANDLE hCon)
+            : _hStmt {NULL}, _type{ 0 } 
         {
-            _info = std::make_unique<uint8_t[]>(sizeof(Info));
+            SQLAllocHandle(SQL_HANDLE_STMT, hCon, &_hStmt);
+
+            _name.resize(MAX_NAME_LEN);
+            _password.resize(MAX_PASSWORD_LEN);
+            _ip.resize(MAX_IP_LEN);
         }
 
-        Register::Register(std::string_view name, std::string_view password, std::string_view ip, uint32_t creation_time)
-            : Register()
-        {
-            // the user of this statement enforces the rules on name and password
-            auto info = (Info*)_info.get();
-            info->creation_time = creation_time;
-            memcpy_s(info->name, MAX_ACCOUNT_LEN, name.data(), name.length());
-            memcpy_s(info->password, MAX_PASSWORD_LEN, password.data(), password.length());
-            memcpy_s(info->last_ip, MAX_IP_LEN, ip.data(), ip.length());
-        }
-
+    
         SQLRETURN Register::bind()
         {
-            auto info = (Info*)_info.get();
-
-            // bind username
-            TRYODBC(_hStatement, SQL_HANDLE_STMT,
-                SQLBindParameter(_hStatement, PARAM_ONE, SQL_PARAM_INPUT, C_STR, SQL_VARCHAR, NULL, NULL, 
-                    (SQLPOINTER)info->name, strnlen_s((char*)info->name, MAX_ACCOUNT_LEN), NULL));
+            // prepare the statement
+            // register(name, password, type, last_ip)
+            static std::string stmt = "EXEC register @name=?, @password=?, @type=?, @last_ip=?";
+            TRYODBC(_hStmt, SQL_HANDLE_STMT,
+                SQLPrepare(_hStmt, (SQLCHAR*)stmt.c_str(), stmt.size()));
+            // bind account
+            TRYODBC(_hStmt, SQL_HANDLE_STMT,
+                SQLBindParameter(_hStmt, PARAM_ONE, SQL_PARAM_INPUT, C_STR, SQL_VARCHAR, NULL, NULL, 
+                    (SQLPOINTER)_name.c_str(), _name.size(), NULL));
             // bind password
-            TRYODBC(_hStatement, SQL_HANDLE_STMT,
-                SQLBindParameter(_hStatement, PARAM_TWO, SQL_PARAM_INPUT, C_STR, SQL_VARCHAR, NULL, NULL, 
-                    (SQLPOINTER)info->password, strnlen_s((char*)info->password, MAX_PASSWORD_LEN), NULL));
-            // bind  last ip
-            TRYODBC(_hStatement, SQL_HANDLE_STMT,
-                SQLBindParameter(_hStatement, PARAM_THREE, SQL_PARAM_INPUT, C_STR, SQL_VARCHAR, NULL, NULL,
-                    (SQLPOINTER)info->last_ip, strnlen_s((char*)info->last_ip, MAX_IP_LEN), NULL));
-            // bind creation time
-            TRYODBC(_hStatement, SQL_HANDLE_STMT,
-                SQLBindParameter(_hStatement, PARAM_FOUR, SQL_PARAM_INPUT, C_QWORD, SQL_BIGINT, NULL, NULL, 
-                    (SQLPOINTER)&info->creation_time, NULL, NULL));
+            TRYODBC(_hStmt, SQL_HANDLE_STMT,
+                SQLBindParameter(_hStmt, PARAM_TWO, SQL_PARAM_INPUT, C_STR, SQL_VARCHAR, NULL, NULL, 
+                    (SQLPOINTER)_password.c_str(), _password.size(), NULL));
+            // bind type
+            TRYODBC(_hStmt, SQL_HANDLE_STMT,
+                SQLBindParameter(_hStmt, PARAM_THREE, SQL_PARAM_INPUT, C_BYTE, SQL_TINYINT, NULL, NULL,
+                    &_type, sizeof(_type), NULL));
+            // bind  last_ip
+            TRYODBC(_hStmt, SQL_HANDLE_STMT,
+                SQLBindParameter(_hStmt, PARAM_FOUR, SQL_PARAM_INPUT, C_STR, SQL_VARCHAR, NULL, NULL,
+                    (SQLPOINTER)_ip.c_str(), _ip.size(), NULL));
 
             return SQL_SUCCESS;
 
@@ -48,11 +45,9 @@ namespace Eternal
             return SQL_ERROR;
         }
 
-        std::vector<std::unique_ptr<uint8_t[]>> Register::fetch()
+        SQLRETURN Register::execute()
         {
-            // TODO: replace the return with std::optional
-            return std::vector<std::unique_ptr<uint8_t[]>>();
+            return SQLExecute(_hStmt);
         }
     }
 }
-

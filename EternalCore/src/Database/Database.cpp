@@ -1,4 +1,6 @@
 #include "Database/Database.h"
+#include "Database/Statements/Register.h"
+#include "Database/Statements/GetAccountInfo.h"
 #include "Util/LineReader.h"
 #include <string>
 #include <iostream>
@@ -54,49 +56,54 @@ namespace Eternal
             _statements = reader.get_lines();          
         }
 
-        std::vector<std::unique_ptr<uint8_t[]>> Database::execute(std::unique_ptr<IStatement>&& statement)
+        void Database::update_player_jump(uint32_t player_id, uint16_t new_x, uint16_t new_y)
         {
-            auto stmt_id  = statement->get_id();
-            auto& stmt_h = statement->get_handle();
-            auto& stmt_txt = _statements.at(id_to_stmt(stmt_id).data());
-                        
-            statement->hook_stmt(stmt_txt);
-            TRYODBC(stmt_h, SQL_HANDLE_STMT,
-                SQLAllocHandle(SQL_HANDLE_STMT, _hCon, &stmt_h));
-            TRYODBC(stmt_h, SQL_HANDLE_STMT,
-                SQLPrepare(stmt_h, (SQLCHAR*)stmt_txt.c_str(), stmt_txt.size()));
-            TRYODBC(stmt_h, SQL_HANDLE_STMT,
-                statement->bind());
-            TRYODBC(stmt_h, SQL_HANDLE_STMT,
-                SQLExecDirectA(stmt_h, (SQLCHAR*)stmt_txt.c_str(), stmt_txt.size()));
-             
-            return std::move(statement->fetch());
 
-        bailout:
-            return {};
         }
 
-        std::string_view Database::id_to_stmt(StatementID id) const
+        std::optional<AccountInfo> Database::get_account_info(std::string account_id)
         {
-            switch (id)
-            {
-            case Eternal::Database::StatementID::AUTHENTICATE:
-                return "authenticate";
-            case Eternal::Database::StatementID::REGISTER:
-                return "register";
-            case Eternal::Database::StatementID::GET_USER:
-                return "get_user";
-            case Eternal::Database::StatementID::GET_USER_ITEMS:
-                return "get_user_items";
-            case Eternal::Database::StatementID::GET_ITEMTYPE:
-                return "get_itemtype";
-            case Eternal::Database::StatementID::GET_MAP:
-                return "get_map";
-            case Eternal::Database::StatementID::GET_NPC:
-                return "get_npc";
-            default:
-                throw std::exception{ "Invalid statement id" };
+            GetAccountInfo info(_hCon);
+            if (SQL_SUCCESS != info.bind()) {
+                // TODO: failed to bind
+                return std::nullopt;
             }
+            
+            info.set_account_id(account_id);
+            auto result = info.execute();
+            if (!SQL_SUCCEEDED(result)) {
+                // TODO: failed to execute
+                return std::nullopt;
+            }
+   
+            return AccountInfo{ info.get_id(), info.let_name(), info.let_password(), 
+                info.let_ip(), (AccountType)info.account_type(), info.is_online() };
+        }
+
+        void authenticate()
+        {
+
+        }
+
+        bool Database::register_user(std::string name, std::string password, std::string ip, AccountType type)
+        {
+            Register register_user(_hCon);
+            if (SQL_SUCCESS != register_user.bind()) {
+                // TODO: failed to bind params
+                return false;
+            }
+
+            if (SQL_SUCCESS == register_user
+                .set_name(name)
+                .set_password(password)
+                .set_ip(ip)
+                .set_type((uint8_t)type)
+                .execute()) 
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

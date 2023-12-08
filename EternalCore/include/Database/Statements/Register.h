@@ -1,42 +1,36 @@
 #pragma once
-#include "IStatement.h"
+#include "./Database/db_helper.h"
 
 namespace Eternal
 {
     namespace Database
     {
-        class Register :
-            public IStatement
+        
+        class Register
         {
-        private:
-#pragma pack(push, 1)
-            struct Info
-            {
-                Info()
-                    :  creation_time{ 0 }
-                {
-                    ZeroMemory(name, MAX_ACCOUNT_LEN);
-                    ZeroMemory(password, MAX_PASSWORD_LEN);
-                    ZeroMemory(last_ip, MAX_IP_LEN);
-                }
-
-
-                uint8_t  name[MAX_ACCOUNT_LEN];
-                uint8_t  password[MAX_PASSWORD_LEN];
-                uint64_t creation_time;             // the local server time(system_clock::now()))
-                uint8_t  last_ip[MAX_IP_LEN];
-            };
-#pragma pack(pop)
         public:
-            Register();
-            Register(std::string_view name, std::string_view password, std::string_view ip, uint32_t creation_time);
-            virtual ~Register() = default;
-            virtual SQLRETURN bind() override;
-            virtual std::vector<std::unique_ptr<uint8_t[]>> fetch() override;
+            Register(SQLHANDLE hCon);
+            ~Register() {
+                SQLFreeHandle(SQL_HANDLE_STMT, _hStmt);
+            }
+
+        public:
+            Register& set_name(std::string_view name) { _name = name; return *this; }
+            Register& set_password(std::string_view password) { _password = password; return *this; }
+            Register& set_ip(std::string_view ip) { _ip = ip; return *this; }
+            Register& set_type(uint8_t type) { type = _type; return *this; }
+
+            
+        public:
+            SQLRETURN bind();
+            SQLRETURN execute();
+
+        private:
+            std::string _name;
+            std::string _password;
+            std::string _ip;
+            uint8_t _type;
+            SQLHANDLE _hStmt;
         };
     }
 }
-
-
-
-

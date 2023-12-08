@@ -1,13 +1,44 @@
 #pragma once
 #include "db_helper.h"
-#include "./Statements/IStatement.h"
-#include <string_view>
+#include "./Statements/Register.h"
+#include "./Statements/GetAccountInfo.h"
+#include <string>
 #include <unordered_map>
+#include <optional>
 
 namespace Eternal
 {
     namespace Database
     {
+
+        enum class AccountType : uint8_t
+        {
+            GM = 0,
+            PM = 1,
+            NORMAL = 2
+        };
+
+        // GetAccountInfo.h
+        struct AccountInfo
+        {
+            AccountInfo(int32_t id, std::string account_id, std::string password, std::string ip,
+                AccountType type, bool is_online)
+                :_id{ id }, _account_id {account_id}, _password{ password }, _ip{ ip },
+                _type{ type }, _is_online{ is_online }
+            {
+
+            }
+
+            AccountInfo() = delete;
+
+            int32_t _id;
+            std::string _account_id;
+            std::string _password;
+            std::string _ip;
+            AccountType _type;
+            bool _is_online;
+        };
+
         class Database
         {
         public:
@@ -18,10 +49,12 @@ namespace Eternal
         public:
             void connect(std::string_view n, std::string_view w);
             void load_statements(std::string_view file);
-            std::vector<std::unique_ptr<uint8_t[]>> execute(std::unique_ptr<IStatement>&& statement);
 
-        private:
-            std::string_view id_to_stmt(StatementID id) const;
+        public:
+            void update_player_jump(uint32_t player_id, uint16_t new_x, uint16_t new_y);
+            std::optional<AccountInfo> get_account_info(std::string account_id);
+            bool register_user(std::string name, std::string password, std::string ip, AccountType type = AccountType::NORMAL);
+
 
 
         private:
@@ -31,4 +64,3 @@ namespace Eternal
         };
     }
 }
-
