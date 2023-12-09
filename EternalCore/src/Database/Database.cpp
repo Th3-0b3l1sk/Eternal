@@ -1,6 +1,4 @@
 #include "Database/Database.h"
-#include "Database/Statements/Register.h"
-#include "Database/Statements/GetAccountInfo.h"
 #include "Util/LineReader.h"
 #include <string>
 #include <iostream>
@@ -80,6 +78,17 @@ namespace Eternal
                 info.let_ip(), (AccountType)info.account_type(), info.is_online() };
         }
 
+        std::optional<PlayerInfo> Database::get_player_info(uint32_t player_id)
+        {
+            GetPlayerInfo info(_hCon);
+            if (SQL_SUCCESS != info.bind()) {
+                // TODO: failed to bind
+                return std::nullopt;
+            }
+
+            return info.set_player_id(player_id).execute();
+        }
+
         void authenticate()
         {
 
@@ -104,6 +113,16 @@ namespace Eternal
             }
 
             return false;
+        }
+        std::optional<std::vector<PlayerOwnItem>> Database::get_player_own_items(uint32_t player_id)
+        {
+            GetPlayerOwnItems player_items(_hCon);
+            if (SQL_SUCCESS != player_items.bind()) {
+                // handle errors
+                return std::nullopt;
+            }
+            
+            return player_items.set_player_id(player_id).execute();
         }
     }
 }

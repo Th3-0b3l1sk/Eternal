@@ -4,49 +4,53 @@
 #include "Network/Connection.h"
 #include "Network/Server.h"
 #include "Entities/Item.h"
+#include "Database/Statements/GetPlayerOwnItems.h"
 
 
 namespace Eternal
 {
     namespace Entities
     {
-        Player::Player(Connection& connection, Database::GetUser::Info* data)
-            : AdvancedEntity(data->identity), _connection(connection)
+        Player::Player(Connection& connection, const Database::PlayerInfo& player_info)
+            : AdvancedEntity(player_info.identity), _connection(connection), _info{ player_info }
         {
-            _info.mate       = std::string{ (char*)data->mate, MAX_NAME_LEN };
-            _info.hair       = data->hair;
-            _info.profession = data->profession;
-            _info.rebirth    = data->rebirth;
-            _info.exp        = data->exp;
-            _info.force      = data->force;
-            _info.dexterity  = data->dexterity;
-            _info.health     = data->health;
-            _info.soul       = data->soul;
-            _info.add_points = data->add_points;
-            _info.current_mp = data->mana;
-            _info.gold       = data->money;
-            _info.cps        = data->cps;
-            _info.pk_points  = data->pk;
-            _info.virtue     = data->virtue;
-            _info.energy     = INITIAL_ENERGY;
-            _info.xp         = INITIAL_XP;
-            _info.prev_map   = data->record_map;
-            _info.prev_x     = data->record_x;
-            _info.prev_y     = data->record_y;
-
             // from AdvancedEntity
-            _level           = data->level;
-            _current_hp      = data->health;
-            _max_hp          = 0;    // needs calculations
+            _level       = _info.level;
+            _current_hp  = _info.health;
+            _max_hp      = 0;                   // needs calculations
+            _energy      = INITIAL_ENERGY;
+            _xp          = INITIAL_XP;
 
             // From Entity
-            _name            = std::string{ (char*)data->name, MAX_NAME_LEN };
-            _id              = data->identity;
-            _look            = data->lookface;
-            _map             = data->record_map;
-            _x               = data->record_x;
-            _y               = data->record_y;
-            _dir             = 1;   // TODO: replace with an enum
+            _name        = _info.name;
+            _id          = _info.identity;
+            _look        = _info.lookface;
+            _map         = _info.record_map;
+            _x           = _info.record_x;
+            _y           = _info.record_y;
+            _dir         = 1;                   // TODO: replace with an enum
+        }
+
+        
+
+        Player::Player(Connection& connection, Database::PlayerInfo&& player_info)
+            : AdvancedEntity(player_info.identity), _connection(connection), _info{ std::move(player_info) }
+        {
+            // from AdvancedEntity
+            _level = _info.level;
+            _current_hp = _info.health;
+            _max_hp = 0;                   // needs calculations
+            _energy = INITIAL_ENERGY;
+            _xp = INITIAL_XP;
+
+            // From Entity
+            _name        = _info.name;
+            _id          = _info.identity;
+            _look        = _info.lookface;
+            _map         = _info.record_map;
+            _x           = _info.record_x;
+            _y           = _info.record_y;
+            _dir         = 1;                   // TODO: replace with an enum
         }
 
         void Player::add_item(Item&& item)

@@ -1,2 +1,2 @@
-authenticate=SELECT * FROM [e_account_db].[DbO].[accounts] WHERE [_name]=?
-register=INSERT INTO [e_account_db].[DbO].[accounts]([_name], [_password], [_last_ip], [_creation_time]) VALUES (?, ?, ?, ?)
+authenticate=get_account_info ? ? ? ?
+register=EXEC register ? ? ? ? ? ?

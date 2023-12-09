@@ -2,8 +2,8 @@
 #include "Msg/MsgItemInfo.h"
 #include "Network/Server.h"
 #include "Network/Connection.h"
-#include "Database/Statements/GetUserItems.h"
-#include "Database/Statements/GetUser.h"
+#include "Database/Database.h"
+//#include "Database/Statements/GetUser.h"
 #include "Entities/Player.h"
 #include "Entities/Item.h"
 #include "Entities/ItemManager.h"
@@ -58,7 +58,7 @@ namespace  Eternal
 
                 server.send(con_id, msg_action);
                 
-                // add the player to the map
+                // add the player to the map/room
                 auto& map_mgr = server.get_world()->get_map_manager();
                 auto& map = map_mgr->get_map(player->get_map());
                 map->add_player(player);
@@ -68,17 +68,20 @@ namespace  Eternal
             }
             case ActionType::ACTION_SEND_ITEMS:
             {
-                auto con = server.get_connection(con_id);
-                auto stmt = std::make_unique<Database::GetUserItems>(con->get_player_id());
-                auto result = server.execute_statement(std::move(stmt));
-                auto& item_mgr = server.get_world()->get_item_manager();
                 auto& player = server.get_connection(con_id)->get_player();
-                std::vector<uint32_t> item_ids;
+                auto& db = server.get_database();
+                auto player_items = db->get_player_own_items(player->get_id());
+                // some error
+                if (!player_items)
+                    return;
+                // no items
+                if (player_items && player_items->size() == 0)
+                    return;
 
-                for (auto& i : result) {
-                    auto msg_item = std::make_shared<Msg::MsgItemInfo>(i.get());
-                    item_ids.push_back(msg_item->get_type());
-                    player->add_item((Database::GetUserItems::Info*)i.get());
+                auto& item_mgr = server.get_world()->get_item_manager();
+                for (auto& item : *player_items) {
+                    auto msg_item = std::make_shared<Msg::MsgItemInfo>(item);
+                    player->add_item(std::move(item));
                     server.send(con_id, msg_item);
                 }
 
@@ -118,6 +121,12 @@ namespace  Eternal
                     
                     server.send(con_id, jump);
                     player->update_bc_set(jump);
+                    
+                    auto& db = server.get_database();
+                    if (db) {
+                        // TODO: DB-FIX
+                        //db->update_player_jump(player->get_id(), new_x, new_y);    // TODO: think of a better impl maybe.
+                    }
                 }
                 else
                     server.send(con_id, flyback);

@@ -30,6 +30,8 @@ namespace Eternal
             uint16_t _current_hp;
             uint16_t _max_hp;       
             uint16_t _pose;
+            uint8_t _energy;
+            uint8_t _xp;
         };
     }
 }

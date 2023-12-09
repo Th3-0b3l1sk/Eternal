@@ -1,5 +1,6 @@
 #pragma once
 #include "NetMsg.h"
+#include "Database/Statements/GetPlayerOwnItems.h"
 
 namespace Eternal
 {
@@ -37,7 +38,7 @@ namespace Eternal
 
         public:
             MsgItemInfo(std::shared_ptr<uint8_t[]>&& msg, size_t len);
-            MsgItemInfo(uint8_t* item);
+            MsgItemInfo(const Database::PlayerOwnItem& item);
             virtual ~MsgItemInfo();
 
             virtual void process(Server& server, uint32_t con_id) override;

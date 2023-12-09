@@ -1,4 +1,5 @@
 #pragma once
+#include <sstream>
 #include <string>
 #include <memory>
 #include <cstdint>
@@ -65,8 +66,15 @@ namespace Eternal
                     return "MSG_ACTION";
                 case MsgType::MSG_ITEM_INFO:
                     return "MSG_ITEM_INFO";
-                default:
-                    return "UNKNOWN_TYPE";
+                case MsgType::MSG_NPC_INFO:
+                    return "MSG_NPC_INFO";
+                default: {
+                    uint16_t* buffer = (uint16_t * )_buffer.get();
+                    uint16_t packet_type = buffer[1];
+                    std::stringstream ss;
+                    ss << std::hex << std::uppercase << packet_type;
+                    return "UNKNOWN_TYPE [" + ss.str() + "]";
+                }
                 }
             }
             
