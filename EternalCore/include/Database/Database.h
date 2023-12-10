@@ -4,6 +4,9 @@
 #include "./Statements/GetAccountInfo.h"
 #include "./Statements/GetPlayerOwnItems.h"
 #include "./Statements/GetPlayerInfo.h"
+#include "./Statements/GetItemsInfo.h"
+#include "./Statements/GetNpcsInfo.h"
+#include "./Statements/GetMapsInfo.h"
 #include <string>
 #include <unordered_map>
 #include <optional>
@@ -56,11 +59,12 @@ namespace Eternal
             void update_player_jump(uint32_t player_id, uint16_t new_x, uint16_t new_y);
             std::optional<AccountInfo> get_account_info(std::string account_id);
             std::optional<PlayerInfo> get_player_info(uint32_t player_id);
-            bool register_user(std::string name, std::string password, std::string ip, AccountType type = AccountType::NORMAL);
             std::optional<std::vector<PlayerOwnItem>> get_player_own_items(uint32_t player_id);
+            std::optional<std::vector<ItemInfo>> get_game_items();
+            std::optional<std::vector<NpcInfo>> get_game_npcs();
+            std::optional<std::vector<MapInfo>> get_game_maps();
+            bool register_user(std::string name, std::string password, std::string ip, AccountType type = AccountType::NORMAL);
             
-
-
         private:
             SQLHANDLE _hEnv;
             SQLHANDLE _hCon;

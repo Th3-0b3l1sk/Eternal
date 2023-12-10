@@ -8,9 +8,15 @@ namespace Eternal
 {
     namespace Database
     {
+        class GetPlayerInfo;
         struct PlayerInfo
         {
-            uint32_t id;    
+            friend class GetPlayerInfo;
+            // id is internal i.e. db
+        private:
+            uint32_t id;        
+        public:
+            // identity is used by the server and the client
             uint32_t identity;
             std::string name;
             std::string mate;
@@ -54,7 +60,10 @@ namespace Eternal
             std::optional<PlayerInfo> execute();
 
         public:
-            GetPlayerInfo& set_player_id(uint32_t player_id) { _player_info.identity = player_id; return *this; }
+            GetPlayerInfo& set_player_id(uint32_t player_id) {
+                _player_info.identity = player_id; 
+                _player_info.id       = player_id - IDENTITY_START;  
+                return *this; }
 
         private:
             SQLHANDLE _hStmt;

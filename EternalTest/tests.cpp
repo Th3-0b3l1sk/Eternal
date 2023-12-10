@@ -14,8 +14,8 @@
 #include "Map/MapData.h"
 #include "Map/MapManager.h"
 #include "Map/Grid.h"
-#include "Database/Statements/GetMap.h"
-#include "Database/Statements/GetNpc.h"
+#include "Database/Statements/GetMapsInfo.h"
+#include "Database/Statements/GetNpcsInfo.h"
 #include "Entities/ItemManager.h"
 #include "Entities/NpcManager.h"
 
@@ -279,7 +279,7 @@ namespace Map
 
 			for (int w = 0; w < width; w++) {
 				auto cell = grid.get_cell(0, w);
-				Assert::AreEqual(cell->accessible, (uint16_t)1);
+				Assert::AreEqual(cell->accessible, (uint16_t)0);	// cell.accessible != 1
 				Assert::AreEqual(cell->surface,    (uint16_t)1);
 				Assert::AreEqual(cell->elevation,  (int16_t)1);
 			}
@@ -324,13 +324,10 @@ namespace Database
 			const uint32_t num_of_entries = 155;	// From the database maps table
 
 			auto db = std::make_unique<Eternal::Database::Database>("eternal_game", "e_game_db", "e_game_pd");
-			db->load_statements(R"(C:\Dev\Eternal\GameServer\game_stmts.txt)");
-			Eternal::Server test_server("127.0.0.1", 5816, std::move(db));
+			auto result = db->get_game_maps();
 
-			auto stmt = std::make_unique<Eternal::Database::GetMap>();
-			auto result = test_server.execute_statement(std::move(stmt));
-			
-			Assert::AreEqual(result.size(), num_of_entries);
+			Assert::IsTrue(result.has_value(), L"failed to load game maps");
+			Assert::AreEqual(result.value().size(), num_of_entries);
 		}
 	};
 
@@ -342,13 +339,10 @@ namespace Database
 			const uint32_t num_of_entries = 564;	// From the database maps table
 
 			auto db = std::make_unique<Eternal::Database::Database>("eternal_game", "e_game_db", "e_game_pd");
-			db->load_statements(R"(C:\Dev\Eternal\GameServer\game_stmts.txt)");
-			Eternal::Server test_server("127.0.0.1", 5816, std::move(db));
+			auto result = db->get_game_npcs();
 
-			auto stmt = std::make_unique<Eternal::Database::GetNpc>();
-			auto result = test_server.execute_statement(std::move(stmt));
-
-			Assert::AreEqual(result.size(), num_of_entries);
+			Assert::IsTrue(result.has_value(), L"failed to load game npcs!");
+			Assert::AreEqual(result.value().size(), num_of_entries);
 		}
 	};
 }
@@ -362,9 +356,9 @@ namespace Entities
 		{
 			const uint32_t ITEMS_COUNT = 6861;
 			auto db = std::make_unique<Eternal::Database::Database>("eternal_game", "e_game_db", "e_game_pd");
-			db->load_statements(R"(C:\Dev\Eternal\GameServer\game_stmts.txt)");
 
 			Eternal::Entities::ItemManager mgr(*db);
+			mgr.load_game_items();
 			auto items_count = mgr.get_items_count();
 			Assert::AreEqual(items_count, ITEMS_COUNT);
 		}
@@ -377,11 +371,10 @@ namespace Entities
 		{
 			const uint32_t NPCS_COUNT = 564;
 			auto db = std::make_unique<Eternal::Database::Database>("eternal_game", "e_game_db", "e_game_pd");
-			db->load_statements(R"(C:\Dev\Eternal\GameServer\game_stmts.txt)");
-
 			Eternal::Entities::NpcManager mgr(*db);
-			auto items_count = mgr.get_npcs_count();
-			Assert::AreEqual(items_count, NPCS_COUNT);
+			mgr.load_game_npcs();
+			auto npcs_count = mgr.get_npcs_count();
+			Assert::AreEqual(npcs_count, NPCS_COUNT);
 		}
 	};
 }

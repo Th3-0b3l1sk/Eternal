@@ -1,7 +1,6 @@
 #include "Entities/NpcManager.h"
 #include "Entities/Npc.h"
 #include "Database/Database.h"
-#include "Database/Statements/GetNpc.h"
 
 
 namespace Eternal
@@ -11,7 +10,14 @@ namespace Eternal
         NpcManager::NpcManager(Database::Database& db)
             : _db(db)
         {
-            _init();
+        }
+
+        void NpcManager::load_game_npcs()
+        {
+            auto game_npcs = _db.get_game_npcs();
+            for (auto&& npc : game_npcs.value()) {
+                _all_npcs[npc.id] = std::make_shared<Npc>(std::move(npc));
+            }
         }
 
         std::shared_ptr<Npc> NpcManager::get_npc_by_id(uint32_t id)
@@ -21,19 +27,6 @@ namespace Eternal
                 return nullptr;
 
             return iter->second;
-        }
-
-        void NpcManager::_init()
-        {
-            using Database::GetNpc;
-
-            auto npc_stmt = std::make_unique<Database::GetNpc>();
-            auto npc_result = _db.execute(std::move(npc_stmt));
-            for (auto&& npc : npc_result) {
-                auto npc_info = (GetNpc::Info*)npc.get();
-                _all_npcs[npc_info->id] = std::make_shared<Npc>(npc_info);
-                npc.release(); // npc manager took owner ship of the pointer |
-            }
-        }
+        }        
     }
 }

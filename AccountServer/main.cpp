@@ -6,10 +6,7 @@
 #include "Util/IniFile.h"
 #include <string>
 #include <thread>
-#include "Entities/ItemManager.h" // NOT USED. KEEP
-#include "Entities/NpcManager.h" // NOT USED. KEEP
-#include "Map/MapManager.h" // NOT USED. KEEP
-#include "World.h"	// NOT USED. KEEP
+#include "World.h" // TODO: find a better way to decouple it  
 
 
 int main()

@@ -21,7 +21,7 @@ namespace Eternal
             _info->header.length = _size;
             _info->header.type = MsgType::MSG_PLAYER;
 
-            _info->unique_id = player.get_id();
+            _info->unique_id = player.get_identity();
             _info->look = player.get_look();
             _info->status = 0;
             _info->synid_rank = 0;
@@ -58,7 +58,7 @@ namespace Eternal
             _info->metempsychosis = player.get_rebirth();
             _info->player_level = player.get_level();
             _info->nobility_rank = 0;
-            _info->nobility_uid = player.get_id();
+            _info->nobility_uid = player.get_identity();
 
             Util::StringPacker packer(_info->strings);
             packer.AddString(player.get_name().data());

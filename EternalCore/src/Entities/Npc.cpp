@@ -16,17 +16,27 @@ namespace Eternal
             _y = pos_y;
         }
 
-        Npc::Npc(Database::GetNpc::Info* info)
-            : Npc(info->id, (char*)& info->name[0], info->type, info->lookface,
-                info->map_id, info->cell_x, info->cell_y,
-                info->base, info->sort)
+        Npc::Npc(const Database::NpcInfo& info)
+            : Npc(info.id, info.name, info.type, info.lookface, info.map_id, info.cell_x, info.cell_y, info.base, info.sort)
         {
+
+        }
+
+        Npc::Npc(Database::NpcInfo&& info)
+            : Entity(info.id),
+            _sort{ info.sort }, _base{ info.base }, _type{ info.type }
+        {
+            _name = std::move(info.name);
+            _look = info.lookface;
+            _map  = info.map_id;
+            _x    = info.cell_x;
+            _y    = info.cell_y;
         }
 
         void Npc::add_to_bc_set(std::shared_ptr<Entity> entity)
         {
             auto npc_info = std::make_shared<Msg::MsgNpcInfo>(
-                _id,
+                _identity,
                 _x,
                 _y,
                 _look,

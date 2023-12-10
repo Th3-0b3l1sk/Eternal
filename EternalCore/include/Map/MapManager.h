@@ -18,7 +18,7 @@ namespace Eternal
 
         public:
             void load_maps(const char* gamemap_ini);
-            void load_db_maps(Server& server);
+            void load_game_maps(Server& server);
             std::unique_ptr<GameMap>& get_map(uint32_t map_id);
 
         private:

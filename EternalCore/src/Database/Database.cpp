@@ -124,5 +124,36 @@ namespace Eternal
             
             return player_items.set_player_id(player_id).execute();
         }
+        std::optional<std::vector<ItemInfo>> Database::get_game_items()
+        {
+            GetItemsInfo items_info(_hCon);
+            if (!SQL_SUCCEEDED(items_info.bind())) {
+                // handle error
+                return std::nullopt;
+            }
+
+            return items_info.execute();
+
+        }
+        std::optional<std::vector<NpcInfo>> Database::get_game_npcs()
+        {
+            GetNpcsInfo npcs_info(_hCon);
+            if (!SQL_SUCCEEDED(npcs_info.bind())) {
+                // handler error
+                return std::nullopt;
+            }
+            
+            return npcs_info.execute();
+        }
+        std::optional<std::vector<MapInfo>> Database::get_game_maps()
+        {
+            GetMapsInfo maps_info(_hCon);
+            if (!SQL_SUCCEEDED(maps_info.bind())) {
+                // handler error
+                return std::nullopt;
+            }
+
+            return maps_info.execute();
+        }
     }
 }

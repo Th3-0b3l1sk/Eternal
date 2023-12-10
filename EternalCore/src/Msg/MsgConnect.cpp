@@ -33,8 +33,8 @@ namespace Eternal
                 // process game logic here ... 
             {
                 auto& db = server.get_database();
-                auto player_info = db->get_player_info(_info->client_identity);
-                if (player_info && player_info->id == PLAYER_STATS_NON_EXISTING) {
+                auto player_info = db->get_player_info(_info->client_identity); // should be fetched from the connection instead. Don't trust the client
+                if (player_info && player_info->identity == PLAYER_STATS_NON_EXISTING) {
                     // add new character
                     std::cout << "Requesting character creation!\n";
                     auto msg_talk = std::make_shared<MsgTalk>(SYSTEM, ALLUSERS, "", NEW_ROLE, 2101, 0x00FFFFFF);
