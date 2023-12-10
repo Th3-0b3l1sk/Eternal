@@ -5,7 +5,6 @@ namespace Eternal
 {
     namespace Database
     {
-        
         class Register
         {
         public:

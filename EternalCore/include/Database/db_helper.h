@@ -104,3 +104,6 @@ static std::string get_error(SQLHANDLE hHandle, SQLSMALLINT hType, RETCODE retur
 #define COL_EIGHT           8
 #define COL_NINE            9
 #define COL_TEN             10
+
+
+#define PLAYER_STATS_NON_EXISTING (-1)

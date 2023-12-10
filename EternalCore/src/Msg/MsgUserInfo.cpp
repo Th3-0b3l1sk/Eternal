@@ -18,35 +18,34 @@ namespace Eternal
             string_packer.AddString(spouse_name.data());
         }
 
+        MsgUserInfo::MsgUserInfo(const Database::PlayerInfo& info)
+            : MsgUserInfo(info.name, info.mate)
+        {
+            _info->identity       = info.identity;
+            _info->mesh           = info.lookface;
+            _info->hairstyle      = info.hair;
+            _info->silver         = info.money;
+            _info->cps            = info.cps;
+            _info->experience     = info.exp;
+            _info->strength       = info.force;
+            _info->agility        = info.dexterity;
+            _info->vitality       = info.life;
+            _info->spirit         = info.soul;
+            _info->attributes     = info.add_points;
+            _info->health         = info.health;
+            _info->mana           = info.mana;
+            _info->pk_points      = info.pk_points;
+            _info->level          = info.level;
+            _info->profession     = info.profession;
+            _info->rebirths       = info.rebirth;
+            _info->previous_class = 0;  // TODO: why?
+            _info->show_name      = true;
+
+        }
+
         void MsgUserInfo::process(Server& server, uint32_t con_id)
         {
             // TODO: add macro for not implemented functions
-        }
-
-        void MsgUserInfo::init_from_stmt(Database::GetUser::Info* data)
-        {
-            if (data == nullptr)
-                throw std::exception{ "a null pointer was used for the data param!" };
-
-            _info->identity       = data->identity;
-            _info->mesh           = data->lookface;
-            _info->hairstyle      = data->hair;
-            _info->silver         = data->money;
-            _info->cps            = data->cps;
-            _info->experience     = data->exp;
-            _info->strength       = data->force;
-            _info->agility        = data->dexterity;
-            _info->vitality       = data->life;
-            _info->spirit         = data->soul;
-            _info->attributes     = data->add_points;
-            _info->health         = data->health;
-            _info->mana           = data->mana;
-            _info->pk_points      = data->pk;
-            _info->level          = data->level;
-            _info->profession     = data->profession;
-            _info->rebirths       = data->rebirth;
-            _info->previous_class = 0;  // TODO: why?
-            _info->show_name      = true;
         }
     }
 }

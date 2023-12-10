@@ -1,6 +1,6 @@
 #pragma once
 #include "NetMsg.h"
-#include "Database/Statements/GetUser.h"    // for the info dt to preserve my sanity
+#include "Database/Statements/GetPlayerInfo.h"    // for the info dt to preserve my sanity
 
 namespace Eternal
 {
@@ -44,11 +44,11 @@ namespace Eternal
         
         public:
             MsgUserInfo(std::string_view char_name, std::string_view spouse_name);
+            MsgUserInfo(const Database::PlayerInfo& data);
             virtual ~MsgUserInfo() = default;
         public:
             virtual void process(Server& server, uint32_t con_id) override;
-            void init_from_stmt(Database::GetUser::Info* data);
-
+            
         private:
             Info* _info;
         };

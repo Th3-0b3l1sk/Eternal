@@ -11,13 +11,14 @@ namespace Eternal
     {
         enum class StatementID
         {
-            AUTHENTICATE   = 0,
-            REGISTER       = 1,
-            GET_USER       = 2,
-            GET_USER_ITEMS = 3,
-            GET_ITEMTYPE   = 4,
-            GET_MAP        = 5,
-            GET_NPC        = 6,
+            AUTHENTICATE      = 0,
+            REGISTER          = 1,
+            GET_USER          = 2,
+            GET_USER_ITEMS    = 3,
+            GET_ITEMTYPE      = 4,
+            GET_MAP           = 5,
+            GET_NPC           = 6,
+            UPDATE_PLAYER_JMP = 7,
 
         };
 

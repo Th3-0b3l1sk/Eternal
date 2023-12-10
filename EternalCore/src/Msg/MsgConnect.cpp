@@ -1,3 +1,4 @@
+#include "Database/Database.h"
 #include "Msg/MsgConnect.h"
 #include "Msg/MsgTalk.h"
 #include "Msg/MsgData.h"
@@ -6,7 +7,6 @@
 #include "Network/Server.h"
 #include "Network/Connection.h"
 #include "World.h"
-#include "Database/Statements/GetUser.h"
 #include "Util/co_defs.h"
 #include <iostream> // TODO: remove
 
@@ -32,15 +32,15 @@ namespace Eternal
             case Eternal::Server::Which::GAME:
                 // process game logic here ... 
             {
-                auto statement = std::make_unique<Database::GetUser>(_info->client_identity);  
-                auto result = server.execute_statement(std::move(statement));
-                if (result.empty()) {
+                auto& db = server.get_database();
+                auto player_info = db->get_player_info(_info->client_identity);
+                if (player_info && player_info->id == PLAYER_STATS_NON_EXISTING) {
                     // add new character
                     std::cout << "Requesting character creation!\n";
                     auto msg_talk = std::make_shared<MsgTalk>(SYSTEM, ALLUSERS, "", NEW_ROLE, 2101, 0x00FFFFFF);
                     server.send(con_id, msg_talk);
                 }
-                else {
+                else if (player_info) {
                     auto& connection = server.get_connection(con_id);
                     // TODO: use enums
                     auto msg_talk_reply = std::make_shared<Msg::MsgTalk>(SYSTEM, ALLUSERS, "", ANSWER_OK, 2101, 0x00FFFFFF);
@@ -51,15 +51,12 @@ namespace Eternal
                     auto msg_data = std::make_shared<Msg::MsgData>(lt->tm_year, lt->tm_mon, lt->tm_yday, lt->tm_mday, lt->tm_hour,  lt->tm_min, lt->tm_sec);
                     server.send(con_id, msg_data);
 
-                    auto user_data = (Database::GetUser::Info*)result[0].get();
-                    auto player = std::make_shared<Entities::Player>(*connection, user_data);
-
+                    auto player = std::make_shared<Entities::Player>(*connection, player_info.value());
                     connection->set_player(player);
                     auto& game_world = server.get_world();
                     game_world->join_player(player);
                     
-                    auto msg_user_info = std::make_shared<Msg::MsgUserInfo>((char*)user_data->name, (char*)user_data->mate);
-                    msg_user_info->init_from_stmt(user_data);
+                    auto msg_user_info = std::make_shared<Msg::MsgUserInfo>(player_info.value());
                     server.send(con_id, msg_user_info);
 
                     auto msg_talk_welcome = std::make_shared<Msg::MsgTalk>(SYSTEM, ALLUSERS, "", ETERNAL_WELCOME, 2006, 0x00FFFFFF);
