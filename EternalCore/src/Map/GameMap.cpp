@@ -9,10 +9,10 @@ namespace Eternal
 {
     namespace Map
     {
-        GameMap::GameMap(std::unique_ptr<uint8_t[]>&& data)
+        GameMap::GameMap(Database::MapInfo&& data)
             : _entities_count{ 0 }, _data{ nullptr }
         {
-            _info.reset((Database::GetMap::Info*)data.release());
+            _info = std::make_unique<Database::MapInfo>(std::move(data));
         }
 
         GameMap::GameMap(GameMap&& other) noexcept

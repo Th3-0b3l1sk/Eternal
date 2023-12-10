@@ -50,7 +50,7 @@ namespace  Eternal
                 auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
                 auto msg_action = std::make_shared<Msg::MsgAction>(ActionType::ACTION_SET_LOCATION,
                     milliseconds,
-                    player->get_id(),
+                    player->get_identity(),
                     player->get_map(),
                     player->get_x(),
                     player->get_y(),
@@ -70,7 +70,7 @@ namespace  Eternal
             {
                 auto& player = server.get_connection(con_id)->get_player();
                 auto& db = server.get_database();
-                auto player_items = db->get_player_own_items(player->get_id());
+                auto player_items = db->get_player_own_items(player->get_identity());
                 // some error
                 if (!player_items)
                     return;
@@ -105,7 +105,7 @@ namespace  Eternal
                 auto flyback = std::make_shared<Eternal::Msg::MsgAction>(
                     ActionType::ACTION_FLYMAP,
                     milliseconds,
-                    player->get_id(),
+                    player->get_identity(),
                     map_id,
                     old_x,
                     old_y,

@@ -23,7 +23,7 @@ namespace Eternal
 
             // From Entity
             _name        = _info.name;
-            _id          = _info.identity;
+            _identity    = _info.identity;
             _look        = _info.lookface;
             _map         = _info.record_map;
             _x           = _info.record_x;
@@ -45,7 +45,7 @@ namespace Eternal
 
             // From Entity
             _name        = _info.name;
-            _id          = _info.identity;
+            _identity    = _info.identity;
             _look        = _info.lookface;
             _map         = _info.record_map;
             _x           = _info.record_x;
@@ -95,7 +95,7 @@ namespace Eternal
         {
             std::unique_lock lock(_view_set.first);
             auto& view_set = _view_set.second;
-            auto it = view_set.find(entity->get_id());
+            auto it = view_set.find(entity->get_identity());
             if (it != view_set.end())
                 view_set.erase(it);
 
@@ -119,10 +119,10 @@ namespace Eternal
         {
             std::unique_lock lock(_view_set.first);
             auto& view_set = _view_set.second;
-            if (view_set.find(entity->get_id()) != view_set.end())
+            if (view_set.find(entity->get_identity()) != view_set.end())
                 return;
 
-            view_set[entity->get_id()] = entity;
+            view_set[entity->get_identity()] = entity;
 
             // TODO: check if player
             entity->inform(shared_from_this());

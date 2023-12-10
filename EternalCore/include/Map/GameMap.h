@@ -3,7 +3,7 @@
 #include <memory>
 #include <shared_mutex>
 #include <unordered_map>
-#include "Database/Statements/GetMap.h"
+#include "Database/Statements/GetMapsInfo.h"
 
 namespace Eternal
 {
@@ -21,11 +21,11 @@ namespace Eternal
         class GameMap
         {
         public:
-            GameMap(std::unique_ptr<uint8_t[]>&& data);
+            GameMap(Database::MapInfo&& data);
             GameMap(GameMap&& other) noexcept;
 
         public:
-            size_t get_map_id() const { return _info->_uid; }
+            size_t get_map_id() const { return _info->uid; }
             size_t get_player_count();
 
         public:
@@ -38,7 +38,7 @@ namespace Eternal
 
         private:
             std::shared_ptr<MapData> _data;
-            std::unique_ptr<Database::GetMap::Info> _info;
+            std::unique_ptr<Database::MapInfo> _info;
             guarded_pair<std::shared_mutex, 
                 std::unordered_map<uint32_t, std::shared_ptr<Entities::Entity>>> _entities;
             uint32_t _player_count;

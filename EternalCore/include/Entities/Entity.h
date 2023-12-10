@@ -21,7 +21,7 @@ namespace Eternal
             
         protected:
             Entity(uint32_t uid) 
-                :  _id{ uid } 
+                :  _identity{ uid } 
             { }
 
             Entity() = default;
@@ -32,7 +32,7 @@ namespace Eternal
             void set_dir(uint8_t dir) { _dir = dir; }
 
         public:
-            uint32_t get_id() const { return _id; }
+            uint32_t get_identity() const { return _identity; }
             uint32_t get_look() const { return _look; }
             uint32_t get_map() const { return _map; }
             uint16_t get_x() const { return _x; }
@@ -57,7 +57,7 @@ namespace Eternal
 
         protected:    
             std::string _name{ "UNKOWN" };
-            uint32_t _id{};
+            uint32_t _identity{};
             uint32_t _look{};
             uint32_t _map{};
             uint16_t _x{};

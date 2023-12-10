@@ -21,7 +21,7 @@ namespace Eternal
                 SQLPrepare(_hStmt, (SQLCHAR*)stmt.c_str(), stmt.size()));
 
             TRYODBC(_hStmt, SQL_HANDLE_STMT,
-                SQLBindCol(_hStmt, 1,  SQL_C_LONG,    (SQLPOINTER)&_player_info.id,             0, nullptr));
+                SQLBindCol(_hStmt, 2,  SQL_C_LONG,    (SQLPOINTER)&_player_info.identity,       0, nullptr));
             TRYODBC(_hStmt, SQL_HANDLE_STMT,
                 SQLBindCol(_hStmt, 3,  SQL_C_CHAR,    (SQLPOINTER)_player_info.name.c_str(), _player_info.name.size(), nullptr));
             TRYODBC(_hStmt, SQL_HANDLE_STMT,
@@ -94,18 +94,12 @@ namespace Eternal
                 return std::nullopt;
             }
 
-            SQLSMALLINT num_result{ 0 };
-            ret = SQLNumResultCols(_hStmt, &num_result);
-            if (!SQL_SUCCEEDED(ret)) {
-                return std::nullopt;
-            }
-
-            if (0 == num_result) {
-                _player_info.id = PLAYER_STATS_NON_EXISTING;
+            ret = SQLFetch(_hStmt);
+            if (SQL_NO_DATA == ret) {
+                _player_info.identity = PLAYER_STATS_NON_EXISTING;
                 return { PlayerInfo(_player_info) };
             }
 
-            ret = SQLFetch(_hStmt);
             if (!SQL_SUCCEEDED(ret)) {
                 // handle error
                 return std::nullopt;

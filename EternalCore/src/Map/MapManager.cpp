@@ -5,7 +5,7 @@
 #include "Map/MapManager.h"
 #include "Util/IniFile.h"
 #include "Network/Server.h"
-#include "Database/Statements/GetMap.h"
+#include "Database/Database.h"
 #include <unordered_map>
 
 namespace Eternal
@@ -28,6 +28,7 @@ namespace Eternal
 
                 auto data = std::make_shared<MapData>(id); // the map id
                 data->load_data(work_pair.second.c_str());
+                data->pack();
                 
                 std::unique_lock game_map_lock(_game_maps.first);
                 auto& game_maps = _game_maps.second;
@@ -64,15 +65,15 @@ namespace Eternal
             }
         }
 
-        void MapManager::load_db_maps(Server& server)
+        void MapManager::load_game_maps(Server& server)
         {
-            auto stmt = std::make_unique<Eternal::Database::GetMap>();
-            auto result = server.execute_statement(std::move(stmt));
-            if (result.size() == 0)
+            auto& db = server.get_database();
+            auto game_maps = db->get_game_maps();
+            if (!game_maps)
                 throw std::exception{ "Failed to load game data from the database\n" };
 
             std::unique_lock lock(_game_maps.first);
-            for (auto&& map : result) {
+            for (auto&& map : game_maps.value()) {
                 auto game_map = std::make_unique<GameMap>(std::move(map));
                 auto& _maps = _game_maps.second;
                 auto _map_id = game_map->get_map_id();

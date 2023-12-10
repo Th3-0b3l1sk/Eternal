@@ -41,7 +41,9 @@ namespace Eternal
 	{
 		if (bytes_received > 0) {
 			// TODO: proper logger
-			std::cout << "Incoming [" << bytes_received << "] bytes from Client: " << connection->get_ip_address() << ":" << connection->get_port() << '\n';
+#ifdef _DEBUG
+				std::cout << "Incoming [" << bytes_received << "] bytes from Client: " << connection->get_ip_address() << ":" << connection->get_port() << '\n';
+#endif
 			_on_receive(connection, bytes_received);
 			if(connection->get_state() != Connection::State::CLOSED)
 				connection->begin_read();
@@ -79,7 +81,10 @@ namespace Eternal
 	std::vector<std::unique_ptr<uint8_t[]>>
 		Server::execute_statement(std::unique_ptr<Database::IStatement>&& statement)
 	{
-		return std::move(_database->execute(std::move(statement)));	
+		DebugBreak();
+		// TODO: DB-FIX
+		//return std::move(_database->execute(std::move(statement)));	
+		return {};
 	}
 
 	static std::shared_ptr<uint8_t[]> prep_msg(std::shared_ptr<Eternal::Msg::NetMsg> msg, bool set_tq_server = true)
@@ -126,6 +131,11 @@ namespace Eternal
 		return _connections.at(con_id); 
 	}
 
+	std::unique_ptr<Database::Database>& Server::get_database()
+	{
+		return _database;
+	}
+
 	void Server::run()
 	{
 		// TODO: proper logger
@@ -162,15 +172,15 @@ namespace Eternal
 
 	{
 		_config = std::make_unique<Util::IniFile>(config_file);
-		auto author = _config->get("server", "author");
-		auto ip     = _config->get("server", "ip");
-		auto port   = _config->get<uint16_t>("server", "port");
+		auto& author = _config->get("server", "author");
+		auto& ip     = _config->get("server", "ip");
+		auto port    = _config->get<uint16_t>("server", "port");
 		init(ip, port);
 
-		auto dsn   = _config->get("database", "dsn");
-		auto usr   = _config->get("database", "usr");
-		auto pwd   = _config->get("database", "pwd");
-		auto stmts = _config->get("database", "stmts");
+		auto& dsn = _config->get("database", "dsn");
+		auto& usr   = _config->get("database", "usr");
+		auto& pwd = _config->get("database", "pwd");
+		auto& stmts = _config->get("database", "stmts");
 		_database = std::make_unique<Database::Database>(dsn, usr, pwd);
 		_database->load_statements(stmts);
 	}

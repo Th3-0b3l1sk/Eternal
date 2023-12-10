@@ -187,8 +187,6 @@ namespace Eternal
 
                     }
                 }
-
-                this->pack();
             }
             catch (std::exception& what)
             {
@@ -210,6 +208,10 @@ namespace Eternal
         void MapData::pack()
         {
             if (_is_packed)
+                return;
+
+            // failed to load the map file
+            if (nullptr == _grid)
                 return;
 
             using Util::Packer;
