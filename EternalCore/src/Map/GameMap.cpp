@@ -36,7 +36,7 @@ namespace Eternal
 
         void GameMap::add_npc(std::shared_ptr<Entities::Entity> entity)
         {
-            auto entity_id = entity->get_id();
+            auto entity_id = entity->get_identity();
             
             std::unique_lock<std::shared_mutex> lock(_entities.first);
             auto& entities = _entities.second;
@@ -48,7 +48,7 @@ namespace Eternal
 
         void GameMap::add_player(std::shared_ptr<Entities::Entity> entity)
         {
-            auto entity_id = entity->get_id();
+            auto entity_id = entity->get_identity();
             
             // TODO: check if player
             if (1) {
@@ -85,12 +85,12 @@ namespace Eternal
 
         void GameMap::update_bc_set(std::shared_ptr<Entities::Entity> entity)
         {
-            auto entity_id = entity->get_id();
+            auto entity_id = entity->get_identity();
             auto& entities = _entities.second;
             
             if (entities.find(entity_id) != entities.end()) {
                 for (auto& e : entities) {
-                    if (e.second->get_id() == entity_id)
+                    if (e.second->get_identity() == entity_id)
                         continue;
                     
                     auto ee = e.second;
