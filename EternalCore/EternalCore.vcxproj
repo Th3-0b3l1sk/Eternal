@@ -96,13 +96,13 @@
   <ItemGroup>
     <ClCompile Include="..\Depends\lz4\lz4.c" />
     <ClCompile Include="src\Entities\NpcManager.cpp" />
-    <ClCompile Include="src\Database\Statements\GetNpc.cpp" />
+    <ClCompile Include="src\Database\Statements\GetNpcsInfo.cpp" />
     <ClCompile Include="src\Msg\MsgNpcInfo.cpp" />
     <ClCompile Include="src\Entities\Npc.cpp" />
     <ClCompile Include="src\Entities\ItemManager.cpp" />
     <ClCompile Include="src\Msg\MsgPlayer.cpp" />
     <ClCompile Include="src\Entities\Entity.cpp" />
-    <ClCompile Include="src\Database\Statements\GetMap.cpp" />
+    <ClCompile Include="src\Database\Statements\GetMapsInfo.cpp" />
     <ClCompile Include="src\Map\GameMap.cpp" />
     <ClCompile Include="src\Util\Packer.cpp" />
     <ClCompile Include="src\Map\Grid.cpp" />
@@ -110,16 +110,16 @@
     <ClCompile Include="src\Map\MapManager.cpp" />
     <ClCompile Include="src\Map\MapData.cpp" />
     <ClCompile Include="src\Util\IniFile.cpp" />
-    <ClCompile Include="src\Database\Statements\GetItemtype.cpp" />
+    <ClCompile Include="src\Database\Statements\GetItemsInfo.cpp" />
     <ClCompile Include="src\Entities\Player.cpp" />
-    <ClCompile Include="src\Database\Statements\GetUserItems.cpp" />
+    <ClCompile Include="src\Database\Statements\GetPlayerOwnItems.cpp" />
     <ClCompile Include="src\Entities\Item.cpp" />
     <ClCompile Include="src\Msg\MsgItemInfo.cpp" />
     <ClCompile Include="src\Msg\MsgAction.cpp" />
     <ClCompile Include="src\Msg\MsgUserInfo.cpp" />
-    <ClCompile Include="src\Database\Statements\GetUser.cpp" />
+    <ClCompile Include="src\Database\Statements\GetPlayerInfo.cpp" />
     <ClCompile Include="src\Database\Statements\Register.cpp" />
-    <ClCompile Include="src\Database\Statements\Authenticate.cpp" />
+    <ClCompile Include="src\Database\Statements\GetAccountInfo.cpp" />
     <ClCompile Include="src\Msg\MsgData.cpp" />
     <ClCompile Include="src\Util\LineReader.cpp" />
     <ClCompile Include="src\Database\Database.cpp" />
@@ -136,14 +136,14 @@
     <ClCompile Include="src\World.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Database\Statements\GetNpc.h" />
-    <ClInclude Include="include\Database\Statements\GetMap.h" />
+    <ClInclude Include="include\Database\Statements\GetNpcsInfo.h" />
+    <ClInclude Include="include\Database\Statements\GetMapsInfo.h" />
     <ClInclude Include="include\Map\GameMap.h" />
     <ClInclude Include="include\Map\Grid.h" />
-    <ClInclude Include="include\Database\Statements\GetItemtype.h" />
-    <ClInclude Include="include\Database\Statements\GetUserItems.h" />
-    <ClInclude Include="include\Database\Statements\GetUser.h" />
-    <ClInclude Include="include\Database\Statements\Authenticate.h" />
+    <ClInclude Include="include\Database\Statements\GetItemsInfo.h" />
+    <ClInclude Include="include\Database\Statements\GetPlayerOwnItems.h" />
+    <ClInclude Include="include\Database\Statements\GetPlayerInfo.h" />
+    <ClInclude Include="include\Database\Statements\GetAccountInfo.h" />
     <ClInclude Include="include\Database\Database.h" />
     <ClInclude Include="include\Database\db_helper.h" />
     <ClInclude Include="include\Msg\MsgData.h" />

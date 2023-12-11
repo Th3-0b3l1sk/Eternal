@@ -1,10 +1,10 @@
 #include "World.h"
+#include "Util/IniFile.h"
 #include "Network/Server.h"
 #include "Network/Connection.h"
-#include "Util/IniFile.h"
-#include "Entities/Player.h"
 #include "Entities/ItemManager.h"
 #include "Entities/NpcManager.h"
+#include "Entities/Player.h"
 #include "Entities/Npc.h"
 #include "Map/MapManager.h"
 
@@ -17,19 +17,23 @@ namespace Eternal
         auto& config = _server.get_config();
         _game_map_ini = config->get("world", "maps");
 
-        _init();
+        _init(); 
+    }
+
+    World::~World()
+    {
     }
 
     void World::join_player(std::shared_ptr<Entities::Player> player)
     {
         std::unique_lock guard(_world_players.first);
         auto& players = _world_players.second;
-        if (players.find(player->get_id()) == players.end())
-            players.insert({ player->get_id(), player });
+        if (players.find(player->get_identity()) == players.end())
+            players.insert({ player->get_identity(), player });
         else {
             guard.unlock();
-            kick_player(player->get_id());
-            players.insert({ player->get_id(), player });
+            kick_player(player->get_identity());
+            players.insert({ player->get_identity(), player });
         }
     }
     void World::kick_player(uint32_t player_id)
@@ -57,11 +61,14 @@ namespace Eternal
 
     void World::_init()
     {
-        auto& db = _server._database;
+        auto& db = _server.get_database();
         _item_manager = std::make_unique<Entities::ItemManager>(*db);
-        _npc_manager = std::make_unique<Entities::NpcManager>(*db);
+        _item_manager->load_game_items();
 
-        _map_manager->load_db_maps(_server);
+        _npc_manager = std::make_unique<Entities::NpcManager>(*db);
+        _npc_manager->load_game_npcs();
+
+        _map_manager->load_game_maps(_server);
         _map_manager->load_maps(_game_map_ini.c_str());
         
         auto& world_npcs = _npc_manager->expose_container();

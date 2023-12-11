@@ -47,13 +47,13 @@
     <ClCompile Include="src\Util\LineReader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Database\Statements\Authenticate.cpp">
+    <ClCompile Include="src\Database\Statements\GetAccountInfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Database\Statements\Register.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Database\Statements\GetUser.cpp">
+    <ClCompile Include="src\Database\Statements\GetPlayerInfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Msg\MsgData.cpp">
@@ -71,7 +71,7 @@
     <ClCompile Include="src\Entities\Item.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Database\Statements\GetUserItems.cpp">
+    <ClCompile Include="src\Database\Statements\GetPlayerOwnItems.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Entities\Player.cpp">
@@ -80,7 +80,7 @@
     <ClCompile Include="src\World.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Database\Statements\GetItemtype.cpp">
+    <ClCompile Include="src\Database\Statements\GetItemsInfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Util\IniFile.cpp">
@@ -107,7 +107,7 @@
     <ClCompile Include="src\Map\GameMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Database\Statements\GetMap.cpp">
+    <ClCompile Include="src\Database\Statements\GetMapsInfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Entities\Entity.cpp">
@@ -125,7 +125,7 @@
     <ClCompile Include="src\Msg\MsgNpcInfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Database\Statements\GetNpc.cpp">
+    <ClCompile Include="src\Database\Statements\GetNpcsInfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Entities\NpcManager.cpp">
@@ -149,21 +149,21 @@
     <ClInclude Include="include\Database\Statements\IStatement.h" />
     <ClInclude Include="include\Util\LineReader.h" />
     <ClInclude Include="include\Database\db_helper.h" />
-    <ClInclude Include="include\Database\Statements\Authenticate.h" />
+    <ClInclude Include="include\Database\Statements\GetAccountInfo.h" />
     <ClInclude Include="include\Database\Statements\Register.h" />
-    <ClInclude Include="include\Database\Statements\GetUser.h" />
+    <ClInclude Include="include\Database\Statements\GetPlayerInfo.h" />
     <ClInclude Include="include\Msg\MsgData.h" />
     <ClInclude Include="include\Msg\MsgUserInfo.h" />
     <ClInclude Include="include\Msg\MsgAction.h" />
     <ClInclude Include="include\Msg\MsgItemInfo.h" />
     <ClInclude Include="include\Entities\Item.h" />
-    <ClInclude Include="include\Database\Statements\GetUserItems.h" />
+    <ClInclude Include="include\Database\Statements\GetPlayerOwnItems.h" />
     <ClInclude Include="include\Entities\Entity.h" />
     <ClInclude Include="include\Entities\AdvancedEntity.h" />
     <ClInclude Include="include\Entities\Player.h" />
     <ClInclude Include="include\World.h" />
     <ClInclude Include="include\Util\co_defs.h" />
-    <ClInclude Include="include\Database\Statements\GetItemtype.h" />
+    <ClInclude Include="include\Database\Statements\GetItemsInfo.h" />
     <ClInclude Include="include\Util\IniFile.h" />
     <ClInclude Include="include\Util\StrUtils.h" />
     <ClInclude Include="include\Map\MapData.h" />
@@ -173,12 +173,12 @@
     <ClInclude Include="include\Map\Grid.h" />
     <ClInclude Include="include\Util\Packer.h" />
     <ClInclude Include="include\Map\GameMap.h" />
-    <ClInclude Include="include\Database\Statements\GetMap.h" />
+    <ClInclude Include="include\Database\Statements\GetMapsInfo.h" />
     <ClInclude Include="include\Msg\MsgPlayer.h" />
     <ClInclude Include="include\Entities\ItemManager.h" />
     <ClInclude Include="include\Entities\Npc.h" />
     <ClInclude Include="include\Msg\MsgNpcInfo.h" />
-    <ClInclude Include="include\Database\Statements\GetNpc.h" />
+    <ClInclude Include="include\Database\Statements\GetNpcsInfo.h" />
     <ClInclude Include="include\Entities\NpcManager.h" />
   </ItemGroup>
 </Project>

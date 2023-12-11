@@ -4,22 +4,24 @@
 #include <shared_mutex>
 #include "Util/comms.h"
 
+
+
 #define TD(x) ;
 
 namespace Eternal
 {
-    namespace Entities
-    {
-        class Player;
-        class Item;       
-        class ItemManager;
-        class NpcManager;
-    };
-
     namespace Map
     {
         class MapManager;
-    };
+    }
+
+    namespace Entities
+    {
+        class ItemManager;
+        class NpcManager;
+        class Player;
+        class Npc;
+    }
 
     class Server;
     class World
@@ -30,7 +32,7 @@ namespace Eternal
 
     public:
         World(Eternal::Server& game_server) noexcept;
-
+        ~World();
     public:
         void join_player(std::shared_ptr<Entities::Player> player);
         void kick_player(uint32_t player_id);

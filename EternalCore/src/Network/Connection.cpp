@@ -74,7 +74,7 @@ namespace Eternal
 
     uint32_t Connection::get_player_id() const
     {
-        return _player->get_id(); 
+        return _player->get_identity();
     }
 
     void Connection::send_over_server(std::shared_ptr<Msg::NetMsg> msg)
