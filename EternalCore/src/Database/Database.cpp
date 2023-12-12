@@ -47,13 +47,6 @@ namespace Eternal
             throw std::exception{ "panic" };
         }
 
-        // requires the file to be in the key=value format
-        void Database::load_statements(std::string_view file)
-        {
-            Util::LineReader reader(file);
-            _statements = reader.get_lines();          
-        }
-
         void Database::update_player_jump(uint32_t player_id, uint16_t new_x, uint16_t new_y)
         {
 

@@ -53,7 +53,6 @@ namespace Eternal
 
         public:
             void connect(std::string_view n, std::string_view w);
-            void load_statements(std::string_view file);
 
         public:
             void update_player_jump(uint32_t player_id, uint16_t new_x, uint16_t new_y);
