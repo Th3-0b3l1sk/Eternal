@@ -15,7 +15,6 @@ namespace Eternal
 {
     namespace Database
     {
-
         enum class AccountType : uint8_t
         {
             GM = 0,
@@ -26,7 +25,7 @@ namespace Eternal
         // GetAccountInfo.h
         struct AccountInfo
         {
-            AccountInfo(int32_t id, std::string account_id, std::string password, std::string ip,
+            AccountInfo(uint32_t id, std::string account_id, std::string password, std::string ip,
                 AccountType type, bool is_online)
                 :_id{ id }, _account_id {account_id}, _password{ password }, _ip{ ip },
                 _type{ type }, _is_online{ is_online }
@@ -34,9 +33,11 @@ namespace Eternal
 
             }
 
+            uint32_t get_player_id() const { return _id; }
+
             AccountInfo() = delete;
 
-            int32_t _id;
+            uint32_t _id;
             std::string _account_id;
             std::string _password;
             std::string _ip;
@@ -58,12 +59,14 @@ namespace Eternal
             void update_player_jump(uint32_t player_id, uint16_t new_x, uint16_t new_y);
             std::optional<AccountInfo> get_account_info(std::string account_id);
             std::optional<PlayerInfo> get_player_info(uint32_t player_id);
+            std::uint32_t get_player_identity(std::string player_name);
             std::optional<std::vector<PlayerOwnItem>> get_player_own_items(uint32_t player_id);
             std::optional<std::vector<ItemInfo>> get_game_items();
             std::optional<std::vector<NpcInfo>> get_game_npcs();
             std::optional<std::vector<MapInfo>> get_game_maps();
             bool register_user(std::string name, std::string password, std::string ip, AccountType type = AccountType::NORMAL);
-            
+            bool set_player_info(uint32_t id, const PlayerInfo& info);
+
         private:
             SQLHANDLE _hEnv;
             SQLHANDLE _hCon;

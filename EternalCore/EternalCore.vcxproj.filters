@@ -131,6 +131,18 @@
     <ClCompile Include="src\Entities\NpcManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Msg\MsgRegister.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Database\Statements\GetPlayerIdByName.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Database\Statements\SetPlayerInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="include\Database\Statements\SetPlayerInfo.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Msg\MsgAccount.h" />
@@ -180,5 +192,7 @@
     <ClInclude Include="include\Msg\MsgNpcInfo.h" />
     <ClInclude Include="include\Database\Statements\GetNpcsInfo.h" />
     <ClInclude Include="include\Entities\NpcManager.h" />
+    <ClInclude Include="include\Msg\MsgRegister.h" />
+    <ClInclude Include="include\Database\Statements\GetPlayerIdByName.h" />
   </ItemGroup>
 </Project>

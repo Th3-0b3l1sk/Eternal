@@ -26,10 +26,10 @@ namespace Eternal
             std::string&& let_ip() { return std::move(_ip); }
             bool is_online() const { return _is_online; }
             uint8_t account_type() const { return _type; }
-            int32_t get_id() const { return _id; }
+            uint32_t get_id() const { return _id; }
 
         private:
-            int32_t _id;
+            uint32_t _id;
             std::string _name;
             std::string _password;
             std::string _ip;

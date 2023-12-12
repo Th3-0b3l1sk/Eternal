@@ -95,6 +95,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Depends\lz4\lz4.c" />
+    <ClCompile Include="include\Database\Statements\SetPlayerInfo.h" />
+    <ClCompile Include="src\Database\Statements\GetPlayerIdByName.cpp" />
+    <ClCompile Include="src\Database\Statements\SetPlayerInfo.cpp" />
     <ClCompile Include="src\Entities\NpcManager.cpp" />
     <ClCompile Include="src\Database\Statements\GetNpcsInfo.cpp" />
     <ClCompile Include="src\Msg\MsgNpcInfo.cpp" />
@@ -104,6 +107,7 @@
     <ClCompile Include="src\Entities\Entity.cpp" />
     <ClCompile Include="src\Database\Statements\GetMapsInfo.cpp" />
     <ClCompile Include="src\Map\GameMap.cpp" />
+    <ClCompile Include="src\Msg\MsgRegister.cpp" />
     <ClCompile Include="src\Util\Packer.cpp" />
     <ClCompile Include="src\Map\Grid.cpp" />
     <ClCompile Include="src\Util\BinaryRW.cpp" />
@@ -138,6 +142,7 @@
   <ItemGroup>
     <ClInclude Include="include\Database\Statements\GetNpcsInfo.h" />
     <ClInclude Include="include\Database\Statements\GetMapsInfo.h" />
+    <ClInclude Include="include\Database\Statements\GetPlayerIdByName.h" />
     <ClInclude Include="include\Map\GameMap.h" />
     <ClInclude Include="include\Map\Grid.h" />
     <ClInclude Include="include\Database\Statements\GetItemsInfo.h" />
@@ -147,6 +152,7 @@
     <ClInclude Include="include\Database\Database.h" />
     <ClInclude Include="include\Database\db_helper.h" />
     <ClInclude Include="include\Msg\MsgData.h" />
+    <ClInclude Include="include\Msg\MsgRegister.h" />
     <ClInclude Include="include\Msg\MsgTalk.h" />
     <ClInclude Include="include\Network\Encryption\IExchange.h" />
     <ClInclude Include="include\Network\Encryption\ICipher.h" />

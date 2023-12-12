@@ -21,6 +21,8 @@ namespace Eternal
             MSG_ITEM_INFO   = 1008,
             MSG_PLAYER      = 1014,
             MSG_NPC_INFO    = 2030,
+            MSG_REGISTER    = 1001,
+
         };
 
 #pragma pack(push, 1)
@@ -68,6 +70,8 @@ namespace Eternal
                     return "MSG_ITEM_INFO";
                 case MsgType::MSG_NPC_INFO:
                     return "MSG_NPC_INFO";
+                case MsgType::MSG_REGISTER:
+                    return "MSG_REGISTER";
                 default: {
                     uint16_t* buffer = (uint16_t * )_buffer.get();
                     uint16_t packet_type = buffer[1];

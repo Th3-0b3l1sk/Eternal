@@ -4,6 +4,7 @@
 #include "./Msg/MsgAccount.h"
 #include "./Msg/MsgConnect.h"
 #include "./Msg/MsgAction.h"
+#include "./Msg/MsgRegister.h"
 
 namespace Eternal
 {
@@ -73,6 +74,8 @@ namespace Eternal
                 return std::make_shared<MsgConnect>(std::move(packet), len);
             case MsgType::MSG_ACTION:
                 return std::make_shared<MsgAction>(std::move(packet), len);
+            case MsgType::MSG_REGISTER:
+                return std::make_shared<MsgRegister>(std::move(packet), len);
 
             default:
                 return std::make_shared<NetMsg>(std::move(packet), len);

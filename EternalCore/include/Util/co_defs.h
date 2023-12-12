@@ -47,8 +47,9 @@
 #define ALLUSERS    "ALLUSERS"
 #define NEW_ROLE    "NEW_ROLE"
 #define ANSWER_OK   "ANSWER_OK"
-
-
+#define INVALID_ACC "The account doesn't exist!"
+#define INVALID_PLR "The player is already registered!"
+#define NAME_TAKEN  "The name is already taken!"
 
 
 

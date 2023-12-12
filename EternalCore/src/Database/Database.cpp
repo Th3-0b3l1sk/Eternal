@@ -1,4 +1,6 @@
 #include "Database/Database.h"
+#include "Database/Statements/GetPlayerIdByName.h"
+#include "Database/Statements/SetPlayerInfo.h"
 #include "Util/LineReader.h"
 #include <string>
 #include <iostream>
@@ -82,6 +84,16 @@ namespace Eternal
             return info.set_player_id(player_id).execute();
         }
 
+        std::uint32_t Database::get_player_identity(std::string player_name)
+        {
+            GetPlayerIdByName id(_hCon);
+            if (SQL_SUCCESS != id.bind()) {
+                return -1;
+            }
+
+            return id.set_player_name(player_name).execute();
+        }
+
         void authenticate()
         {
 
@@ -107,6 +119,24 @@ namespace Eternal
 
             return false;
         }
+        bool Database::set_player_info(uint32_t id, const PlayerInfo& info)
+        {
+            SetPlayerInfo set_info(_hCon);
+            if (!SQL_SUCCEEDED(set_info.bind())) {
+                return false;
+            }
+
+            // TODO: what the hell
+            set_info.set_id(id).set_name(info.name).set_mate(info.mate).set_lookface(info.lookface)
+                .set_hair(info.hair).set_money(info.money).set_money_saved(info.money_saved).set_cps(info.cps)
+                .set_level(info.level).set_exp(info.exp).set_force(info.force).set_dexterity(info.dexterity)
+                .set_health(info.health).set_soul(info.soul).set_add_points(info.add_points).set_life(info.life)
+                .set_mana(info.mana).set_profession(info.profession).set_pk_points(info.pk_points).set_virtue(info.virtue)
+                .set_nobility(info.nobility).set_rebirth(info.rebirth).set_syndicate_id(info.syndicate_id).set_record_map(info.record_map)
+                .set_record_x(info.record_x).set_record_y(info.record_y).set_last_login(info.last_login);
+
+            return set_info.execute();
+        }
         std::optional<std::vector<PlayerOwnItem>> Database::get_player_own_items(uint32_t player_id)
         {
             GetPlayerOwnItems player_items(_hCon);
@@ -126,7 +156,6 @@ namespace Eternal
             }
 
             return items_info.execute();
-
         }
         std::optional<std::vector<NpcInfo>> Database::get_game_npcs()
         {

@@ -9,9 +9,11 @@ namespace Eternal
     namespace Database
     {
         class GetPlayerInfo;
+        class SetPlayerInfo;
         struct PlayerInfo
         {
             friend class GetPlayerInfo;
+            friend class SetPlayerInfo;
             // id is internal i.e. db
         private:
             uint32_t id;        
@@ -71,4 +73,3 @@ namespace Eternal
         };
     }
 }
-
