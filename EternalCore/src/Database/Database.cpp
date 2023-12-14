@@ -4,14 +4,19 @@
 #include "Util/LineReader.h"
 #include <string>
 #include <iostream>
+#include <Util/IniFile.h>
 
 namespace Eternal
 {
     namespace Database
     {
+        // the static definition
+        PlayerInfo Database::_s_default_info{};
+
         Database::Database()
             : _hEnv(SQL_NULL_HENV), _hCon(SQL_NULL_HDBC)
         {
+
             TRYODBC(_hEnv, SQL_HANDLE_ENV,
                 SQLAllocHandle(SQL_HANDLE_ENV, SQL_NULL_HANDLE, &_hEnv));
             TRYODBC(_hEnv, SQL_HANDLE_ENV,
@@ -136,6 +141,46 @@ namespace Eternal
                 .set_record_x(info.record_x).set_record_y(info.record_y).set_last_login(info.last_login);
 
             return set_info.execute();
+        }
+        void Database::set_def_player_info(PlayerInfo& info)
+        {
+            info = _s_default_info;
+        }
+        void Database::load_def_player_info()
+        {
+            static bool defOn = false;
+            if (defOn) {
+                return;
+            }
+
+            try {
+                Util::IniFile def_stats{ "./config.ini" };
+                _s_default_info.mate  = def_stats.get("def_stats", "mate");
+                _s_default_info.hair  = def_stats.get<std::uint16_t>("def_stats", "hair");
+                _s_default_info.money = def_stats.get<std::uint32_t>("def_stats", "money");
+                _s_default_info.cps   = def_stats.get<std::uint32_t>("def_stats", "cps");
+                _s_default_info.level = def_stats.get<std::uint8_t>("def_stats", "level");
+                _s_default_info.record_map = def_stats.get<std::uint32_t>("def_stats", "record_map");
+                _s_default_info.record_x = def_stats.get<std::uint16_t>("def_stats", "record_x");
+                _s_default_info.record_y = def_stats.get<std::uint16_t>("def_stats", "record_y");
+
+            }
+            catch (std::logic_error & invalid_value)
+            {
+                // TODO: logger
+                std::cerr << "[!] Failed to load default values from \"./config.ini\"\n\tError: " << invalid_value.what() << '\n';
+                std::cerr << "\tRolling hard coded values.\n";               
+                _s_default_info.mate = "None";
+                _s_default_info.hair = 310;
+                _s_default_info.money = 1000;
+                _s_default_info.cps = 0;
+                _s_default_info.level = 1;
+                _s_default_info.record_map = 1036;
+                _s_default_info.record_x = 195;
+                _s_default_info.record_y = 186;
+            }
+
+            defOn = true;
         }
         std::optional<std::vector<PlayerOwnItem>> Database::get_player_own_items(uint32_t player_id)
         {

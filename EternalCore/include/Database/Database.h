@@ -47,6 +47,7 @@ namespace Eternal
 
         class Database
         {
+            static PlayerInfo _s_default_info;
         public:
             Database();
             Database(std::string_view dsn_name, std::string_view user_name, std::string_view password);
@@ -66,6 +67,10 @@ namespace Eternal
             std::optional<std::vector<MapInfo>> get_game_maps();
             bool register_user(std::string name, std::string password, std::string ip, AccountType type = AccountType::NORMAL);
             bool set_player_info(uint32_t id, const PlayerInfo& info);
+            void set_def_player_info(PlayerInfo& info);
+
+        private:
+            void load_def_player_info();
 
         private:
             SQLHANDLE _hEnv;

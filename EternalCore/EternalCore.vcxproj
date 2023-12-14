@@ -95,7 +95,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Depends\lz4\lz4.c" />
-    <ClCompile Include="include\Database\Statements\SetPlayerInfo.h" />
     <ClCompile Include="src\Database\Statements\GetPlayerIdByName.cpp" />
     <ClCompile Include="src\Database\Statements\SetPlayerInfo.cpp" />
     <ClCompile Include="src\Entities\NpcManager.cpp" />
@@ -143,6 +142,7 @@
     <ClInclude Include="include\Database\Statements\GetNpcsInfo.h" />
     <ClInclude Include="include\Database\Statements\GetMapsInfo.h" />
     <ClInclude Include="include\Database\Statements\GetPlayerIdByName.h" />
+    <ClInclude Include="include\Database\Statements\SetPlayerInfo.h" />
     <ClInclude Include="include\Map\GameMap.h" />
     <ClInclude Include="include\Map\Grid.h" />
     <ClInclude Include="include\Database\Statements\GetItemsInfo.h" />

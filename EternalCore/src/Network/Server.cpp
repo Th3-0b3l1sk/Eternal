@@ -171,17 +171,22 @@ namespace Eternal
 		: _io_context{ std::make_shared<asio::io_context>() }, _acceptor{ *_io_context }
 
 	{
-		_config = std::make_unique<Util::IniFile>(config_file);
-		auto& author = _config->get("server", "author");
-		auto& ip     = _config->get("server", "ip");
-		auto port    = _config->get<uint16_t>("server", "port");
-		init(ip, port);
+		try {
+			_config = std::make_unique<Util::IniFile>(config_file);
+			auto& author = _config->get("server", "author");
+			auto& ip = _config->get("server", "ip");
+			auto port = _config->get<uint16_t>("server", "port");
+			init(ip, port);
 
-		auto& dsn = _config->get("database", "dsn");
-		auto& usr   = _config->get("database", "usr");
-		auto& pwd = _config->get("database", "pwd");
-		auto& stmts = _config->get("database", "stmts");
-		_database = std::make_unique<Database::Database>(dsn, usr, pwd);
-		_database->load_statements(stmts);
+			auto& dsn = _config->get("database", "dsn");
+			auto& usr = _config->get("database", "usr");
+			auto& pwd = _config->get("database", "pwd");
+			_database = std::make_unique<Database::Database>(dsn, usr, pwd);
+		}
+		catch (std::exception& e) {
+			std::cerr << "[!] A fatal error has occured.\n\tError: " << e.what() << '\n';
+			std::cerr << "\tShutting down the server!\n";
+			::terminate();
+		}
 	}
 }

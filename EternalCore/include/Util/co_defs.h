@@ -32,6 +32,11 @@
 #define INITIAL_ENERGY      0
 #define INITIAL_XP          0
 
+// registeration
+#define FACE_FEMALE         2
+#define FACE_MALE           1
+
+
 
 
 

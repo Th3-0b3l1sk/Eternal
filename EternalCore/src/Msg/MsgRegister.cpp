@@ -15,7 +15,6 @@ namespace Eternal
 
         void MsgRegister::process(Server& server, uint32_t con_id)
         {
-            // TODO: handle exceptions
             auto& db = server.get_database();
 
             // GetAccountInfo to test if the account is already registerd, if not send an error
@@ -47,36 +46,25 @@ namespace Eternal
 
             // Register the player
             Database::PlayerInfo info{};
+            db->set_def_player_info(info);
+            
             info.name = (char*)_info->name;
-            info.mate = std::string("None");    // TODO: move defaults to a file/config
-            auto face = _info->model / 1000 == 1 ? 2 : 1;
+            auto face = _info->model / 1000 == 1 ? FACE_FEMALE : FACE_MALE;
             info.lookface = (face * 10000) + _info->model;
-            info.hair = 0;
-            info.money = 1'000'000;
-            info.money_saved = 0;
-            info.cps = 100'000;
-            info.level = 110;
-            info.exp = 0;
-            info.force = 10;
+            info.profession = _info->profession;
+            // TODO: fix after implementing professions
+            info.force     = 10;
             info.dexterity = 10;
             info.health = 400;
             info.soul = 10;
             info.add_points = 10;
             info.life = 400;
-            info.mana = 0;
-            info.profession = _info->profession;
-            info.pk_points = 0;
-            info.virtue = 100;
-            info.nobility = 0;
-            info.rebirth = 0;
-            info.syndicate_id = 0;
-            info.record_map = 1036;
-            info.record_x = 195;
-            info.record_y = 186;
-            info.last_login = 0;
+            
+
             if (!db->set_player_info(account_info.value().get_player_id(), info)) {
-                // failed handle error
-                auto msg_talk = std::make_shared<MsgTalk>(SYSTEM, ALLUSERS, "", "An error has occured!", 2100, 0x00FFFFFF);
+                // TODO: logger
+                std::cerr << "[!] Failed to set player {id:" << account_info.value().get_player_id() << "} info.\n";
+                auto msg_talk = std::make_shared<MsgTalk>(SYSTEM, ALLUSERS, "", "An error has occured!\nTry again later.", 2100, 0x00FFFFFF);
                 server.send(con_id, msg_talk);
                 return;
             }

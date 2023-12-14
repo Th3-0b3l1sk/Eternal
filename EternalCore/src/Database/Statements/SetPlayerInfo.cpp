@@ -31,12 +31,12 @@ namespace Eternal
 
             // account_id
             TRYODBC(_hStmt, SQL_HANDLE_STMT,
-            SQLBindParameter(_hStmt,
-                1,
-                SQL_PARAM_INPUT, C_DWORD, SQL_INTEGER,
-                NULL, NULL,
-                (SQLPOINTER)&_info.id,
-                NULL, NULL));
+                SQLBindParameter(_hStmt,
+                    1,
+                    SQL_PARAM_INPUT, C_DWORD, SQL_INTEGER,
+                    NULL, NULL,
+                    (SQLPOINTER)&_info.id,
+                    NULL, NULL));
             // identity
             TRYODBC(_hStmt, SQL_HANDLE_STMT,
                 SQLBindParameter(_hStmt,
@@ -272,7 +272,7 @@ namespace Eternal
         bool SetPlayerInfo::execute()
         {
             SQLRETURN ret = SQL_SUCCESS;
-    
+
             ret = SQLExecute(_hStmt);
             if (!SQL_SUCCEEDED(ret)) {
                 std::cout << get_error(_hStmt, SQL_HANDLE_STMT, ret) << '\n';
@@ -293,7 +293,7 @@ namespace Eternal
             // TODO: perform name checks here, throw if bad
             if (name.size() >= MAX_NAME_LEN)
                 throw std::exception{};
-            
+
             _info.name = name;
             return *this;
         }

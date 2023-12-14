@@ -140,9 +140,6 @@
     <ClCompile Include="src\Database\Statements\SetPlayerInfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\Database\Statements\SetPlayerInfo.h">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Msg\MsgAccount.h" />
@@ -194,5 +191,6 @@
     <ClInclude Include="include\Entities\NpcManager.h" />
     <ClInclude Include="include\Msg\MsgRegister.h" />
     <ClInclude Include="include\Database\Statements\GetPlayerIdByName.h" />
+    <ClInclude Include="include\Database\Statements\SetPlayerInfo.h" />
   </ItemGroup>
 </Project>
