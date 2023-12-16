@@ -140,6 +140,15 @@
     <ClCompile Include="src\Database\Statements\SetPlayerInfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Util\Logger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Util\_detail_logger_setup.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Depends\easylogging++\easylogging++.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Msg\MsgAccount.h" />
@@ -192,5 +201,6 @@
     <ClInclude Include="include\Msg\MsgRegister.h" />
     <ClInclude Include="include\Database\Statements\GetPlayerIdByName.h" />
     <ClInclude Include="include\Database\Statements\SetPlayerInfo.h" />
+    <ClInclude Include="include\Util\Logger.h" />
   </ItemGroup>
 </Project>

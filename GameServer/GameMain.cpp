@@ -1,4 +1,3 @@
-#include <iostream>
 #include <string>
 #include <thread>
 #include "Network/Server.h"
@@ -15,13 +14,17 @@
 #include "Database/Database.h"
 #include "Util/co_defs.h"
 #include "Util/IniFile.h"
+#include "Util/Logger.h"
 #include "World.h"
 
 
 int main()
 {
+	auto GServerLogger = std::make_unique<Eternal::Util::Logger>("Game", true);
+	
 	try {
-		
+		Info(GServerLogger, "Initializing the Game server.");
+
 		Eternal::Server GameServer("./config.ini");
 		auto game_world = std::make_unique<Eternal::World>(GameServer);
 		GameServer._which = Eternal::Server::Which::GAME;
@@ -89,16 +92,21 @@ int main()
 			}
 		};
 
+		Info(GServerLogger, "Finished initializing the Game server");
+
 		GameServer.take_over();
+
 		while (!(GetAsyncKeyState(VK_NUMPAD0) & 1))
 		{
 			Sleep(100);
 		}
 		GameServer.shutdown();
-		std::cout << "Server stopped\n";
+		
+		Info(GServerLogger, "Server shutdown!");
 	}
 	catch (std::exception& e)
 	{
-		std::cout << "Exception: " << e.what() << '\n';
+		std::string error_msg = "A fatal exception has occured. Error: " + std::string(e.what());
+		Fatal(GServerLogger, error_msg);
 	}
 }
