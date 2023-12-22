@@ -8,6 +8,7 @@
 #include "Util/LineReader.h"
 #include "Util/IniFile.h"
 #include "Util/Packer.h"
+#include "Util/Logger.h"
 #include "Network/Encryption/TqCipher.h"
 #include "GameServer/Encryption/DiffieHellman.h"
 #include "GameServer/Encryption/Blowfish.h"
@@ -20,6 +21,10 @@
 #include "Entities/NpcManager.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
+
+// the global logger
+INITIALIZE_EASYLOGGINGPP
+auto GServerLogger = std::make_unique<Eternal::Util::Logger>("Tests", true);
 
 namespace Utilities
 {
@@ -138,6 +143,7 @@ namespace Encryption
 	TEST_CLASS(TqCipher)
 	{
 	public:
+		// TODO: Fix Cipher internal stat
 		TEST_METHOD(EncryptDecrypt)
 		{
 			Eternal::Encryption::TqCipher cipher;
@@ -250,10 +256,12 @@ namespace Map
 	TEST_CLASS(MapManager)
 	{
 	public:
-		TEST_METHOD(load_maps)
+		TEST_METHOD(load_game_maps)
 		{
+			Eternal::Server GameServer("./config.ini");
+
 			Eternal::Map::MapManager manager;
-			manager.load_maps(R"(C:\Dev\Eternal\EternalTest\GameMap.ini)");
+			Assert::IsTrue(manager.load_game_maps(GameServer, R"(C:\Dev\Eternal\EternalTest\GameMap.ini)"));
 		}
 	};
 
@@ -323,7 +331,7 @@ namespace Database
 		{
 			const uint32_t num_of_entries = 155;	// From the database maps table
 
-			auto db = std::make_unique<Eternal::Database::Database>("eternal_game", "e_game_db", "e_game_pd");
+			auto db = std::make_unique<Eternal::Database::Database>("EternalDB", "Eternal", "password");
 			auto result = db->get_game_maps();
 
 			Assert::IsTrue(result.has_value(), L"failed to load game maps");
@@ -338,7 +346,7 @@ namespace Database
 		{
 			const uint32_t num_of_entries = 564;	// From the database maps table
 
-			auto db = std::make_unique<Eternal::Database::Database>("eternal_game", "e_game_db", "e_game_pd");
+			auto db = std::make_unique<Eternal::Database::Database>("EternalDB", "Eternal", "password");
 			auto result = db->get_game_npcs();
 
 			Assert::IsTrue(result.has_value(), L"failed to load game npcs!");
@@ -354,8 +362,9 @@ namespace Entities
 	public:
 		TEST_METHOD(load_all_items)
 		{
-			const uint32_t ITEMS_COUNT = 6861;
-			auto db = std::make_unique<Eternal::Database::Database>("eternal_game", "e_game_db", "e_game_pd");
+			const uint32_t ITEMS_COUNT = 6512;
+
+			auto db = std::make_unique<Eternal::Database::Database>("EternalDB", "Eternal", "password");
 
 			Eternal::Entities::ItemManager mgr(*db);
 			mgr.load_game_items();
@@ -370,7 +379,8 @@ namespace Entities
 		TEST_METHOD(load_all_npcs)
 		{
 			const uint32_t NPCS_COUNT = 564;
-			auto db = std::make_unique<Eternal::Database::Database>("eternal_game", "e_game_db", "e_game_pd");
+
+			auto db = std::make_unique<Eternal::Database::Database>("EternalDB", "Eternal", "password");
 			Eternal::Entities::NpcManager mgr(*db);
 			mgr.load_game_npcs();
 			auto npcs_count = mgr.get_npcs_count();
