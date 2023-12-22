@@ -2,9 +2,12 @@
 #include "Database/Statements/GetPlayerIdByName.h"
 #include "Database/Statements/SetPlayerInfo.h"
 #include "Util/LineReader.h"
+#include "Util/Logger.h"
 #include <string>
-#include <iostream>
 #include <Util/IniFile.h>
+
+// Global logger
+extern std::unique_ptr<Eternal::Util::Logger> GServerLogger;
 
 namespace Eternal
 {
@@ -14,7 +17,7 @@ namespace Eternal
         PlayerInfo Database::_s_default_info{};
 
         Database::Database()
-            : _hEnv(SQL_NULL_HENV), _hCon(SQL_NULL_HDBC)
+            :  _hEnv(SQL_NULL_HENV), _hCon(SQL_NULL_HDBC)
         {
 
             TRYODBC(_hEnv, SQL_HANDLE_ENV,
@@ -31,7 +34,7 @@ namespace Eternal
             DO_IF(_hEnv != SQL_NULL_HANDLE, SQLFreeHandle, SQL_HANDLE_ENV, _hEnv);
             DO_IF(_hCon != SQL_NULL_HANDLE, SQLFreeHandle, SQL_HANDLE_DBC, _hCon);
 
-            throw std::exception{ "panic" };
+            throw std::exception{ "Failed to initialized the Database instance" };
         }
 
         Database::Database(std::string_view dsn_name, std::string_view username, std::string_view password)
@@ -46,12 +49,12 @@ namespace Eternal
                     (SQLCHAR*)username.data(), (SQLSMALLINT)username.size(),
                     (SQLCHAR*)password.data(), (SQLSMALLINT)password.size()));
 
-            std::cout << "[successfully connected to the database!]\n";
+            Info(GServerLogger, "Successfully connected to the database server!");
             return;
 
         bailout:
             DO_IF(_hCon != SQL_NULL_HANDLE, SQLFreeHandle, SQL_HANDLE_DBC, _hCon);
-            throw std::exception{ "panic" };
+            throw std::exception{ "Failed to initialized the Database instance" };
         }
 
         void Database::update_player_jump(uint32_t player_id, uint16_t new_x, uint16_t new_y)
@@ -167,9 +170,9 @@ namespace Eternal
             }
             catch (std::logic_error & invalid_value)
             {
-                // TODO: logger
-                std::cerr << "[!] Failed to load default values from \"./config.ini\"\n\tError: " << invalid_value.what() << '\n';
-                std::cerr << "\tRolling hard coded values.\n";               
+                Error(GServerLogger, "[!] Failed to load default values from \"./config.ini\"\n\tError: " + std::string(invalid_value.what())
+                    + "\n\tRolling hard-coded values.\n");
+
                 _s_default_info.mate = "None";
                 _s_default_info.hair = 310;
                 _s_default_info.money = 1000;

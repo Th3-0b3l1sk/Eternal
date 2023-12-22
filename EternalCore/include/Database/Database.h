@@ -75,7 +75,6 @@ namespace Eternal
         private:
             SQLHANDLE _hEnv;
             SQLHANDLE _hCon;
-            std::unordered_map<std::string, std::string> _statements;
         };
     }
 }
