@@ -13,6 +13,7 @@ namespace Eternal
         const std::string Logger::COLOR_FG_CYAN   = "\x1b[36m";
         const std::string Logger::COLOR_FG_WHITE  = "\x1b[0m";
         const std::string Logger::COLOR_FG_GREEN  = "\x1b[38;2;0;255;0m";
+        const std::string Logger::COLOR_FG_PURPLE = "\x1b[38;5;128m";
         
         std::string Logger::get_record_id(const el::LogMessage*)
         {
@@ -36,10 +37,11 @@ namespace Eternal
 
             config.set(el::Level::Trace,   el::ConfigurationType::Format, "[%id] [%datetime{%b %d, %Y %H:%m:%s}] [%logger:TRACE] %msg");
             config.set(el::Level::Info,    el::ConfigurationType::Format, "[%id] [%datetime{%b %d, %Y %H:%m:%s}] [%logger:" + COLOR_FG_GREEN  + "INFO " + COLOR_FG_WHITE + "] %msg");
-            config.set(el::Level::Debug,   el::ConfigurationType::Format, "[%id] [%datetime{%b %d, %Y %H:%m:%s}] [%logger:" + COLOR_FG_CYAN   + "DEBUG" + COLOR_FG_WHITE + "] %msg => %loc");
-            config.set(el::Level::Warning, el::ConfigurationType::Format, "[%id] [%datetime{%b %d, %Y %H:%m:%s}] [%logger:" + COLOR_FG_YELLOW + "WARN " + COLOR_FG_WHITE + "] %msg => %loc");
-            config.set(el::Level::Error,   el::ConfigurationType::Format, "[%id] [%datetime{%b %d, %Y %H:%m:%s}] [%logger:" + COLOR_FG_RED    + "ERROR" + COLOR_FG_WHITE + "] %msg => %loc");
-            config.set(el::Level::Fatal,   el::ConfigurationType::Format, "[%id] [%datetime{%b %d, %Y %H:%m:%s}] [%logger:" + COLOR_FG_RED    + "FATAL" + COLOR_FG_WHITE + "] %msg => %loc");
+            config.set(el::Level::Verbose, el::ConfigurationType::Format, "[%id] [%datetime{%b %d, %Y %H:%m:%s}] [%logger:" + COLOR_FG_PURPLE + "VERBOSE" + COLOR_FG_WHITE + "] %msg");
+            config.set(el::Level::Debug,   el::ConfigurationType::Format, "[%id] [%datetime{%b %d, %Y %H:%m:%s}] [%logger:" + COLOR_FG_CYAN   + "DEBUG" + COLOR_FG_WHITE + "] %msg @ %loc");
+            config.set(el::Level::Warning, el::ConfigurationType::Format, "[%id] [%datetime{%b %d, %Y %H:%m:%s}] [%logger:" + COLOR_FG_YELLOW + "WARN " + COLOR_FG_WHITE + "] %msg @ %loc");
+            config.set(el::Level::Error,   el::ConfigurationType::Format, "[%id] [%datetime{%b %d, %Y %H:%m:%s}] [%logger:" + COLOR_FG_RED    + "ERROR" + COLOR_FG_WHITE + "] %msg @ %loc");
+            config.set(el::Level::Fatal,   el::ConfigurationType::Format, "[%id] [%datetime{%b %d, %Y %H:%m:%s}] [%logger:" + COLOR_FG_RED    + "FATAL" + COLOR_FG_WHITE + "] %msg @ %loc");
 
             // install record_id formatter
             el::Helpers::installCustomFormatSpecifier(el::CustomFormatSpecifier("%id", Logger::get_record_id));
