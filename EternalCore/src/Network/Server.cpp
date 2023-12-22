@@ -3,8 +3,12 @@
 #include "Network/Connection.h"
 #include "Database/Database.h"
 #include "Util/IniFile.h"
+#include "Util/Logger.h"
 #include "Entities/ItemManager.h"
 #include "World.h"
+
+// Global logger
+extern std::unique_ptr<Eternal::Util::Logger> GServerLogger;
 
 namespace Eternal
 {
@@ -22,8 +26,8 @@ namespace Eternal
 
 	void Server::on_accept(const asio::error_code& error, tcp::socket peer)
 	{
-		// TODO: proper logger
-		std::cout << " Accepeted connection from: " << peer.remote_endpoint().address().to_string() << " port: " << peer.remote_endpoint().port() << '\n';
+		std::string con = "Accepeted connection from: "+ peer.remote_endpoint().address().to_string() + " port: " + std::to_string(peer.remote_endpoint().port()) + '\n';
+		Info(GServerLogger, con);
 
 		std::shared_ptr<Connection> client = std::make_shared<Connection>( std::move(peer), 
 			std::bind(&Server::on_receive, this ,std::placeholders::_1, std::placeholders::_2), *this);
@@ -40,10 +44,10 @@ namespace Eternal
 	void Server::on_receive(std::shared_ptr<Connection> connection, size_t bytes_received)
 	{
 		if (bytes_received > 0) {
-			// TODO: proper logger
-#ifdef _DEBUG
-				std::cout << "Incoming [" << bytes_received << "] bytes from Client: " << connection->get_ip_address() << ":" << connection->get_port() << '\n';
-#endif
+	
+			std::string msg = "Incoming [" +  std::to_string(bytes_received) + "] bytes from Client: " + connection->get_ip_address() + ":" + std::to_string(connection->get_port()) + '\n';
+			Verbose(GServerLogger, msg);
+			
 			_on_receive(connection, bytes_received);
 			if(connection->get_state() != Connection::State::CLOSED)
 				connection->begin_read();
@@ -71,9 +75,9 @@ namespace Eternal
 	}
 
 	void Server::disconnect(uint32_t id)
-	{
-		// TODO: remove this logging
-		std::cout << "Disconnecting client: " << id << '\n';
+	{	
+		Info(GServerLogger, "Disconnecting client: " + std::to_string(id) + '\n');
+
 		_connections.at(id)->reset();
 		_connections.erase(id);
 	}
@@ -83,7 +87,6 @@ namespace Eternal
 	{
 		DebugBreak();
 		// TODO: DB-FIX
-		//return std::move(_database->execute(std::move(statement)));	
 		return {};
 	}
 
@@ -93,10 +96,10 @@ namespace Eternal
 		std::shared_ptr<uint8_t[]> data(new uint8_t[msg->get_size() + (set_tq_server ? SEAL_LEN : 0)]{});
 		memcpy_s(data.get(), msg->get_size(), msg->get_data().get(), msg->get_size());
 		if (!set_tq_server)
-			return std::move(data);
+			return data;
 
 		memcpy_s(data.get() + msg->get_size(), SEAL_LEN, SEAL, SEAL_LEN);
-		return std::move(data);
+		return data;
 	}
 
 
@@ -104,13 +107,16 @@ namespace Eternal
 	{
 		auto packet = prep_msg(msg);
 		_connections.at(con_id)->send(packet, msg->get_size() + SEAL_LEN);
-		std::cout << msg->stringfy() << '\n';
+		
+		Verbose(GServerLogger, "Sending to client [ " + std::to_string(con_id) + "] \n" + msg->stringfy() + '\n');
 	}
 
 	void Server::send_n_kill(uint32_t con_id, std::shared_ptr<Eternal::Msg::NetMsg> msg, bool set_tq_server )
 	{
 		auto packet = prep_msg(msg, set_tq_server);
-		std::cout << msg->stringfy() << '\n';
+		
+		Verbose(GServerLogger, "SenKilling client [ " + std::to_string(con_id) + "] \n" + msg->stringfy() + '\n');
+
 		_connections.at(con_id)->block();
 		_connections.at(con_id)->write(packet, msg->get_size() + (set_tq_server ? SEAL_LEN : 0));
 		disconnect(con_id);
@@ -138,8 +144,8 @@ namespace Eternal
 
 	void Server::run()
 	{
-		// TODO: proper logger
-		std::cout << "The server is up and running ..." << '\n';
+		Info(GServerLogger, "The Game server is up and running.");
+
 		_acceptor.async_accept(std::bind(&Server::on_accept, this,  std::placeholders::_1, std::placeholders::_2));
 		auto work_guard = asio::make_work_guard<asio::io_context>(*_io_context);
 		
@@ -184,8 +190,7 @@ namespace Eternal
 			_database = std::make_unique<Database::Database>(dsn, usr, pwd);
 		}
 		catch (std::exception& e) {
-			std::cerr << "[!] A fatal error has occured.\n\tError: " << e.what() << '\n';
-			std::cerr << "\tShutting down the server!\n";
+			Fatal(GServerLogger, "[!] A fatal error has occured.\n\tError: " + std::string(e.what()) + "\nShutting down the server!");
 			::terminate();
 		}
 	}

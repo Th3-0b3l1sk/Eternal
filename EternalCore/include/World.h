@@ -10,6 +10,7 @@
 
 namespace Eternal
 {
+  
     namespace Map
     {
         class MapManager;

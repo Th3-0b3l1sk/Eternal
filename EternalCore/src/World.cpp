@@ -1,5 +1,4 @@
 #include "World.h"
-#include "Util/IniFile.h"
 #include "Network/Server.h"
 #include "Network/Connection.h"
 #include "Entities/ItemManager.h"
@@ -7,6 +6,11 @@
 #include "Entities/Player.h"
 #include "Entities/Npc.h"
 #include "Map/MapManager.h"
+#include "Util/IniFile.h"
+#include "Util/Logger.h"
+
+// Global logger
+extern std::unique_ptr<Eternal::Util::Logger> GServerLogger;
 
 namespace Eternal
 {
@@ -61,27 +65,28 @@ namespace Eternal
 
     void World::_init()
     {
-        auto& db = _server.get_database();
-        _item_manager = std::make_unique<Entities::ItemManager>(*db);
-        _item_manager->load_game_items();
+        try {
+            auto& db = _server.get_database();
+            _item_manager = std::make_unique<Entities::ItemManager>(*db);
+            _item_manager->load_game_items();
 
-        _npc_manager = std::make_unique<Entities::NpcManager>(*db);
-        _npc_manager->load_game_npcs();
+            _npc_manager = std::make_unique<Entities::NpcManager>(*db);
+            _npc_manager->load_game_npcs();
 
-        _map_manager->load_game_maps(_server);
-        _map_manager->load_maps(_game_map_ini.c_str());
-        
-        auto& world_npcs = _npc_manager->expose_container();
-        for (auto& iter : world_npcs) {
-            auto entity = iter.second;
-            auto map_id = entity->get_map();
+            _map_manager->load_game_maps(_server, _game_map_ini.c_str());
 
-            try {
+            auto& world_npcs = _npc_manager->expose_container();
+            for (auto& npc : world_npcs) {
+                auto& entity = npc.second;
+                auto map_id = entity->get_map();              
                 _map_manager->get_map(map_id)->add_npc(entity);
             }
-            catch (...) {
-                continue;
-            }
         }
+        catch (std::exception& e) {
+            std::string err = "An unexpected error has occured.\n\tError: " + std::string(e.what());
+            Error(GServerLogger, err);
+        }
+
+        Info(GServerLogger, "Game World started successfully.");
     }
 }

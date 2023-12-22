@@ -115,8 +115,11 @@ namespace Eternal
             const uint32_t MAX_JUMP_DISTANCE = 18;
             if (distance <= MAX_JUMP_DISTANCE) {
                 auto& cell = _data->get_cell(new_x, new_y);
-                if (!cell.accessible)
+                if (!cell.accessible) {
+                    // log cell info
+
                     return false;
+                }
 
                 entity->set_pos(new_x, new_y);
                 entity->set_dir(dir);   // TODO: needs sanitization

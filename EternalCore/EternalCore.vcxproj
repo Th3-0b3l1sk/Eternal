@@ -138,7 +138,6 @@
     <ClCompile Include="src\Network\Encryption\TqCipher.cpp" />
     <ClCompile Include="src\Network\Server.cpp" />
     <ClCompile Include="src\Util\StringPacker.cpp" />
-    <ClCompile Include="src\Util\_detail_logger_setup.cpp" />
     <ClCompile Include="src\World.cpp" />
   </ItemGroup>
   <ItemGroup>

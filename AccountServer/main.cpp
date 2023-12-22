@@ -4,15 +4,18 @@
 #include "Network/Encryption/TqCipher.h"
 #include "Database/Database.h"
 #include "Util/IniFile.h"
+#include "Util/Logger.h"
 #include <string>
 #include <thread>
 #include "World.h" // TODO: find a better way to decouple it  
 
+// the global logger
+INITIALIZE_EASYLOGGINGPP
+auto GServerLogger = std::make_unique<Eternal::Util::Logger>("Account", true);
 
 int main()
 {
 	try {
-
 		Eternal::Server AccountServer("./config.ini");
 		AccountServer._which = Eternal::Server::Which::ACCOUNT;
 

@@ -143,9 +143,6 @@
     <ClCompile Include="src\Util\Logger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Util\_detail_logger_setup.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\Depends\easylogging++\easylogging++.cc">
       <Filter>Source Files</Filter>
     </ClCompile>

@@ -17,16 +17,17 @@
 #include "Util/Logger.h"
 #include "World.h"
 
+// The global logger
+INITIALIZE_EASYLOGGINGPP
+auto GServerLogger = std::make_unique<Eternal::Util::Logger>("Game", true);
 
 int main()
 {
-	auto GServerLogger = std::make_unique<Eternal::Util::Logger>("Game", true);
-	
 	try {
-		Info(GServerLogger, "Initializing the Game server.");
-
 		Eternal::Server GameServer("./config.ini");
 		auto game_world = std::make_unique<Eternal::World>(GameServer);
+
+		
 		GameServer._which = Eternal::Server::Which::GAME;
 		GameServer.set_world(std::move(game_world));
 		GameServer._on_accept = [&](std::shared_ptr<Eternal::Connection> connection) {
@@ -92,7 +93,7 @@ int main()
 			}
 		};
 
-		Info(GServerLogger, "Finished initializing the Game server");
+		Info(GServerLogger, "Game server initialized successfully.");
 
 		GameServer.take_over();
 
@@ -107,6 +108,7 @@ int main()
 	catch (std::exception& e)
 	{
 		std::string error_msg = "A fatal exception has occured. Error: " + std::string(e.what());
-		Fatal(GServerLogger, error_msg);
+		std::cerr  << error_msg;
+		::terminate();
 	}
 }
