@@ -1,7 +1,11 @@
 #include "Map/MapData.h"
 #include "Util/Packer.h"
+#include "Util/Logger.h"
 #include <Windows.h>
 #include <string>
+
+// Global logger
+extern std::unique_ptr<Eternal::Util::Logger> GServerLogger;
 
 namespace Eternal
 {
@@ -32,12 +36,13 @@ namespace Eternal
             return reader.let_ptr();
         }
 
-        void MapData::load_data(const char* map_file)
+        bool MapData::load_data(const char* map_file)
         {
+            bool result = false;
             try {
                 auto file_in_mem_ptr = _load_file(map_file);
                 if (!file_in_mem_ptr)
-                    return;
+                    return result;
 
                    /*
              +-------------+------------+-------------------------------------+
@@ -81,7 +86,8 @@ namespace Eternal
                     auto row_checksum = binary_reader.read<uint32_t>();
                     if (computed_checksum != row_checksum) {
                         std::string err_code = "Invalid row checksum at h: " + std::to_string(h) + " total height: " + std::to_string(height) + "\n";
-                        throw std::exception{ err_code.c_str() };
+                        Error(GServerLogger, err_code.c_str());
+                        return result;
                     }
                 }
 
@@ -157,9 +163,9 @@ namespace Eternal
                         }
 
                         catch (std::exception& e) {
-                            // TODO: implement the exception handler
-                            OutputDebugString(e.what());
-                            //throw;
+                            std::string msg = std::string("An exception has occured.\n\tError: ") + e.what();
+                            Error(GServerLogger, msg.c_str());
+                            return result;
                         }
                         break;
                     }
@@ -190,11 +196,12 @@ namespace Eternal
             }
             catch (std::exception& what)
             {
-                OutputDebugString(what.what());
-                //throw;
+                std::string msg = std::string("An exception has occured.\n\tError: ") + what.what();
+                Error(GServerLogger, msg.c_str());
+                return result;
             }
 
-            return;
+            return !result;
         }
 
         const PortalInfo& MapData::get_portal(uint32_t portal_id) const
@@ -205,14 +212,15 @@ namespace Eternal
                 throw std::exception{ "The portal doesn't exist\n" };
         }
 
-        void MapData::pack()
+        bool MapData::pack()
         {
+            bool err = false;
             if (_is_packed)
-                return;
+                return err;
 
             // failed to load the map file
             if (nullptr == _grid)
-                return;
+                return err;
 
             using Util::Packer;
             auto grid_size = _get_grid_size();
@@ -223,19 +231,25 @@ namespace Eternal
                 packed_grid.resize(result);
                 packed_grid.shrink_to_fit();
             }
-            else
-                ;   // TODO: handle error
+            else {
+                std::string msg = std::string("Failed to pack map data. Error: ") + std::to_string(result);
+                Error(GServerLogger, msg.c_str());
+                return err;
+            }
 
             _packed_size = result;
             _grid->_reset_grid(std::move(packed_grid));
             _is_packed = true;
+
+            return !err;
         }
 
 
-        void MapData::unpack()
+        bool MapData::unpack()
         {
+            bool err = false;
             if (!_is_packed)
-                return;
+                return err;
             
             using Util::Packer;
             auto unpacked_size = _get_grid_size();
@@ -245,12 +259,17 @@ namespace Eternal
                 unpacked_grid.resize(result);
                 unpacked_grid.shrink_to_fit();
             }
-            else
-                ;   // TODO: handle error
+            else {
+                std::string msg = std::string("Failed to unpack map data. Error: ") + std::to_string(result);
+                Error(GServerLogger, msg.c_str());
+                return err;
+            }
 
             _packed_size = 0;
             _grid->_reset_grid(std::move(unpacked_grid));
             _is_packed = false;
+
+            return !err;
         }
     }
 }

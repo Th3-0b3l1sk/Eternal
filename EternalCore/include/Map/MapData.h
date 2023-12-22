@@ -48,12 +48,12 @@ namespace Eternal
 
         public:
             /* requires absolute path */
-            void load_data(const char* map_file);
+            bool load_data(const char* map_file);
             const PortalInfo& get_portal(uint32_t portal_id) const;
 
         public:
-            void pack();
-            void unpack();
+            bool pack();
+            bool unpack();
 
             // FOR USE IN THE UNIT TESTS 
             const uint8_t* _get_raw_grid() const { return _grid->_get_raw(); }

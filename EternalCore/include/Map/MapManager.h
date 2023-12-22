@@ -3,7 +3,7 @@
 #include "Util/comms.h"
 #include "Map/MapData.h"
 #include "Map/GameMap.h"
-#include <shared_mutex>
+#include <mutex>
 
 namespace Eternal
 {
@@ -17,17 +17,17 @@ namespace Eternal
             ~MapManager() = default;
 
         public:
-            void load_maps(const char* gamemap_ini);
-            void load_game_maps(Server& server);
+            bool load_game_maps(Server& server, const char* gamemap_ini);
             std::unique_ptr<GameMap>& get_map(uint32_t map_id);
 
         private:
+            bool load_maps(const char* gamemap_ini);
             void load_map_and_pack(std::vector < std::pair<uint32_t, std::string>>& maps);
 
         private:
-            guarded_pair < std::shared_mutex, 
+            guarded_pair < std::mutex,
                 std::unordered_map<uint32_t, std::shared_ptr<MapData>>> _map_data;
-            guarded_pair < std::shared_mutex,
+            guarded_pair < std::mutex,
                 std::unordered_map<uint32_t, std::unique_ptr<GameMap>>> _game_maps;
             std::mutex _work_mtx;
         };
