@@ -14,42 +14,77 @@ namespace Eternal
         }
 
         BinaryRW::BinaryRW(std::filesystem::path file_path)
-            : _ptr{ nullptr }, _read{ 0 }, _write{ 0 }, _is_owner{ true }, 
-            _owner_ptr { nullptr, BinaryRW::_deleter }
+            : BinaryRW()
         {
-            if (!std::filesystem::exists(file_path)) {
-                std::string er_msg{ "BinaryRw::BinaryRw() failed to locate the file <" + file_path.string() + ">"};
-                throw std::exception{ er_msg.c_str() };
+            auto err = _do_open(file_path);
+            std::string msg = "";
+
+            switch (err)
+            {
+            case BRWError::E_FILE_DOESNT_EXIST:
+            {
+                msg = "BinaryRW::BinaryRW() The file at " + file_path.string() + " doesn't exist.\n";
+                break;
             }
+            case BRWError::E_FAILED_TO_OPEN_FILE:
+            {
+                msg = "BinaryRW::BinaryRW() can't open the file at " + file_path.string() + '\n';
+                break;
+            }
+            case BRWError::E_FAILED_TO_MEMMAP:
+            {
+                msg = "BinaryRW::BinaryRW() failed to create a file mapping for the file " + file_path.string() + '\n';
+                break;
+            }
+            default:
+                return;
+            }
+
+            throw std::exception{ msg.c_str() };
+        }
+
+  
+
+        BinaryRW::BinaryRW()
+            : _ptr{ nullptr }, _read{ 0 }, _write{ 0 }, _is_owner{ true },
+            _owner_ptr{ nullptr, BinaryRW::_deleter }
+        {
+        }
+
+        bool BinaryRW::open(std::filesystem::path file_path)
+        {
+            return BRWError::E_SUCCESS == _do_open(file_path);
+        }
+
+        BinaryRW::BRWError BinaryRW::_do_open(std::filesystem::path file_path)
+        {
+            if (!std::filesystem::exists(file_path)) 
+                return BRWError::E_FILE_DOESNT_EXIST;
 
             // TODO: should be GENERIC_READWRITE
             HANDLE hFile = CreateFileA(file_path.string().c_str(), GENERIC_READ | GENERIC_WRITE,
-                FILE_SHARE_READ, NULL,
+                FILE_SHARE_READ | FILE_SHARE_WRITE, NULL,
                 OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL,
                 NULL);
-            if (hFile == INVALID_HANDLE_VALUE) {
-                auto msg = "BinaryRW::BinaryRW() Failed to create a file handle to the file<" + file_path.string() + std::string(">. Error code: ") +  std::to_string(GetLastError());
-                throw std::exception{ msg.c_str() };
-            }
+            if (hFile == INVALID_HANDLE_VALUE)
+                return BRWError::E_FAILED_TO_OPEN_FILE;
 
             auto hMapping = CreateFileMapping(hFile, NULL,
-                PAGE_READWRITE, 0, 0, NULL);
-            if (hMapping == INVALID_HANDLE_VALUE || hMapping == NULL) {
-                auto msg = "BinaryRW::BinaryRW() Failed to create a file mapping object. Error code: " + std::to_string(GetLastError());
-                throw std::exception{ msg.c_str() };
-            }
+                PAGE_WRITECOPY, 0, 0, NULL);
+            if (hMapping == INVALID_HANDLE_VALUE || hMapping == NULL)
+                return BRWError::E_FAILED_TO_MEMMAP;
 
             auto file = MapViewOfFile(hMapping, FILE_MAP_COPY, 0, 0, 0);
-            if (file == NULL) {
-                auto msg = "BinaryRW::BinaryRW() Failed to create a file mapping object. Error code: " + std::to_string(GetLastError());
-                throw std::exception{ msg.c_str() };
-            }
+            if (file == NULL) 
+                return BRWError::E_FAILED_TO_MEMMAP;
 
             CloseHandle(hFile);
             CloseHandle(hMapping);
 
             _ptr = (uint8_t*)file;
             _owner_ptr.reset((uint8_t*)file);
+
+            return BRWError::E_SUCCESS;
         }
         
         BinaryRW::unique_deleter&& BinaryRW::let_ptr()

@@ -20,13 +20,6 @@ namespace Eternal
         class Logger
         {
         private:
-            static const std::string COLOR_FG_RED;
-            static const std::string COLOR_FG_WHITE;
-            static const std::string COLOR_FG_YELLOW;
-            static const std::string COLOR_FG_CYAN;
-            static const std::string COLOR_FG_GREEN; 
-            static const std::string COLOR_FG_PURPLE;
-
             static std::string get_record_id(const el::LogMessage*);
 
         public:

@@ -8,6 +8,13 @@ namespace Eternal
     {
         class BinaryRW
         {
+            enum class BRWError
+            {
+                E_SUCCESS,
+                E_FILE_DOESNT_EXIST,
+                E_FAILED_TO_OPEN_FILE,
+                E_FAILED_TO_MEMMAP
+            };
 
             static void _deleter(uint8_t* ptr);
 
@@ -27,11 +34,21 @@ namespace Eternal
             {
 
             }
+            
             BinaryRW(std::filesystem::path file_path);
+
+            BinaryRW();
 
             ~BinaryRW() {
                 _ptr = nullptr;
             }
+
+        public:
+            bool open(std::filesystem::path file_path);
+
+        private:
+            BRWError _do_open(std::filesystem::path file_path);
+
 
         public:
             template <typename T>

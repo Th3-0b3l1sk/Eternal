@@ -4,17 +4,17 @@
 #include <sstream>
 #include <iomanip>
 
+#define COLOR_FG_RED      "\x1b[38;2;255;0;0m"
+#define COLOR_FG_YELLOW   "\x1b[33m"
+#define COLOR_FG_CYAN     "\x1b[36m"
+#define COLOR_FG_WHITE    "\x1b[0m"
+#define COLOR_FG_GREEN    "\x1b[38;2;0;255;0m"
+#define COLOR_FG_PURPLE   "\x1b[38;5;128m"
+
 namespace Eternal
 {
     namespace Util
     {
-        const std::string Logger::COLOR_FG_RED    = "\x1b[38;2;255;0;0m";
-        const std::string Logger::COLOR_FG_YELLOW = "\x1b[33m";
-        const std::string Logger::COLOR_FG_CYAN   = "\x1b[36m";
-        const std::string Logger::COLOR_FG_WHITE  = "\x1b[0m";
-        const std::string Logger::COLOR_FG_GREEN  = "\x1b[38;2;0;255;0m";
-        const std::string Logger::COLOR_FG_PURPLE = "\x1b[38;5;128m";
-        
         std::string Logger::get_record_id(const el::LogMessage*)
         {
             static std::uint32_t id = 1;
@@ -32,16 +32,20 @@ namespace Eternal
             el::Configurations config{};
             config.setToDefault();
 
+            // set file logging
+            /*config.set(el::Level::Debug, el::ConfigurationType::ToFile, "true");
+            config.set(el::Level::Debug, el::ConfigurationType::Filename, R"(C:\Dev\eternal_log.txt)");*/
+
             // 2023-12-16 20:06:55 WARNING [default] Aborting application. Reason: Fatal log at [path] 
             config.set(el::Level::Global, el::ConfigurationType::Format, "[%id] [%datetime{%b %d, %Y %H:%m:%s}] [%logger:%level] %msg");
 
             config.set(el::Level::Trace,   el::ConfigurationType::Format, "[%id] [%datetime{%b %d, %Y %H:%m:%s}] [%logger:TRACE] %msg");
-            config.set(el::Level::Info,    el::ConfigurationType::Format, "[%id] [%datetime{%b %d, %Y %H:%m:%s}] [%logger:" + COLOR_FG_GREEN  + "INFO " + COLOR_FG_WHITE + "] %msg");
-            config.set(el::Level::Verbose, el::ConfigurationType::Format, "[%id] [%datetime{%b %d, %Y %H:%m:%s}] [%logger:" + COLOR_FG_PURPLE + "VERBOSE" + COLOR_FG_WHITE + "] %msg");
-            config.set(el::Level::Debug,   el::ConfigurationType::Format, "[%id] [%datetime{%b %d, %Y %H:%m:%s}] [%logger:" + COLOR_FG_CYAN   + "DEBUG" + COLOR_FG_WHITE + "] %msg @ %loc");
-            config.set(el::Level::Warning, el::ConfigurationType::Format, "[%id] [%datetime{%b %d, %Y %H:%m:%s}] [%logger:" + COLOR_FG_YELLOW + "WARN " + COLOR_FG_WHITE + "] %msg @ %loc");
-            config.set(el::Level::Error,   el::ConfigurationType::Format, "[%id] [%datetime{%b %d, %Y %H:%m:%s}] [%logger:" + COLOR_FG_RED    + "ERROR" + COLOR_FG_WHITE + "] %msg @ %loc");
-            config.set(el::Level::Fatal,   el::ConfigurationType::Format, "[%id] [%datetime{%b %d, %Y %H:%m:%s}] [%logger:" + COLOR_FG_RED    + "FATAL" + COLOR_FG_WHITE + "] %msg @ %loc");
+            config.set(el::Level::Info,    el::ConfigurationType::Format, "[%id] [%datetime{%b %d, %Y %H:%m:%s}] [%logger:" + std::string(COLOR_FG_GREEN ) + "INFO " + COLOR_FG_WHITE + "] %msg");
+            config.set(el::Level::Verbose, el::ConfigurationType::Format, "[%id] [%datetime{%b %d, %Y %H:%m:%s}] [%logger:" + std::string(COLOR_FG_PURPLE) + "VERBOSE" + COLOR_FG_WHITE + "] %msg");
+            config.set(el::Level::Debug,   el::ConfigurationType::Format, "[%id] [%datetime{%b %d, %Y %H:%m:%s}] [%logger:" + std::string(COLOR_FG_CYAN  ) + "DEBUG" + COLOR_FG_WHITE + "] %msg @ %loc");
+            config.set(el::Level::Warning, el::ConfigurationType::Format, "[%id] [%datetime{%b %d, %Y %H:%m:%s}] [%logger:" + std::string(COLOR_FG_YELLOW) + "WARN " + COLOR_FG_WHITE + "] %msg @ %loc");
+            config.set(el::Level::Error,   el::ConfigurationType::Format, "[%id] [%datetime{%b %d, %Y %H:%m:%s}] [%logger:" + std::string(COLOR_FG_RED   ) + "ERROR" + COLOR_FG_WHITE + "] %msg @ %loc");
+            config.set(el::Level::Fatal,   el::ConfigurationType::Format, "[%id] [%datetime{%b %d, %Y %H:%m:%s}] [%logger:" + std::string(COLOR_FG_RED   ) + "FATAL" + COLOR_FG_WHITE + "] %msg @ %loc");
 
             // install record_id formatter
             el::Helpers::installCustomFormatSpecifier(el::CustomFormatSpecifier("%id", Logger::get_record_id));
