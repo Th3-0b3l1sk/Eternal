@@ -55,18 +55,15 @@ namespace Eternal
             bool pack();
             bool unpack();
 
-            // FOR USE IN THE UNIT TESTS 
-            const uint8_t* _get_raw_grid() const { return _grid->_get_raw(); }
-            const uint32_t _get_grid_size() const { return _grid->get_grid_size(); }
             Cell& get_cell(uint16_t x, uint16_t y) { return *_grid->get_cell(x, y); }
 
+            // for the test class
+            size_t get_grid_size_in_bytes() const { return _grid->get_byte_count(); }
 
         private:
             static Util::BinaryRW::unique_deleter _load_file(const char* map_file);
 
         private:
-            bool _is_packed;
-            uint32_t _packed_size;
             std::uint32_t _map_id;
             std::unique_ptr<Map::Grid> _grid;
             std::unordered_map<uint32_t, PortalInfo> _portals;          

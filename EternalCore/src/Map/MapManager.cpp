@@ -31,6 +31,8 @@ namespace Eternal
                 _work_mtx.unlock();
 
                 auto data = std::make_shared<MapData>(id); 
+                /*std::string dbg_msg = "MapManager::load_map_and_pack() => Loading map data for map id [" + std::to_string(id) + "]\n";
+                Debug(GServerLogger, dbg_msg.c_str());*/
                 if (!data->load_data(work_pair.second.c_str()))
                     continue;
                 
@@ -64,8 +66,9 @@ namespace Eternal
             catch (std::exception& e)
             {
                 std::string msg = std::string("MapManager::load_maps() => An error has occured.\n\tError: ") + e.what();
-                Error(GServerLogger, msg.c_str());
-                return err;
+                msg += "\nTerminating the server.\n";
+                Fatal(GServerLogger, msg.c_str());
+                ::terminate();
             }
 
             std::vector<std::future<void>> work_queue;
