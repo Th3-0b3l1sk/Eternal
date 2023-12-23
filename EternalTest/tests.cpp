@@ -232,20 +232,21 @@ namespace Map
 		{
 			auto data = Eternal::Map::MapData(1010);
 			data.load_data(R"(C:\Dev\Eternal\Depends\street.DMap)");
-			auto bsize = data._get_grid_size();
+			auto bsize = data.get_grid_size_in_bytes();
 
 			data.pack();
 			data.unpack();
-			auto pp = data._get_raw_grid();
 
-			auto size1 = data._get_grid_size();
-
+			auto size1 = data.get_grid_size_in_bytes();
 			Assert::AreEqual(bsize, size1);
+
+
+			auto pp = (char*)&data.get_cell(0, 0);
 
 			auto unpacked = Eternal::Map::MapData(1010);
 			unpacked.load_data(R"(C:\Dev\Eternal\Depends\street.DMap)");
-			auto up = unpacked._get_raw_grid();
-			auto size2 = unpacked._get_grid_size();
+			auto up = (char*) & unpacked.get_cell(0, 0);
+			auto size2 = unpacked.get_grid_size_in_bytes();
 
 			Assert::AreEqual(size1, size2);
 			for (auto i{ 0 }; i < size1; i++)
@@ -258,7 +259,7 @@ namespace Map
 	public:
 		TEST_METHOD(load_game_maps)
 		{
-			Eternal::Server GameServer("./config.ini");
+			Eternal::Server GameServer(R"(C:\Dev\Eternal\GameServer\config.ini)");
 
 			Eternal::Map::MapManager manager;
 			Assert::IsTrue(manager.load_game_maps(GameServer, R"(C:\Dev\Eternal\EternalTest\GameMap.ini)"));
@@ -287,7 +288,7 @@ namespace Map
 
 			for (int w = 0; w < width; w++) {
 				auto cell = grid.get_cell(0, w);
-				Assert::AreEqual(cell->accessible, (uint16_t)0);	// cell.accessible != 1
+				Assert::AreEqual(cell->accessible, (uint16_t)1);	
 				Assert::AreEqual(cell->surface,    (uint16_t)1);
 				Assert::AreEqual(cell->elevation,  (int16_t)1);
 			}
@@ -299,25 +300,28 @@ namespace Map
 			* * SET THE CELL IN THE x ROW, y COL TO ALL 1s
 			*/
 
-			const uint32_t width = 10;
+			const uint32_t width  = 10;
 			const uint32_t height = 10;
 
-			const uint32_t x = 3;	// 4th row
-			const uint32_t y = 5;	// 5th col
+			const uint32_t x = 3;	// 4th col
+			const uint32_t y = 5;	// 5th row
 
-			Eternal::Map::Cell c_grid[height][width];
-			Eternal::Map::Grid grid(width, height, (uint8_t*)c_grid);
-			
+			Eternal::Map::Grid grid(width, height);
+
 			Eternal::Map::Cell cell;
-			cell.accessible = cell.elevation = cell.surface = 1;
-			
-			c_grid[x][y] = cell;
+
+			for(int i = 0; i < height; i++)
+				for (int j = 0; j < width; j++) {
+					cell.accessible = cell.elevation = cell.surface = j;
+					grid.set_cell(cell, j, i);
+				}
+
 
 			auto g_cell = grid.get_cell(x, y);
 
-			Assert::AreEqual(g_cell->accessible, (uint16_t)1);
-			Assert::AreEqual(g_cell->surface,    (uint16_t)1);
-			Assert::AreEqual(g_cell->elevation,  (int16_t)1);
+			Assert::AreEqual(g_cell->accessible, (uint16_t)3);
+			Assert::AreEqual(g_cell->surface,    (uint16_t)3);
+			Assert::AreEqual(g_cell->elevation,  (int16_t)3);
 		}
 	};
 }
