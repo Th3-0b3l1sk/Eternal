@@ -98,6 +98,9 @@ namespace Eternal
             _mtx.lock();
             _Q.push(std::move(msg));
             _mtx.unlock();
+
+            if (level == el::Level::Error)
+                _logger->flush();
         }
     }
 }

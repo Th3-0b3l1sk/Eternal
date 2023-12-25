@@ -146,6 +146,9 @@
     <ClCompile Include="..\Depends\easylogging++\easylogging++.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Map\DMap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Msg\MsgAccount.h" />
@@ -199,5 +202,6 @@
     <ClInclude Include="include\Database\Statements\GetPlayerIdByName.h" />
     <ClInclude Include="include\Database\Statements\SetPlayerInfo.h" />
     <ClInclude Include="include\Util\Logger.h" />
+    <ClInclude Include="include\Map\DMap.h" />
   </ItemGroup>
 </Project>

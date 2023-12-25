@@ -73,6 +73,7 @@ namespace Eternal
 
             std::vector<std::future<void>> work_queue;
             const uint32_t hardware_concurrency = std::thread::hardware_concurrency();
+            //const uint32_t hardware_concurrency = 1;
             for (auto i{ 0 }; i < hardware_concurrency; i++)
                 work_queue.push_back(std::async(std::launch::async,
                     std::bind(&MapManager::load_map_and_pack, this, std::ref(maps))));

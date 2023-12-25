@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <vector>
 #include "Map/Grid.h"
+#include "Map/DMap.h"
 #include "Util/BinaryRW.h"
 
 namespace Eternal
@@ -17,13 +18,6 @@ namespace Eternal
             uint8_t  puzzle[260];
             uint32_t map_width;
             uint32_t map_height;
-        };
-
-        struct PortalInfo
-        {
-            uint32_t x;
-            uint32_t y;
-            uint32_t id;
         };
 
         enum MapObject : uint32_t
