@@ -56,5 +56,11 @@ namespace Eternal
             _packed_size = 0;
             _packed_data.resize(0); _packed_data.clear(); _packed_data.shrink_to_fit();
         }
+        void Grid::reset_grid(std::vector<Cell>&& new_data, uint32_t width, uint32_t height)
+        {
+            set_unpack_info(std::move(new_data));
+            _grid.width  = width;
+            _grid.height = height;
+        }
     }
 }

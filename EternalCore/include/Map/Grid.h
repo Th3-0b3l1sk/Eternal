@@ -2,35 +2,12 @@
 #include <cstdint>
 #include <memory>
 #include <vector>
+#include "Map/DMap.h"
 
 namespace Eternal
 {
     namespace Map
     {   
-#pragma pack(push, 1)
-        struct Cell
-        {
-            ~Cell() = default;
-
-            Cell() noexcept
-                : accessible{}, surface{}, elevation{}
-            {
-
-            }
-
-            Cell(const Cell& other) noexcept
-            {
-                accessible = other.accessible;
-                surface = other.surface;
-                elevation = other.elevation;
-            }
-
-            uint16_t accessible;
-            uint16_t surface;
-            int16_t  elevation;
-        };
-#pragma pack(pop)
-
         class Grid
         {
             friend class MapData;
@@ -106,6 +83,7 @@ namespace Eternal
             void set_cell(const Cell& cell, uint32_t row, uint32_t col);
             void set_packed_info(uint32_t packed_size, std::vector<uint8_t >&& packed_data);
             void set_unpack_info(std::vector<Cell >&& packed_data);
+            void reset_grid(std::vector<Cell>&& new_data, uint32_t width, uint32_t height);
             inline uint8_t* get_packed_data()  { return _packed_data.data(); }
             inline uint32_t get_packed_size() const { return _packed_size; }
             inline bool is_packed() const { return _is_packed; }
