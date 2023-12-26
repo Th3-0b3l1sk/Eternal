@@ -28,7 +28,10 @@ namespace Eternal
 
         public:
             GetMapsInfo(SQLHANDLE hCon);
-            virtual ~GetMapsInfo() = default;
+            virtual ~GetMapsInfo() {
+                SQLFreeHandle(SQL_HANDLE_STMT, _hStmt);
+            }
+
             SQLRETURN bind() ;
             std::optional<std::vector<MapInfo>> execute();
 

@@ -28,7 +28,10 @@ namespace Eternal
         {
         public:
             GetNpcsInfo(SQLHANDLE hStmt);
-            ~GetNpcsInfo() = default;
+            ~GetNpcsInfo() {
+                SQLFreeHandle(SQL_HANDLE_STMT, _hStmt);
+            }
+
             SQLRETURN bind() ;
             std::optional<std::vector<NpcInfo>> execute();
 

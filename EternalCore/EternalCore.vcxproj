@@ -96,6 +96,7 @@
   <ItemGroup>
     <ClCompile Include="..\Depends\easylogging++\easylogging++.cc" />
     <ClCompile Include="..\Depends\lz4\lz4.c" />
+    <ClCompile Include="src\Database\Statements\GetMonsterType.cpp" />
     <ClCompile Include="src\Database\Statements\GetPlayerIdByName.cpp" />
     <ClCompile Include="src\Database\Statements\SetPlayerInfo.cpp" />
     <ClCompile Include="src\Entities\NpcManager.cpp" />
@@ -142,6 +143,7 @@
     <ClCompile Include="src\World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Database\Statements\GetMonsterType.h" />
     <ClInclude Include="include\Database\Statements\GetNpcsInfo.h" />
     <ClInclude Include="include\Database\Statements\GetMapsInfo.h" />
     <ClInclude Include="include\Database\Statements\GetPlayerIdByName.h" />

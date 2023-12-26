@@ -53,7 +53,9 @@ namespace Eternal
         {
         public:
             GetItemsInfo(SQLHANDLE hCon);
-            ~GetItemsInfo() = default;
+            ~GetItemsInfo() {
+                SQLFreeHandle(SQL_HANDLE_STMT, _hStmt);
+            }
             SQLRETURN bind();
             std::optional<std::vector<ItemInfo>> execute();
         

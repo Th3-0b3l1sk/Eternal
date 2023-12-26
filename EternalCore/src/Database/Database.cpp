@@ -189,7 +189,9 @@ namespace Eternal
         {
             GetPlayerOwnItems player_items(_hCon);
             if (SQL_SUCCESS != player_items.bind()) {
-                // handle errors
+                std::string err = "Database::get_player_own_items() => Failed to get items for the player id[" + std::to_string(player_id) + "]\n";
+                Error(GServerLogger, err.c_str());
+
                 return std::nullopt;
             }
             
@@ -199,7 +201,10 @@ namespace Eternal
         {
             GetItemsInfo items_info(_hCon);
             if (!SQL_SUCCEEDED(items_info.bind())) {
-                // handle error
+                std::string err = "Database::get_game_items() => Failed to load game items' info from the database. [TERMINATING!]\n";
+                Fatal(GServerLogger, err.c_str());
+                ::terminate();
+
                 return std::nullopt;
             }
 
@@ -209,7 +214,10 @@ namespace Eternal
         {
             GetNpcsInfo npcs_info(_hCon);
             if (!SQL_SUCCEEDED(npcs_info.bind())) {
-                // handler error
+                std::string err = "Database::get_game_npcs() => Failed to load game NPCs' info from the database. [TERMINATING!]\n";
+                Fatal(GServerLogger, err.c_str());
+                ::terminate();
+
                 return std::nullopt;
             }
             
@@ -219,11 +227,27 @@ namespace Eternal
         {
             GetMapsInfo maps_info(_hCon);
             if (!SQL_SUCCEEDED(maps_info.bind())) {
-                // handler error
+                std::string err = "Database::get_game_maps() => Failed to load game maps' info from the database. [TERMINATING!]\n";
+                Fatal(GServerLogger, err.c_str());
+                ::terminate();
+
                 return std::nullopt;
             }
 
             return maps_info.execute();
+        }
+        std::optional<std::vector<MonsterType>> Database::get_game_monsters()
+        {
+            GetMonsterType monster_type(_hCon);
+            if (!SQL_SUCCEEDED(monster_type.bind())) {
+                std::string err = "Database::get_game_monster() => Failed to load monster type info from the database. [TERMINATING!]\n";
+                Fatal(GServerLogger, err.c_str());
+                ::terminate();
+
+                return std::nullopt;
+            }
+
+            return monster_type.execute();
         }
     }
 }
