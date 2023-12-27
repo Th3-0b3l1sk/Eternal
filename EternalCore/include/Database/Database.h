@@ -8,6 +8,7 @@
 #include "./Statements/GetNpcsInfo.h"
 #include "./Statements/GetMapsInfo.h"
 #include "./Statements/GetMonsterType.h"
+#include "./Statements/GetMonsterGenerators.h"
 #include <string>
 #include <unordered_map>
 #include <optional>
@@ -67,6 +68,7 @@ namespace Eternal
             std::optional<std::vector<NpcInfo>> get_game_npcs();
             std::optional<std::vector<MapInfo>> get_game_maps();
             std::optional<std::vector<MonsterType>> get_game_monsters();
+            std::optional<std::vector<MonsterGenerator>> get_generators();
             bool register_user(std::string name, std::string password, std::string ip, AccountType type = AccountType::NORMAL);
             bool set_player_info(uint32_t id, const PlayerInfo& info);
             void set_def_player_info(PlayerInfo& info);

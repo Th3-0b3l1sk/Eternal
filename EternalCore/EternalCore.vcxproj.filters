@@ -152,6 +152,15 @@
     <ClCompile Include="src\Database\Statements\GetMonsterType.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Entities\MonsterManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Database\Statements\GetMonsterGenerators.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Entities\Generator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Msg\MsgAccount.h" />
@@ -207,5 +216,8 @@
     <ClInclude Include="include\Util\Logger.h" />
     <ClInclude Include="include\Map\DMap.h" />
     <ClInclude Include="include\Database\Statements\GetMonsterType.h" />
+    <ClInclude Include="include\Entities\MonsterManager.h" />
+    <ClInclude Include="include\Database\Statements\GetMonsterGenerators.h" />
+    <ClInclude Include="include\Entities\Generator.h" />
   </ItemGroup>
 </Project>

@@ -249,5 +249,15 @@ namespace Eternal
 
             return monster_type.execute();
         }
+        std::optional<std::vector<MonsterGenerator>> Database::get_generators()
+        {
+            GetMonsterGenerators gens(_hCon);
+            if (!SQL_SUCCEEDED(gens.bind())) {
+                std::string err = "Database::get_generators() => Failed to load the monster generators!.[Terminating]\n";
+                Fatal(GServerLogger, err.c_str());
+                ::terminate();
+            }                
+            return gens.execute();
+        }
     }
 }
