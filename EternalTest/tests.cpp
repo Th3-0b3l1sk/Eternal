@@ -372,6 +372,21 @@ namespace Database
 			Assert::AreEqual(result.value().size(), num_of_entries);
 		}
 	};
+
+	TEST_CLASS(GetMonsterGenerators)
+	{
+	public:
+		TEST_METHOD(execute)
+		{
+			const uint32_t num_of_entries = 1889;	// From the database generators table
+
+			auto db = std::make_unique<Eternal::Database::Database>("EternalDB", "Eternal", "password");
+			auto result = db->get_generators();
+
+			Assert::IsTrue(result.has_value(), L"failed to load game generators!");
+			Assert::AreEqual(result.value().size(), num_of_entries);
+		}
+	};
 }
 
 namespace Entities
